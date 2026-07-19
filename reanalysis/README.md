@@ -1,0 +1,45 @@
+# Reanalysis of METR's Time Horizon data
+
+Independent reanalysis of the human-baseline side of METR's
+[time horizon methodology](https://arxiv.org/abs/2503.14499)
+([upstream repo](https://github.com/METR/eval-analysis-public)).
+Everything lives in this `reanalysis/` directory; the rest of the repo is unmodified upstream.
+
+**The theme:** the x-axis of the whole methodology — `human_minutes`, how long a task takes
+a human expert — is a measured quantity with structure and error that the headline analysis
+treats as exact. We reconstruct how it was measured, quantify its uncertainty, and propagate
+that uncertainty through to time horizons and doubling times.
+
+## Stages
+
+| Stage | Question | Status |
+|---|---|---|
+| [A — Export archaeology](stage-a-export-archaeology/) | What exactly is in the public export, and can per-run human times be recovered? | ✅ done |
+| C — Measurement error | How does per-task uncertainty in `human_minutes` propagate to horizons and doubling times? | planned |
+| B — Survival analysis | What happens when failed human baselines are treated as censored observations instead of discarded? | planned |
+| D — Cohort selection | Could baseliner self-selection bias task times? (design; needs baseliner IDs from METR) | planned |
+
+Stages are ordered A → C → B → D by dependency, not by letter.
+
+## Relation to prior work
+
+METR's own
+[modelling-assumptions note](https://metr.org/notes/2026-03-20-impact-of-modelling-assumptions-on-time-horizon-results/)
+applied a SIMEX noise correction with a *global* noise assumption, and their
+[limitations note](https://metr.org/notes/2026-01-22-time-horizon-limitations/) explicitly
+lists failed-baseline survival analysis and baseliner selection as open. Stage C refines the
+former with per-task empirical noise estimates; Stage B does the latter for the first time.
+
+## Reproducing
+
+```bash
+uv sync --all-extras            # from repo root (Python ≥3.11)
+cd reanalysis/stage-a-export-archaeology
+python analysis.py              # or open analysis.ipynb
+```
+
+Each stage directory contains: `README.md` (summary + key figures), `analysis.py`
+(jupytext py:percent source of truth), `analysis.ipynb` (paired, executed), `figures/`,
+and `data/` (derived datasets).
+
+*By [Ofir Reich](https://github.com/ofir-reich), with Claude as research assistant.*
