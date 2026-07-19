@@ -12,14 +12,14 @@
 # ---
 
 # %% [markdown]
-# # Stage A — Export archaeology: reconstructing per-run human baseline times
+# # Stage 1 — Export archaeology: reconstructing per-run human baseline times
 #
 # **Finding:** in the public METR export (`runs.jsonl`), the durations of the human
-# baseline runs are not the originally measured times. For HCAST (and RE-Bench) they are
-# **floored to the whole minute**, and are in fact *derived from* the official per-task
-# aggregate `human_minutes` — the aggregation ran on unfloored internal data, then
-# per-run times were reconstructed and truncated for release. SWAA runs are stored to
-# the millisecond and are unaffected.
+# baseline runs are not the originally measured times. For HCAST (and RE-Bench) they were
+# **floored to the whole minute** before public release. The official per-task aggregate
+# `human_minutes` was computed upstream from the *unfloored* times and is published at
+# full precision — so the floored per-run times cannot exactly reproduce it. SWAA runs
+# are stored to the millisecond and are unaffected.
 #
 # **Consequences:** anyone re-deriving `human_minutes = gmean(successful baseline times)`
 # from the export gets systematic misses, concentrated on short tasks (3.7 min → 3.0 is
@@ -63,17 +63,17 @@ print(f"{len(runs):,} runs | {len(human)} human baseline runs | "
 
 
 # %% [markdown]
-# ## 1. The stored durations are floored — and derived from `human_minutes`
+# ## 1. The stored durations are floored to the whole minute
 #
 # Two observations establish this:
 #
 # **(a) Granularity differs by source.** Every HCAST and RE-Bench human duration is a
 # whole number of minutes; SWAA durations are stored to the millisecond.
 #
-# **(b) Single-baseliner tasks give the smoking gun.** When exactly one successful
-# baseline exists, `human_minutes` *is* that run's time — and the stored duration equals
-# `floor(human_minutes)` **exactly, for all such tasks**. The export's per-run time was
-# computed from the aggregate, not vice versa.
+# **(b) Single-baseliner tasks pin down the exact scheme.** When exactly one successful
+# baseline exists, `human_minutes` *is* that run's (unfloored) time — and the stored
+# duration equals `floor(human_minutes)` **exactly, for all such tasks**. So the
+# truncation is a floor (not a round), and the upstream aggregate kept full precision.
 
 # %%
 frac = human["minutes_floored"] % 1
@@ -199,7 +199,7 @@ fig.show()
 # | `delta_imputed_failure` | HCAST failed run: floored + δ_task as best guess (δ not identified from failures; true value in [t, t+1)) |
 # | `uncorrected_rebench` | RE-Bench: different time convention, no δ exists; floored value shipped as-is |
 #
-# Failed runs matter downstream as *censoring times* (Stage B), where a sub-minute offset
+# Failed runs matter downstream as *censoring times* (Stage 3, survival analysis), where a sub-minute offset
 # is immaterial — but the flag makes the epistemic status explicit.
 
 # %%
@@ -263,6 +263,6 @@ fig.show()
 #    successes only.
 # 3. **RE-Bench is uncorrected**: its `human_minutes` is not the gmean of raw elapsed
 #    times (8h-capped sessions; threshold = mean of 7–9h runs), so no δ ∈ [0,1) exists.
-# 4. This documents the **public export**, not METR's internal analysis — the official
-#    `human_minutes` has full precision throughout; the information loss is only in the
-#    shipped per-run times.
+# 4. This documents the **public export**, not METR's internal analysis — `human_minutes`
+#    was computed from the unfloored times upstream and has full precision throughout;
+#    the information loss is only in the shipped per-run times.

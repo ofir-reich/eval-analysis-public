@@ -1,10 +1,10 @@
-# Stage A — Export archaeology: recovering per-run human baseline times
+# Stage 1 — Export archaeology: recovering per-run human baseline times
 
-**TL;DR:** In the public export, the durations of human baseline runs are floored to the
-whole minute and were *derived from* the official per-task `human_minutes` — not the other
-way around. We prove this, recover the lost sub-minute structure exactly at the task level,
-and publish a corrected per-run dataset that downstream analyses (and other researchers)
-can use directly.
+**TL;DR:** In the public export, the durations of human baseline runs were floored to the
+whole minute before release, while the official per-task `human_minutes` (computed upstream
+from the unfloored times) kept full precision. We demonstrate this, recover the lost
+sub-minute structure exactly at the task level, and publish a corrected per-run dataset
+that downstream analyses (and other researchers) can use directly.
 
 ## The finding
 
@@ -16,8 +16,9 @@ short tasks. Three facts explain everything:
    are stored to the millisecond (0% whole minutes). The flooring bites short tasks
    proportionally hardest.
 2. **For all 21 single-baseliner tasks, the stored duration equals `floor(human_minutes)`
-   exactly** — the per-run times were reconstructed from the official aggregate for
-   release, then truncated. The official numbers have full precision; only the export is lossy.
+   exactly** — for n=1 the aggregate *is* that run's time, so this pins down the scheme:
+   a floor (not a round), applied to the per-run times only. The official numbers have
+   full precision; only the export is lossy.
 3. **The flooring bracket `gmean(t) ≤ human_minutes < gmean(t+1)` holds for 81/81 HCAST
    baselined tasks** — including three successful runs stored as *0 minutes* (dropping
    those, instead of keeping them, is a trap: one zero collapses a geometric mean).

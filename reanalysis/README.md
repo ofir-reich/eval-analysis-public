@@ -14,12 +14,10 @@ that uncertainty through to time horizons and doubling times.
 
 | Stage | Question | Status |
 |---|---|---|
-| [A — Export archaeology](stage-a-export-archaeology/) | What exactly is in the public export, and can per-run human times be recovered? | ✅ done |
-| C — Measurement error | How does per-task uncertainty in `human_minutes` propagate to horizons and doubling times? | planned |
-| B — Survival analysis | What happens when failed human baselines are treated as censored observations instead of discarded? | planned |
-| D — Cohort selection | Could baseliner self-selection bias task times? (design; needs baseliner IDs from METR) | planned |
-
-Stages are ordered A → C → B → D by dependency, not by letter.
+| [1 — Export archaeology](stage-1-export-archaeology/) | What exactly is in the public export, and can per-run human times be recovered? | ✅ done |
+| 2 — Measurement error | How does per-task uncertainty in `human_minutes` propagate to horizons and doubling times? | planned |
+| 3 — Survival analysis | What happens when failed human baselines are treated as censored observations instead of discarded? | planned |
+| 4 — Cohort selection | Could baseliner self-selection bias task times? (design; needs baseliner IDs from METR) | planned |
 
 ## Relation to prior work
 
@@ -27,14 +25,14 @@ METR's own
 [modelling-assumptions note](https://metr.org/notes/2026-03-20-impact-of-modelling-assumptions-on-time-horizon-results/)
 applied a SIMEX noise correction with a *global* noise assumption, and their
 [limitations note](https://metr.org/notes/2026-01-22-time-horizon-limitations/) explicitly
-lists failed-baseline survival analysis and baseliner selection as open. Stage C refines the
-former with per-task empirical noise estimates; Stage B does the latter for the first time.
+lists failed-baseline survival analysis and baseliner selection as open. Stage 2 refines the
+former with per-task empirical noise estimates; Stage 3 does the latter for the first time.
 
 ## Reproducing
 
 ```bash
 uv sync --all-extras            # from repo root (Python ≥3.11)
-cd reanalysis/stage-a-export-archaeology
+cd reanalysis/stage-1-export-archaeology
 python analysis.py              # or open analysis.ipynb
 ```
 
