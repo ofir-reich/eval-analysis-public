@@ -1,0 +1,2 @@
+# derived local artifacts — regenerate with: pandoc README.md -s --css=<css> --self-contained -o r.html && google-chrome --headless --print-to-pdf=README.pdf r.html
+*.pdf

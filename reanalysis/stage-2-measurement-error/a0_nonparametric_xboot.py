@@ -140,12 +140,20 @@ def one_replicate(i: int, condition: str) -> dict:
     return fit_horizons(df, hm)
 
 
+# Raw per-replicate horizons are cached to data/ — delete those files to force a
+# recompute (seeds are fixed, so a recompute reproduces them exactly).
 results = {}
 for condition in ["metr", "metr+x", "x_only"]:
+    cache = DATA_OUT / f"a0_horizons_{condition.replace('+', '_')}.csv"
+    if cache.exists():
+        results[condition] = pd.read_csv(cache)
+        print(f"{condition}: loaded {len(results[condition])} cached replicates")
+        continue
     reps = Parallel(n_jobs=-1, verbose=0)(
         delayed(one_replicate)(i, condition) for i in range(N_BOOT)
     )
     results[condition] = pd.DataFrame(reps)
+    results[condition].to_csv(cache, index=False)
     print(f"{condition}: {len(results[condition])} replicates")
 
 # %% [markdown]
@@ -226,9 +234,9 @@ dt_summary["ci_width_days"] = dt_summary["97.5%"] - dt_summary["2.5%"]
 print(dt_summary.round(1).to_string())
 dt.to_csv(DATA_OUT / "a0_doubling_times.csv", index=False)
 
-fig = px.histogram(
+fig = px.ecdf(
     dt.melt(var_name="condition", value_name="doubling_days"),
-    x="doubling_days", color="condition", barmode="overlay", nbins=60, opacity=0.6,
+    x="doubling_days", color="condition",
     title=f"Bootstrap distribution of the doubling time (frontier agents, {N_BOOT} reps)",
     labels={"doubling_days": "doubling time (days)"},
 )
