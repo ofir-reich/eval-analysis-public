@@ -53,6 +53,18 @@ REPO = HERE / ".." / ".."
 FIGURES = HERE / "figures"
 DATA_OUT = HERE / "data"
 
+try:  # running under a Jupyter/VS Code kernel?
+    get_ipython()  # type: ignore[name-defined]
+    IS_INTERACTIVE = True
+except NameError:
+    IS_INTERACTIVE = False
+
+def show(fig):
+    """Display inline in interactive sessions; no-op in headless script runs
+    (plotly's fallback there opens browser windows — figures are on disk anyway)."""
+    if IS_INTERACTIVE:
+        show(fig)
+
 runs = pd.read_json(
     REPO / "reports" / "time-horizon-1-0" / "data" / "raw" / "runs.jsonl", lines=True
 )
@@ -152,7 +164,7 @@ fig.add_trace(go.Scatter(x=(line_start, line_end), y=(line_start, line_end),
                          mode="lines", name="y=x",
                          line=dict(color="gray", dash="dash", width=2), opacity=0.5))
 fig.write_image(FIGURES / "bracket.png", width=750, height=550, scale=2)
-fig.show()
+show(fig)
 
 # %% [markdown]
 # ## 3. Solving for δ_task
@@ -201,7 +213,7 @@ fig = px.histogram(
     labels={"delta_task": "δ_task (minutes)"},
 )
 fig.write_image(FIGURES / "delta_distribution.png", width=750, height=450, scale=2)
-fig.show()
+show(fig)
 
 # %% [markdown]
 # ## 4. The corrected per-run dataset
@@ -274,7 +286,7 @@ fig = px.ecdf(
 )
 fig.update_xaxes(range=[0.75, 1.05])
 fig.write_image(FIGURES / "before_after_ecdf.png", width=750, height=450, scale=2)
-fig.show()
+show(fig)
 
 # %% [markdown]
 # ## Caveats

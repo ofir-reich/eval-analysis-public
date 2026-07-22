@@ -67,6 +67,18 @@ FIGURES = HERE / "figures"
 DATA_OUT = HERE / "data"
 FIGURES.mkdir(exist_ok=True), DATA_OUT.mkdir(exist_ok=True)
 
+try:  # running under a Jupyter/VS Code kernel?
+    get_ipython()  # type: ignore[name-defined]
+    IS_INTERACTIVE = True
+except NameError:
+    IS_INTERACTIVE = False
+
+def show(fig):
+    """Display inline in interactive sessions; no-op in headless script runs
+    (plotly's fallback there opens browser windows — figures are on disk anyway)."""
+    if IS_INTERACTIVE:
+        show(fig)
+
 N_BOOT = int(os.environ.get("N_BOOT", 500))
 REGULARIZATION = 1e-5          # headline value from reports/time-horizon-1-0/fig_params
 WEIGHT_COLUMN = "invsqrt_task_weight"
@@ -239,7 +251,7 @@ fig = px.scatter(
 )
 fig.update_layout(height=600)
 fig.write_image(FIGURES / "a0_ci_comparison.png", width=850, height=600, scale=2)
-fig.show()
+show(fig)
 
 # %% [markdown]
 # ## Effect on the doubling time
@@ -296,7 +308,7 @@ fig = px.ecdf(
     labels={"doubling_days": "doubling time (days)"},
 )
 fig.write_image(FIGURES / "a0_doubling_time.png", width=800, height=450, scale=2)
-fig.show()
+show(fig)
 
 # %% [markdown]
 # ## Caveats
