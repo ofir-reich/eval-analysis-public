@@ -69,12 +69,14 @@ FIGURES.mkdir(exist_ok=True), DATA_OUT.mkdir(exist_ok=True)
 
 N_BOOT = int(os.environ.get("N_BOOT", 500))
 REGULARIZATION = 1e-5          # headline value from reports/time-horizon-1-0/fig_params
-WEIGHT_COL = "invsqrt_task_weight"
+WEIGHT_COLUMN = "invsqrt_task_weight"
 CATEGORIES = ["task_family", "task_id", "run_id"]   # METR's "ftr"
 
 runs = pd.read_json(REPORT / "data" / "raw" / "runs.jsonl", lines=True)
 runs = runs.rename(columns={"alias": "agent"})
-derived = pd.read_csv(HERE / ".." / "stage-1-export-archaeology" / "data" / "human_runs_derived.csv")
+human_runs_derived = pd.read_csv(
+    HERE / ".." / "stage-1-export-archaeology" / "data" / "human_runs_derived.csv"
+)
 print(f"{len(runs):,} runs | {runs['agent'].nunique()} agents")
 
 # %% [markdown]
@@ -85,118 +87,152 @@ print(f"{len(runs):,} runs | {runs['agent'].nunique()} agents")
 # `swaa_exact`) vary across replicates.
 
 # %%
-pool_df = derived.query(
+resampleable_successful_runs = human_runs_derived.query(
     "score_binarized == 1 and derivation in ['delta_corrected', 'swaa_exact']"
 )
-pool = {
+successful_times_by_task = {
     task: grp["minutes_derived"].to_numpy()
-    for task, grp in pool_df.groupby("task_id")
+    for task, grp in resampleable_successful_runs.groupby("task_id")
     if len(grp) >= 2
 }
-official_hm = runs.groupby("task_id")["human_minutes"].first()
+official_human_minutes_by_task = runs.groupby("task_id")["human_minutes"].first()
 n_tasks = runs["task_id"].nunique()
-print(f"x-resampled tasks: {len(pool)} / {n_tasks} "
+print(f"x-resampled tasks: {len(successful_times_by_task)} / {n_tasks} "
       f"(rest fixed: n=1, estimates, RE-Bench)")
 
 # HCAST reproduces exactly (δ-corrected); SWAA to ~2e-4 (its timestamps are ms-rounded)
-sanity = np.array([stats.gmean(v) / official_hm[t] for t, v in pool.items()])
-assert np.abs(sanity - 1).max() < 1e-3, "pool gmeans should reproduce official human_minutes"
+pool_gmean_to_official_ratio = np.array([
+    stats.gmean(times) / official_human_minutes_by_task[task]
+    for task, times in successful_times_by_task.items()
+])
+assert np.abs(pool_gmean_to_official_ratio - 1).max() < 1e-3, \
+    "pool gmeans should reproduce official human_minutes"
 
 
 def draw_human_minutes(rng: np.random.Generator) -> pd.Series:
     """One bootstrap draw of the x-axis: resample each task's baseline runs, re-gmean."""
-    hm = official_hm.copy()
-    for task, times in pool.items():
-        hm[task] = stats.gmean(rng.choice(times, size=len(times), replace=True))
-    return hm
+    human_minutes_by_task = official_human_minutes_by_task.copy()
+    for task, times in successful_times_by_task.items():
+        human_minutes_by_task[task] = stats.gmean(
+            rng.choice(times, size=len(times), replace=True)
+        )
+    return human_minutes_by_task
 
 
 # %% [markdown]
 # ## Bootstrap machinery — METR's fit, three conditions
 
 # %%
-def fit_horizons(df: pd.DataFrame, hm: pd.Series) -> dict:
+def fit_horizons(runs_sample: pd.DataFrame, human_minutes_by_task: pd.Series) -> dict:
     """Fit METR's weighted logistic per agent on log2(human_minutes); return p50s."""
-    x_all = np.log2(df["task_id"].map(hm).to_numpy())
-    out = {}
-    for agent, idx in df.groupby("agent").indices.items():
-        y = df["score_binarized"].to_numpy()[idx]
+    log2_minutes = np.log2(
+        runs_sample["task_id"].map(human_minutes_by_task).to_numpy()
+    )
+    p50_by_agent = {}
+    for agent, indices in runs_sample.groupby("agent").indices.items():
+        y = runs_sample["score_binarized"].to_numpy()[indices]
         if len(np.unique(y)) < 2:
             continue
         model = logistic_regression(
-            x_all[idx].reshape(-1, 1), y,
-            sample_weight=df[WEIGHT_COL].to_numpy()[idx],
+            log2_minutes[indices].reshape(-1, 1), y,
+            sample_weight=runs_sample[WEIGHT_COLUMN].to_numpy()[indices],
             regularization=REGULARIZATION,
             ensure_weights_sum_to_1=False,
         )
-        out[agent] = float(np.exp2(get_x_for_quantile(model, 0.5)))
-    return out
+        p50_by_agent[agent] = float(np.exp2(get_x_for_quantile(model, 0.5)))
+    return p50_by_agent
 
 
-def one_replicate(i: int, condition: str) -> dict:
-    rng = np.random.default_rng(42 + i)
-    df = bootstrap_sample(runs, CATEGORIES, rng) if condition in ("metr", "metr+x") else runs
-    hm = draw_human_minutes(rng) if condition in ("metr+x", "x_only") else official_hm
-    return fit_horizons(df, hm)
+def one_replicate(replicate_index: int, condition: str) -> dict:
+    rng = np.random.default_rng(42 + replicate_index)
+    runs_sample = (
+        bootstrap_sample(runs, CATEGORIES, rng) if condition in ("metr", "metr+x")
+        else runs
+    )
+    human_minutes_by_task = (
+        draw_human_minutes(rng) if condition in ("metr+x", "x_only")
+        else official_human_minutes_by_task
+    )
+    return fit_horizons(runs_sample, human_minutes_by_task)
 
 
 # Raw per-replicate horizons are cached to data/ — delete those files to force a
 # recompute (seeds are fixed, so a recompute reproduces them exactly).
-results = {}
+p50_per_agent_by_replicate_by_condition = {}
 for condition in ["metr", "metr+x", "x_only"]:
-    cache = DATA_OUT / f"a0_horizons_{condition.replace('+', '_')}.csv"
-    if cache.exists():
-        results[condition] = pd.read_csv(cache)
-        print(f"{condition}: loaded {len(results[condition])} cached replicates")
+    cache_path = DATA_OUT / f"a0_horizons_{condition.replace('+', '_')}.csv"
+    if cache_path.exists():
+        p50_per_agent_by_replicate_by_condition[condition] = pd.read_csv(cache_path)
+        print(f"{condition}: loaded "
+              f"{len(p50_per_agent_by_replicate_by_condition[condition])} cached replicates")
         continue
-    reps = Parallel(n_jobs=-1, verbose=0)(
+    replicate_results = Parallel(n_jobs=-1, verbose=0)(
         delayed(one_replicate)(i, condition) for i in range(N_BOOT)
     )
-    results[condition] = pd.DataFrame(reps)
-    results[condition].to_csv(cache, index=False)
-    print(f"{condition}: {len(results[condition])} replicates")
+    p50_per_agent_by_replicate_by_condition[condition] = pd.DataFrame(replicate_results)
+    p50_per_agent_by_replicate_by_condition[condition].to_csv(cache_path, index=False)
+    print(f"{condition}: {len(p50_per_agent_by_replicate_by_condition[condition])} replicates")
 
 # %% [markdown]
 # ## Effect on per-agent horizon CIs
 
 # %%
-release_dates = yaml.safe_load((REPO / "data" / "external" / "release_dates.yaml").read_text())
-fits_official = pd.read_csv(REPORT / "data" / "wrangled" / "logistic_fits" / "headline.csv")
-frontier = get_frontier_agents(fits_official, release_dates, 50)
-print(f"frontier agents ({len(frontier)}):", sorted(frontier))
+release_dates = yaml.safe_load(
+    (REPO / "data" / "external" / "release_dates.yaml").read_text()
+)
+official_fits_by_agent = pd.read_csv(
+    REPORT / "data" / "wrangled" / "logistic_fits" / "headline.csv"
+)
+frontier_agents = get_frontier_agents(official_fits_by_agent, release_dates, 50)
+print(f"frontier agents ({len(frontier_agents)}):", sorted(frontier_agents))
 
-rows = []
-for condition, df in results.items():
-    for agent in df.columns:
-        p50 = df[agent].dropna()
-        p50 = p50[np.isfinite(p50)]
-        if len(p50) < N_BOOT * 0.9:
+ci_rows = []
+for condition, p50_per_agent_by_replicate in p50_per_agent_by_replicate_by_condition.items():
+    for agent in p50_per_agent_by_replicate.columns:
+        p50_draws = p50_per_agent_by_replicate[agent].dropna()
+        p50_draws = p50_draws[np.isfinite(p50_draws)]
+        if len(p50_draws) < N_BOOT * 0.9:
             continue
-        lo, hi = p50.quantile([0.025, 0.975])
-        rows.append({
+        ci_lower, ci_upper = p50_draws.quantile([0.025, 0.975])
+        ci_rows.append({
             "agent": agent, "condition": condition,
-            "p50_median": p50.median(), "ci_lo": lo, "ci_hi": hi,
-            "ci_logwidth": np.log(hi / lo),
+            "p50_median": p50_draws.median(), "ci_lower": ci_lower, "ci_upper": ci_upper,
+            "ci_logwidth": np.log(ci_upper / ci_lower),
         })
-ci = pd.DataFrame(rows)
-ci.to_csv(DATA_OUT / "a0_ci_by_agent.csv", index=False)
+ci_by_agent_condition = pd.DataFrame(ci_rows)
+ci_by_agent_condition.to_csv(DATA_OUT / "a0_ci_by_agent.csv", index=False)
 
-wide = ci.pivot(index="agent", columns="condition", values="ci_logwidth")
-wide["widening_pct"] = 100 * (wide["metr+x"] / wide["metr"] - 1)
-wide["x_share_pct"] = 100 * (wide["x_only"] / wide["metr+x"]) ** 2   # variance-share heuristic
-summary = wide.loc[wide.index.isin(frontier)].sort_values("widening_pct", ascending=False)
-print(summary.round(1).to_string())
-print(f"\nmedian CI log-width widening (frontier agents): {summary['widening_pct'].median():.1f}%")
+ci_logwidth_per_condition_by_agent = ci_by_agent_condition.pivot(
+    index="agent", columns="condition", values="ci_logwidth"
+)
+ci_logwidth_per_condition_by_agent["widening_pct"] = 100 * (
+    ci_logwidth_per_condition_by_agent["metr+x"]
+    / ci_logwidth_per_condition_by_agent["metr"] - 1
+)
+ci_logwidth_per_condition_by_agent["x_share_pct"] = 100 * (
+    ci_logwidth_per_condition_by_agent["x_only"]
+    / ci_logwidth_per_condition_by_agent["metr+x"]
+) ** 2   # variance-share heuristic
+ci_widening_by_frontier_agent = ci_logwidth_per_condition_by_agent.loc[
+    ci_logwidth_per_condition_by_agent.index.isin(frontier_agents)
+].sort_values("widening_pct", ascending=False)
+print(ci_widening_by_frontier_agent.round(1).to_string())
+print(f"\nmedian CI log-width widening (frontier agents): "
+      f"{ci_widening_by_frontier_agent['widening_pct'].median():.1f}%")
 
-order = fits_official.set_index("agent")["p50"].sort_values().index
-plot_df = ci[ci["agent"].isin(frontier)].copy()
-plot_df["err_plus"] = plot_df["ci_hi"] - plot_df["p50_median"]
-plot_df["err_minus"] = plot_df["p50_median"] - plot_df["ci_lo"]
-plot_df["agent"] = pd.Categorical(plot_df["agent"],
-                                  [a for a in order if a in frontier], ordered=True)
+agents_sorted_by_official_p50 = official_fits_by_agent.set_index("agent")["p50"].sort_values().index
+ci_plot_data = ci_by_agent_condition[
+    ci_by_agent_condition["agent"].isin(frontier_agents)
+].copy()
+ci_plot_data["error_upper"] = ci_plot_data["ci_upper"] - ci_plot_data["p50_median"]
+ci_plot_data["error_lower"] = ci_plot_data["p50_median"] - ci_plot_data["ci_lower"]
+ci_plot_data["agent"] = pd.Categorical(
+    ci_plot_data["agent"],
+    [a for a in agents_sorted_by_official_p50 if a in frontier_agents], ordered=True,
+)
 fig = px.scatter(
-    plot_df.sort_values("agent"), y="agent", x="p50_median", color="condition",
-    error_x="err_plus", error_x_minus="err_minus",
+    ci_plot_data.sort_values("agent"), y="agent", x="p50_median", color="condition",
+    error_x="error_upper", error_x_minus="error_lower",
     log_x=True,
     title="p50 horizon, 95% bootstrap CI — with vs without x-axis resampling (frontier agents)",
     labels={"p50_median": "p50 horizon (minutes)", "agent": ""},
@@ -212,30 +248,49 @@ fig.show()
 # headline construction); doubling time = 1/slope.
 
 # %%
-date_lookup = {a: pd.Timestamp(d) for a, d in release_dates["date"].items()
-               if a in frontier and d is not None}
-t0 = min(date_lookup.values())
-years = {a: (d - t0).days / 365.25 for a, d in date_lookup.items()}
+release_date_by_agent = {
+    agent: pd.Timestamp(date) for agent, date in release_dates["date"].items()
+    if agent in frontier_agents and date is not None
+}
+first_release_date = min(release_date_by_agent.values())
+years_since_first_release_by_agent = {
+    agent: (date - first_release_date).days / 365.25
+    for agent, date in release_date_by_agent.items()
+}
 
-def doubling_days(row: pd.Series) -> float:
-    pts = [(years[a], np.log2(row[a])) for a in years
-           if a in row and np.isfinite(row.get(a, np.nan))]
-    if len(pts) < 5:
+def fit_doubling_days(p50_by_agent: pd.Series) -> float:
+    points = [
+        (years_since_first_release_by_agent[agent], np.log2(p50_by_agent[agent]))
+        for agent in years_since_first_release_by_agent
+        if agent in p50_by_agent and np.isfinite(p50_by_agent.get(agent, np.nan))
+    ]
+    if len(points) < 5:
         return np.nan
-    x, y = map(np.array, zip(*pts))
+    x, y = map(np.array, zip(*points))
     slope = np.polyfit(x, y, 1)[0]
     return 365.25 / slope
 
-dt = pd.DataFrame({
-    condition: df.apply(doubling_days, axis=1) for condition, df in results.items()
+doubling_days_per_condition_by_replicate = pd.DataFrame({
+    condition: p50_per_agent_by_replicate.apply(fit_doubling_days, axis=1)
+    for condition, p50_per_agent_by_replicate
+    in p50_per_agent_by_replicate_by_condition.items()
 })
-dt_summary = dt.describe(percentiles=[0.025, 0.5, 0.975]).T[["2.5%", "50%", "97.5%"]]
-dt_summary["ci_width_days"] = dt_summary["97.5%"] - dt_summary["2.5%"]
-print(dt_summary.round(1).to_string())
-dt.to_csv(DATA_OUT / "a0_doubling_times.csv", index=False)
+doubling_days_summary_by_condition = (
+    doubling_days_per_condition_by_replicate
+    .describe(percentiles=[0.025, 0.5, 0.975]).T[["2.5%", "50%", "97.5%"]]
+)
+doubling_days_summary_by_condition["ci_width_days"] = (
+    doubling_days_summary_by_condition["97.5%"] - doubling_days_summary_by_condition["2.5%"]
+)
+print(doubling_days_summary_by_condition.round(1).to_string())
+doubling_days_per_condition_by_replicate.to_csv(
+    DATA_OUT / "a0_doubling_times.csv", index=False
+)
 
 fig = px.ecdf(
-    dt.melt(var_name="condition", value_name="doubling_days"),
+    doubling_days_per_condition_by_replicate.melt(
+        var_name="condition", value_name="doubling_days"
+    ),
     x="doubling_days", color="condition",
     title=f"Bootstrap distribution of the doubling time (frontier agents, {N_BOOT} reps)",
     labels={"doubling_days": "doubling time (days)"},
