@@ -51,6 +51,8 @@ HERE = Path(__file__).parent if "__file__" in dir() else Path.cwd()
 FIGURES = HERE / "figures"
 DATA_OUT = HERE / "data"
 FIGURES.mkdir(exist_ok=True), DATA_OUT.mkdir(exist_ok=True)
+SUFFIX = metr.VERSION_SUFFIX   # "" for v1.0, "_v1_1" for v1.1
+print(f"dataset version: {metr.DATASET_VERSION}")
 
 try:
     get_ipython()  # type: ignore[name-defined]
@@ -71,7 +73,7 @@ METR_SIGMA_ESTIMATE = 1.05
 runs = metr.load_runs()
 official_human_minutes_by_task = metr.official_human_minutes_by_task(runs)
 log_human_minutes_by_task = np.log(official_human_minutes_by_task)
-sigma_by_task = pd.read_csv(DATA_OUT / "b_sigma_by_task.csv", index_col=0)
+sigma_by_task = pd.read_csv(DATA_OUT / f"b_sigma_by_task{SUFFIX}.csv", index_col=0)
 
 frontier_agents, release_dates, official_fits_by_agent = (
     metr.load_frontier_agents_and_dates()
@@ -127,7 +129,7 @@ def simex_horizons_at_lambda(noise_model: str, lam: float) -> dict:
     return {key: total / N_SIMEX for key, total in log_horizon_sums.items()}
 
 
-simex_cache = DATA_OUT / "d_simex_curves.csv"
+simex_cache = DATA_OUT / f"d_simex_curves{SUFFIX}.csv"
 if simex_cache.exists():
     simex_curve_rows = pd.read_csv(simex_cache)
     print(f"loaded cached SIMEX curves ({len(simex_curve_rows)} rows)")
@@ -168,7 +170,7 @@ for (noise_model, agent, quantile), curve in simex_curve_rows.groupby(
         "pct_change": 100 * (2 ** (corrected_log2 - naive_log2) - 1),
     })
 simex_correction_by_agent = pd.DataFrame(corrected_rows)
-simex_correction_by_agent.to_csv(DATA_OUT / "d_simex_corrections.csv", index=False)
+simex_correction_by_agent.to_csv(DATA_OUT / f"d_simex_corrections{SUFFIX}.csv", index=False)
 
 # %% [markdown]
 # ## Frontier summary: per-task vs METR-global haircut
@@ -200,7 +202,7 @@ fig = px.box(
     labels={"pct_change": "horizon change at λ=−1 (%)", "quantile": ""},
 )
 fig.add_hline(y=0, line_dash="dash", line_color="gray")
-fig.write_image(FIGURES / "d_simex_correction.png", width=850, height=500, scale=2)
+fig.write_image(FIGURES / f"d_simex_correction{SUFFIX}.png", width=850, height=500, scale=2)
 show(fig)
 
 # %% [markdown]
@@ -235,7 +237,7 @@ for curve_name, curve in example_curves.groupby("curve"):
     )
 fig.add_vline(x=0, line_dash="dot", line_color="gray")
 fig.add_vline(x=-1, line_dash="dash", line_color="red")
-fig.write_image(FIGURES / "d_simex_curves.png", width=850, height=500, scale=2)
+fig.write_image(FIGURES / f"d_simex_curves{SUFFIX}.png", width=850, height=500, scale=2)
 show(fig)
 
 # %% [markdown]

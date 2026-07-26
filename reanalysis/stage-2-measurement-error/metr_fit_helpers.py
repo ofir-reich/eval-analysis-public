@@ -5,6 +5,7 @@ construction, so every sub-analysis perturbs the x-axis and then runs the
 *identical* downstream pipeline. Imported by the analysis notebooks; not itself
 a notebook.
 """
+import os
 from pathlib import Path
 
 import numpy as np
@@ -16,11 +17,28 @@ from horizon.wrangle.out_of_sample_extrapolation import get_frontier_agents
 
 HERE = Path(__file__).parent
 REPO = HERE / ".." / ".."
-REPORT = REPO / "reports" / "time-horizon-1-0"
 
-REGULARIZATION = 1e-5          # headline value from reports/time-horizon-1-0/fig_params
+# Which public suite to analyse: "1-0" (paper's suite, default) or "1-1" (§7 replication).
+# Set DATASET_VERSION=1-1 in the environment to run the whole Stage-2 chain on v1.1.
+DATASET_VERSION = os.environ.get("DATASET_VERSION", "1-0")
+# suffix appended to every input/output filename so v1.0 and v1.1 artifacts coexist
+# ("" for the default v1.0, "_v1_1" for v1.1). Matches the Stage-1 derived-CSV naming.
+VERSION_SUFFIX = "" if DATASET_VERSION == "1-0" else "_v" + DATASET_VERSION.replace("-", "_")
+# short tag for figure titles (blank for v1.0 to keep the headline figures unchanged)
+VERSION_TITLE_TAG = "" if DATASET_VERSION == "1-0" else f" · v{DATASET_VERSION}"
+REPORT = REPO / "reports" / f"time-horizon-{DATASET_VERSION}"
+
+REGULARIZATION = 1e-5          # headline value from reports/time-horizon-*/fig_params
 WEIGHT_COLUMN = "invsqrt_task_weight"
 DEFAULT_QUANTILES = (0.5, 0.8)
+
+
+def derived_human_runs_csv() -> Path:
+    """Path to the Stage-1 δ-corrected per-run dataset for the active version."""
+    return (
+        HERE / ".." / "stage-1-export-archaeology" / "data"
+        / f"human_runs_derived{VERSION_SUFFIX}.csv"
+    )
 
 
 def load_runs() -> pd.DataFrame:

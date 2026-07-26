@@ -52,6 +52,8 @@ HERE = Path(__file__).parent if "__file__" in dir() else Path.cwd()
 FIGURES = HERE / "figures"
 DATA_OUT = HERE / "data"
 FIGURES.mkdir(exist_ok=True), DATA_OUT.mkdir(exist_ok=True)
+SUFFIX = metr.VERSION_SUFFIX   # "" for v1.0, "_v1_1" for v1.1
+print(f"dataset version: {metr.DATASET_VERSION}")
 
 try:
     get_ipython()  # type: ignore[name-defined]
@@ -69,7 +71,7 @@ CATEGORIES = ["task_family", "task_id", "run_id"]   # METR's "ftr"
 # %%
 runs = metr.load_runs()
 official_human_minutes_by_task = metr.official_human_minutes_by_task(runs)
-sigma_by_task = pd.read_csv(DATA_OUT / "b_sigma_by_task.csv", index_col=0)
+sigma_by_task = pd.read_csv(DATA_OUT / f"b_sigma_by_task{SUFFIX}.csv", index_col=0)
 
 log_human_minutes_by_task = np.log(official_human_minutes_by_task)
 sem_log_by_task = sigma_by_task["sem_log"].reindex(official_human_minutes_by_task.index)
@@ -114,7 +116,7 @@ def one_replicate(replicate_index: int, condition: str) -> dict:
 
 horizons_by_replicate_by_condition = {}
 for condition in ["metr", "metr+x_param", "x_param_only"]:
-    cache_path = DATA_OUT / f"a_horizons_{condition.replace('+', '_')}.csv"
+    cache_path = DATA_OUT / f"a_horizons_{condition.replace('+', '_')}{SUFFIX}.csv"
     if cache_path.exists():
         horizons_by_replicate_by_condition[condition] = pd.read_csv(cache_path)
         print(f"{condition}: loaded {len(horizons_by_replicate_by_condition[condition])} cached")
@@ -154,7 +156,7 @@ for condition, horizons_by_replicate in horizons_by_replicate_by_condition.items
             "ci_logwidth": np.log(ci_upper / ci_lower),
         })
 ci_by_agent_condition = pd.DataFrame(ci_rows)
-ci_by_agent_condition.to_csv(DATA_OUT / "a_ci_by_agent.csv", index=False)
+ci_by_agent_condition.to_csv(DATA_OUT / f"a_ci_by_agent{SUFFIX}.csv", index=False)
 
 ci_logwidth_per_condition_by_agent = ci_by_agent_condition.pivot(
     index="agent", columns="condition", values="ci_logwidth"
@@ -164,7 +166,7 @@ ci_logwidth_per_condition_by_agent["widening_pct"] = 100 * (
     / ci_logwidth_per_condition_by_agent["metr"] - 1
 )
 # pull in a0's nonparametric widening for the same agents, if present
-a0_ci_path = DATA_OUT / "a0_ci_by_agent.csv"
+a0_ci_path = DATA_OUT / f"a0_ci_by_agent{SUFFIX}.csv"
 if a0_ci_path.exists():
     a0_ci = pd.read_csv(a0_ci_path)
     a0_logwidth = a0_ci.pivot(index="agent", columns="condition", values="ci_logwidth")
@@ -197,7 +199,7 @@ fig = px.scatter(
     labels={"p50_median": "p50 horizon (minutes)", "agent": ""},
 )
 fig.update_layout(height=600)
-fig.write_image(FIGURES / "a_ci_comparison.png", width=850, height=600, scale=2)
+fig.write_image(FIGURES / f"a_ci_comparison{SUFFIX}.png", width=850, height=600, scale=2)
 show(fig)
 
 # %% [markdown]
@@ -225,7 +227,7 @@ doubling_days_summary_by_condition["ci_width_days"] = (
 )
 print(doubling_days_summary_by_condition.round(1).to_string())
 doubling_days_per_condition_by_replicate.to_csv(
-    DATA_OUT / "a_doubling_times.csv", index=False)
+    DATA_OUT / f"a_doubling_times{SUFFIX}.csv", index=False)
 
 fig = px.ecdf(
     doubling_days_per_condition_by_replicate.melt(
@@ -235,7 +237,7 @@ fig = px.ecdf(
           f"({N_BOOT} reps)",
     labels={"doubling_days": "doubling time (days)"},
 )
-fig.write_image(FIGURES / "a_doubling_time.png", width=800, height=450, scale=2)
+fig.write_image(FIGURES / f"a_doubling_time{SUFFIX}.png", width=800, height=450, scale=2)
 show(fig)
 
 # %% [markdown]

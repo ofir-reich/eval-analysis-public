@@ -26,6 +26,11 @@ Our per-task σ makes that correction **slightly larger, not smaller**, than MET
 tasks are a touch noisier than 0.78 (see (b)). Shared fit machinery for (a)/(c)/(d):
 [`metr_fit_helpers.py`](metr_fit_helpers.py), which reproduces METR's published p50/p80 exactly.
 
+Everything below is on **Time Horizon v1.0** (the paper's suite). The whole chain also
+runs on **v1.1** (228 tasks, GPT-4-era, Inspect harness) via `DATASET_VERSION=1-1` — see
+[the v1.1 replication](#v11-replication) at the end, which notably reproduces METR's own
+published Opus 4.6 SIMEX headline (−36%) almost exactly.
+
 ## (a0) — Nonparametric x-bootstrap
 
 **Design:** three bootstrap conditions × 500 replicates, all using METR's own fit code and
@@ -237,3 +242,46 @@ ranges), and SIMEX assumes *independent* noise; the systematic component is (c).
 Code: [`d_simex.py`](d_simex.py) / [notebook](d_simex.ipynb). Outputs:
 [`data/d_simex_curves.csv`](data/d_simex_curves.csv),
 [`data/d_simex_corrections.csv`](data/d_simex_corrections.csv).
+
+## v1.1 replication
+
+Rerunning the whole chain on **Time Horizon v1.1** (228 tasks, GPT-4-era, Inspect harness;
+14 frontier agents) — `DATASET_VERSION=1-1 python {b,a,c,d}_*.py`, outputs suffixed
+`_v1_1`. All Stage-2 conclusions carry over, and one new thing appears because v1.1
+includes the agent METR itself reported on:
+
+| | v1.0 (paper suite) | v1.1 (§7) |
+|---|---|---|
+| (b) HCAST prior | d₀=∞, σ≈0.89 (complete pooling) | d₀=∞, **σ≈0.89** — identical |
+| (b) SWAA prior | d₀≈2.5, s₀≈0.30 | d₀≈2.5, s₀≈0.30 — identical |
+| (a) median frontier p50 CI widening | 13.6% | **12.4%** |
+| (a) doubling-time CI (metr → metr+x) | 52.7 → 54.7 d, median ~flat | 54.2 → 57.0 d, **median 129 → 117 d** |
+| (c) coherent ±1σ̃: horizon | ×2.23 / ×0.45 | ×2.39 / ×0.42 |
+| (c) coherent ±1σ̃: doubling | −6.5% / +7.4% | **−1.3% / +1.5%** |
+| (d) SIMEX newest agent p50 (global / per-task) | Opus 4.5: −16.6 / −18.8% | **Opus 4.6: −34.3 / −35.9%** |
+| (d) SIMEX frontier median p80 (global / per-task) | +29.6 / +33.0% | +37.4 / +43.2% |
+
+Three takeaways:
+
+1. **The (b) noise model is suite-invariant.** HCAST complete-pools to σ≈0.89 and SWAA to
+   s₀≈0.30 on *both* suites — the per-task σ estimates aren't an artifact of the paper's
+   task selection.
+2. **SIMEX reproduces METR's own headline.** v1.1's newest frontier agent is
+   Claude Opus 4.6 — the very agent METR's note highlights. Our global-σ SIMEX gives
+   p50 **−34.3%** (11h59m → 7h53m); METR reported **−36%** (→ 7h38m). That near-exact
+   match validates the whole `metr_fit_helpers` pipeline against METR's published number,
+   and our per-task σ again lands slightly deeper (−35.9%).
+3. **The trend is *even more* robust on v1.1 under a coherent shift** (doubling moves
+   only ±1.5% vs v1.0's ±7%), but the independent-noise bootstrap (a) pulls the
+   doubling-time *median* down ~9% (129 → 117 d) — a larger central effect than v1.0's
+   ~0%, because v1.1's wider horizon range gives x-noise more leverage on the slope. So
+   v1.1 is the case where the x-axis most affects the trend, and it does so as a modest
+   downward bias, not just added width.
+
+![v1.1 SIMEX correction](figures/d_simex_correction_v1_1.png)
+
+![v1.1 shrinkage](figures/b_shrinkage_v1_1.png)
+
+v1.1 figures/data carry the `_v1_1` suffix throughout `figures/` and `data/`. (a0 is not
+rerun for v1.1 — the parametric (a) supersedes its lower bound.) The paired notebooks
+render the v1.0 headline; rerun any `.py` with `DATASET_VERSION=1-1` to regenerate v1.1.

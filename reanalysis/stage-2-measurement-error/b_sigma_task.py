@@ -56,15 +56,17 @@ from scipy import stats
 from scipy.optimize import brentq
 from scipy.special import digamma, polygamma
 
+import metr_fit_helpers as metr
+
 plotly.io.templates.default = "plotly_white"
 pd.set_option("display.max_columns", None, "display.width", 200)
 
 HERE = Path(__file__).parent if "__file__" in dir() else Path.cwd()
-REPO = HERE / ".." / ".."
-REPORT = REPO / "reports" / "time-horizon-1-0"
 FIGURES = HERE / "figures"
 DATA_OUT = HERE / "data"
 FIGURES.mkdir(exist_ok=True), DATA_OUT.mkdir(exist_ok=True)
+SUFFIX = metr.VERSION_SUFFIX   # "" for v1.0, "_v1_1" for v1.1
+print(f"dataset version: {metr.DATASET_VERSION}")
 
 try:  # running under a Jupyter/VS Code kernel?
     get_ipython()  # type: ignore[name-defined]
@@ -91,15 +93,13 @@ METR_SIGMA_ESTIMATE = 1.05    # METR's σ for researcher-estimate tasks
 # are hours-scale, so flooring is negligible for *spread*).
 
 # %%
-runs = pd.read_json(REPORT / "data" / "raw" / "runs.jsonl", lines=True)
+runs = pd.read_json(metr.REPORT / "data" / "raw" / "runs.jsonl", lines=True)
 tasks = runs.groupby("task_id").agg(
     task_source=("task_source", "first"),
     human_source=("human_source", "first"),
     human_minutes=("human_minutes", "first"),
 )
-human_runs_derived = pd.read_csv(
-    HERE / ".." / "stage-1-export-archaeology" / "data" / "human_runs_derived.csv"
-)
+human_runs_derived = pd.read_csv(metr.derived_human_runs_csv())
 successful_runs_with_derived_times = human_runs_derived.query("score_binarized == 1")
 assert set(successful_runs_with_derived_times["derivation"]) == {
     "delta_corrected", "swaa_exact", "uncorrected_rebench"
@@ -138,7 +138,7 @@ fig = px.ecdf(
     labels={"log_time_std": "sample SD of ln(completion minutes)"},
 )
 fig.add_vline(x=METR_SIGMA_BASELINED, line_dash="dash", line_color="gray")
-fig.write_image(FIGURES / "b_sigma_ecdf_by_source.png", width=900, height=500, scale=2)
+fig.write_image(FIGURES / f"b_sigma_ecdf_by_source{SUFFIX}.png", width=900, height=500, scale=2)
 show(fig)
 
 # %% [markdown]
@@ -156,7 +156,7 @@ fig = px.scatter(
             "log_time_std": "sample SD of ln(completion minutes)"},
 )
 fig.add_hline(y=METR_SIGMA_BASELINED, line_dash="dash", line_color="gray")
-fig.write_image(FIGURES / "b_sigma_vs_length.png", width=900, height=500, scale=2)
+fig.write_image(FIGURES / f"b_sigma_vs_length{SUFFIX}.png", width=900, height=500, scale=2)
 show(fig)
 
 # %% [markdown]
@@ -282,7 +282,7 @@ fig.add_shape(type="line", x0=0, y0=0, x1=axis_max, y1=axis_max,
 for prior_sigma, sources_with_prior in prior_by_source.groupby("prior_sigma"):
     fig.add_hline(y=prior_sigma, line_dash="dash", opacity=0.4,
                   annotation_text="s₀ " + "/".join(sources_with_prior.index))
-fig.write_image(FIGURES / "b_shrinkage.png", width=900, height=550, scale=2)
+fig.write_image(FIGURES / f"b_shrinkage{SUFFIX}.png", width=900, height=550, scale=2)
 show(fig)
 
 # %% [markdown]
@@ -331,7 +331,7 @@ fig = px.ecdf(
           "(baselined tasks)",
     labels={"sem": "SEM of ln(human_minutes)"},
 )
-fig.write_image(FIGURES / "b_sem_vs_metr.png", width=900, height=500, scale=2)
+fig.write_image(FIGURES / f"b_sem_vs_metr{SUFFIX}.png", width=900, height=500, scale=2)
 show(fig)
 
 sem_ratio_to_metr = (
@@ -457,7 +457,7 @@ fig = px.ecdf(
 normal_grid = np.linspace(-3, 3, 200)
 fig.add_scatter(x=normal_grid, y=stats.norm.cdf(normal_grid), mode="lines",
                 line=dict(color="black", dash="dash"), name="N(0,1)")
-fig.write_image(FIGURES / "b_within_task_normality.png", width=900, height=500, scale=2)
+fig.write_image(FIGURES / f"b_within_task_normality{SUFFIX}.png", width=900, height=500, scale=2)
 show(fig)
 
 # %% [markdown]
@@ -476,6 +476,6 @@ show(fig)
 # ## Output
 
 # %%
-sigma_by_task.to_csv(DATA_OUT / "b_sigma_by_task.csv")
-print(f"wrote {DATA_OUT / 'b_sigma_by_task.csv'} ({len(sigma_by_task)} tasks)")
+sigma_by_task.to_csv(DATA_OUT / f"b_sigma_by_task{SUFFIX}.csv")
+print(f"wrote {DATA_OUT / f'b_sigma_by_task{SUFFIX}.csv'} ({len(sigma_by_task)} tasks)")
 sigma_by_task.head()

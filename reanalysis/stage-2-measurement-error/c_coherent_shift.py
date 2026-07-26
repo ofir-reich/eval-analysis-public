@@ -53,6 +53,8 @@ HERE = Path(__file__).parent if "__file__" in dir() else Path.cwd()
 FIGURES = HERE / "figures"
 DATA_OUT = HERE / "data"
 FIGURES.mkdir(exist_ok=True), DATA_OUT.mkdir(exist_ok=True)
+SUFFIX = metr.VERSION_SUFFIX   # "" for v1.0, "_v1_1" for v1.1
+print(f"dataset version: {metr.DATASET_VERSION}")
 
 try:
     get_ipython()  # type: ignore[name-defined]
@@ -70,7 +72,7 @@ def show(fig):
 # %%
 runs = metr.load_runs()
 official_human_minutes_by_task = metr.official_human_minutes_by_task(runs)
-sigma_by_task = pd.read_csv(DATA_OUT / "b_sigma_by_task.csv", index_col=0)
+sigma_by_task = pd.read_csv(DATA_OUT / f"b_sigma_by_task{SUFFIX}.csv", index_col=0)
 
 frontier_agents, release_dates, official_fits_by_agent = (
     metr.load_frontier_agents_and_dates()
@@ -135,7 +137,7 @@ scenario_summary["doubling_vs_baseline"] = scenario_summary.apply(
     / baseline_by_quantile.loc[row["quantile"], "doubling_days"], axis=1
 )
 print(scenario_summary.round(3).to_string(index=False))
-scenario_summary.to_csv(DATA_OUT / "c_coherent_shift.csv", index=False)
+scenario_summary.to_csv(DATA_OUT / f"c_coherent_shift{SUFFIX}.csv", index=False)
 
 # %% [markdown]
 # ## The headline: horizons swing hugely; the trend barely moves
@@ -157,7 +159,7 @@ fig = px.bar(
             "scenario": ""},
 )
 fig.add_hline(y=1.0, line_dash="dash", line_color="gray")
-fig.write_image(FIGURES / "c_doubling_sensitivity.png", width=900, height=500, scale=2)
+fig.write_image(FIGURES / f"c_doubling_sensitivity{SUFFIX}.png", width=900, height=500, scale=2)
 show(fig)
 
 # %%
@@ -169,7 +171,7 @@ fig = px.bar(
     labels={"gmean_frontier_horizon_min": "gmean frontier horizon (min, log axis)",
             "scenario": ""},
 )
-fig.write_image(FIGURES / "c_horizon_levels.png", width=900, height=500, scale=2)
+fig.write_image(FIGURES / f"c_horizon_levels{SUFFIX}.png", width=900, height=500, scale=2)
 show(fig)
 
 # %% [markdown]
