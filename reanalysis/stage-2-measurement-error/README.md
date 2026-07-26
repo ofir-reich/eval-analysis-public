@@ -5,14 +5,26 @@ the headline results? METR's hierarchical bootstrap resamples task families, tas
 agent runs, but carries a **fixed** `human_minutes` per task through every replicate: the
 x-axis contributes nothing to their published confidence intervals.
 
-Sub-analyses (a0, b done; c–d planned):
+Sub-analyses (all done):
 
 | | approach | assumption level |
 |---|---|---|
 | **(a0)** [Nonparametric x-bootstrap](#a0--nonparametric-x-bootstrap) | resample *which baseline runs* enter each task's gmean | none (lower bound) |
 | **(b)** [Per-task σ via empirical Bayes](#b--per-task-σ-via-empirical-bayes-shrinkage) | hierarchical estimate of per-task log-time spread, incl. n=1 tasks | parametric |
-| (c) | coherent ±1σ_task shift of all tasks (systematic-error worst case) | parametric |
-| (d) | SIMEX with per-task σ from (b) (refines METR's global-σ version) | parametric |
+| **(a)** [Parametric x-bootstrap](#a--parametric-x-bootstrap-with-per-task-σ) | draw every task's `human_minutes` from LogNormal(·, SEM²_task) | parametric |
+| **(c)** [Coherent ±1σ shift](#c--coherent-1σ-shift-systematic-error-worst-case) | shift *all* tasks the same direction (systematic-error worst case) | parametric |
+| **(d)** [SIMEX with per-task σ](#d--simex-with-per-task-σ) | errors-in-variables *point-estimate* correction vs METR's global σ | parametric |
+
+**Bottom line for Stage 2.** The x-axis matters for the *absolute* horizon numbers but
+barely for the *trend*. The doubling time is remarkably robust: independent x-noise
+averages out (CI widens ~2 days even with every task perturbed, (a)), and a coherent
+systematic bias — even a full ±1σ — moves it under ±10% while swinging absolute horizons
+by ~×2.4 ((c)). The one place the x-axis bites the headline is the errors-in-variables
+*bias* in the p50/p80 point estimates ((d), SIMEX): a real effect METR already flagged.
+Our per-task σ makes that correction **slightly larger, not smaller**, than METR's global
+σ=0.78 — overturning our initial guess — because the frontier-driving HCAST/RE-Bench
+tasks are a touch noisier than 0.78 (see (b)). Shared fit machinery for (a)/(c)/(d):
+[`metr_fit_helpers.py`](metr_fit_helpers.py), which reproduces METR's published p50/p80 exactly.
 
 ## (a0) — Nonparametric x-bootstrap
 
@@ -127,3 +139,101 @@ Code: [`b_sigma_task.py`](b_sigma_task.py) (jupytext; paired executed notebook
 [`data/b_sigma_by_task.csv`](data/b_sigma_by_task.csv) — 170 tasks with raw and
 shrunken σ, SEM of ln(human_minutes), and a `sem_source` flag
 (130 `empirical_shrunken`, 21 `prior_only`, 19 `metr_estimate_assumption`).
+
+## (a) — Parametric x-bootstrap with per-task σ
+
+(a0) could only perturb the 126 tasks with ≥2 successful runs and *froze* the 21
+single-baseline tasks, the researcher estimates, and RE-Bench — disproportionately the
+long, frontier-driving tasks — making it a lower bound. Here we draw **every** task's
+`human_minutes` from LogNormal(ln `human_minutes`, SEM²_task) each replicate, with
+SEM_task = σ̃_task/√n (baselined) or 1.05 (estimates) from (b), combined with METR's
+family→task→run resampling. Same code and 500 replicates as (a0), so they're directly
+comparable.
+
+**Result: the independent-noise floor roughly quadruples, but the trend holds.**
+
+- Per-agent p50 CIs widen by a **median 13.6%** in log-width across the 17 frontier
+  agents (vs a0's 3.8% floor) — the extra width comes almost entirely from noising the
+  long frozen tasks that a0 couldn't touch. The most-affected agents shift too
+  (Grok 4, gpt-3.5-turbo-instruct, Claude 4.1 Opus lead now, not a0's o1-preview).
+- The **doubling-time** 95% CI: [171.7, 224.4] days (`metr`) → [168.8, 223.5]
+  (`metr+x_param`), only ~2 days wider; the pure-x doubling spread is ±5 days. Even with
+  *every* task independently perturbed at full per-task σ, independent x-noise still
+  averages out across the frontier regression.
+
+![parametric CI comparison](figures/a_ci_comparison.png)
+
+![parametric doubling time](figures/a_doubling_time.png)
+
+Code: [`a_parametric_xboot.py`](a_parametric_xboot.py) / [notebook](a_parametric_xboot.ipynb).
+Outputs: [`data/a_ci_by_agent.csv`](data/a_ci_by_agent.csv),
+[`data/a_doubling_times.csv`](data/a_doubling_times.csv).
+
+## (c) — Coherent ±1σ shift (systematic-error worst case)
+
+The bootstraps ((a0)/(a)) treat x-noise as *independent* across tasks, so it averages
+out. A **systematic** error — every task biased the same direction (baseliner
+selection, a shared convention, the flooring scheme) — does not. We bound it by shifting
+*all* tasks' `human_minutes` coherently by ±1 σ̃_task in log space and refitting.
+
+**Result: absolute horizons swing hugely; the trend barely moves.**
+
+- A coherent ±1σ̃ bias multiplies the frontier geo-mean p50 horizon by **×2.23 / ×0.45**
+  (16.4 min → 36.7 / 7.4 min): the *absolute* horizon is extremely sensitive to any
+  systematic error in the baseline times.
+- But the **doubling time** moves only **−6.5% / +7.4%** (201 → 188 / 216 days), because
+  a coherent shift is nearly a uniform rescale, which slides log-horizons vertically
+  without changing the slope. The small residual asymmetry is real: the shift is larger
+  for the long HCAST/RE-Bench tasks than for short SWAA, so pushing all tasks *up*
+  steepens the recent frontier slightly (faster doubling).
+- The **p80/p50 ratio is preserved** (0.235–0.255 across scenarios) — a pure shift moves
+  both quantiles by the same factor. This is the systematic-error counterpart to the
+  errors-in-variables *attenuation* in (d), which instead widens the p50/p80 gap.
+
+This is the quantitative hook for **Stage 4**: baseliner selection is precisely a
+coherent shift, and (c) shows it would badly bias the absolute horizon claims while
+sparing the doubling-time trend.
+
+![coherent-shift doubling sensitivity](figures/c_doubling_sensitivity.png)
+
+![coherent-shift horizon levels](figures/c_horizon_levels.png)
+
+Code: [`c_coherent_shift.py`](c_coherent_shift.py) / [notebook](c_coherent_shift.ipynb).
+Output: [`data/c_coherent_shift.csv`](data/c_coherent_shift.csv).
+
+## (d) — SIMEX with per-task σ
+
+Wider CIs aren't the whole story: x-noise *attenuates* the logistic slope, biasing the
+horizon **point estimates**. SIMEX corrects it — add known noise at λ = 0.5…2, watch the
+horizon drift, extrapolate to λ = −1 (zero noise). We run METR's own global-σ version and
+our per-task-σ version through the identical pipeline. (Validation: the λ=0 fits
+reproduce METR's published p50/p80 exactly.)
+
+**Result: per-task σ makes the correction slightly *larger*, overturning our initial
+guess.**
+
+- For the newest frontier agent (Claude Opus 4.5), SIMEX moves p50 **−16.6%**
+  (global σ) → **−18.8%** (per-task σ), and p80 **+24.0% → +26.3%**. The direction and
+  rough magnitude reproduce METR's reported Opus 4.6 result (p50 −36% on the larger
+  private suite; p80 +9%) — the p50 magnitude differs because it's a different agent and
+  the v1.0 suite.
+- Across all 17 frontier agents the median correction is p50 +4.1% → +3.4%,
+  p80 +29.6% → +33.0% (global → per-task): per-task σ deepens the p50 haircut and
+  enlarges the p80 rise for the recent, long-horizon agents. The reason is exactly the
+  (b) finding: HCAST/RE-Bench noise (σ̃≈0.89) exceeds METR's global 0.78, and those tasks
+  drive the frontier. **So METR's published SIMEX, if anything, slightly *understates*
+  the errors-in-variables correction — not overstates it, as we'd hypothesised.**
+- The p50/p80 split is the errors-in-variables signature: attenuation flattens the slope,
+  which lowers p50 and raises p80, widening the gap — the mechanism behind the p50/p80
+  divergence noted in the intro.
+
+Caveat: the quadratic extrapolant to λ=−1 is itself uncertain (METR emphasised wide
+ranges), and SIMEX assumes *independent* noise; the systematic component is (c).
+
+![SIMEX correction across agents](figures/d_simex_correction.png)
+
+![SIMEX extrapolation curves](figures/d_simex_curves.png)
+
+Code: [`d_simex.py`](d_simex.py) / [notebook](d_simex.ipynb). Outputs:
+[`data/d_simex_curves.csv`](data/d_simex_curves.csv),
+[`data/d_simex_corrections.csv`](data/d_simex_corrections.csv).
