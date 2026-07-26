@@ -366,6 +366,113 @@ print(estimate_check.round(2))
 print(f"METR's assumed estimate σ: {METR_SIGMA_ESTIMATE}")
 
 # %% [markdown]
+# ## Robustness (a): does the $d_0 = \infty$ boundary matter downstream?
+#
+# The HCAST $d_0 = \infty$ is a point estimate on the boundary of the parameter space.
+# A bootstrap over the 60 spread-observable HCAST tasks refits finite heterogeneity in
+# only ~⅓ of resamples (median $d_0 \approx 11$ among those) — so the data are also
+# compatible with moderate heterogeneity, and a full-Bayes posterior on $d_0$ would keep
+# mass on finite values. Does that ambiguity change what feeds (c)/(d)? Recompute the
+# HCAST shrunken σ̃ (holding $s_0 = 0.89$) under $d_0 \in \{\infty, 20, 10\}$:
+
+# %%
+def shrink_sigma(sample_std, degrees_of_freedom, prior_degrees_of_freedom, prior_sigma):
+    if np.isinf(prior_degrees_of_freedom):
+        return np.full_like(np.asarray(sample_std, dtype=float), prior_sigma)
+    return np.sqrt(
+        (prior_degrees_of_freedom * prior_sigma ** 2
+         + degrees_of_freedom * np.nan_to_num(sample_std) ** 2)
+        / (prior_degrees_of_freedom + degrees_of_freedom)
+    )
+
+
+hcast_tasks = sigma_by_task.query("task_source == 'HCAST'")
+hcast_prior_sigma = prior_by_source.loc["HCAST", "prior_sigma"]
+sigma_by_alternative_d0 = pd.DataFrame({
+    f"sigma_shrunken_d0={d0}": shrink_sigma(
+        hcast_tasks["log_time_std"], hcast_tasks["degrees_of_freedom"],
+        d0, hcast_prior_sigma,
+    )
+    for d0 in [np.inf, 20, 10]
+}, index=hcast_tasks.index)
+print("HCAST shrunken σ̃ across the 97 tasks, under alternative prior strengths:")
+print(sigma_by_alternative_d0.describe().loc[["mean", "50%", "max"]].round(3))
+print("\nThe most-affected tasks (largest raw s_j) — the only ones that move:")
+most_affected_hcast_tasks = hcast_tasks["log_time_std"].nlargest(4).index
+print(sigma_by_alternative_d0.loc[most_affected_hcast_tasks].round(3))
+
+# %% [markdown]
+# The **median is fixed at $s_0$** and the mean moves ~1% (0.889 → 0.901) across
+# $d_0 \in \{\infty, 20, 10\}$. Only a handful of high-$s_j$ tasks move materially, and
+# only at $d_0 = 10$ (the low end of what the bootstrap supports): the single most
+# extreme task goes 0.89 → 1.30. So the *aggregate scale* that (c)/(d) consume is
+# insensitive to the boundary; individual tail tasks are not — but per-task independent
+# x-noise largely averages out across ~130 tasks in the horizon fit (this is exactly
+# what the nonparametric (a0) bootstrap already showed: ±2.4 days on doubling time).
+# The $d_0 = \infty$ result is best read as a statement about the *story* — the data
+# cannot resolve task-to-task heterogeneity in σ from n=2–3 runs — rather than a claim
+# that every task's true σ is identical.
+
+# %% [markdown]
+# ## Robustness (b): is the χ² sampling model (within-task log-normality) violated?
+#
+# The moment fit attributes observed dispersion of $s_j^2$ to sampling noise via the
+# χ² model, which assumes within-task **log-times are normal**. If they are heavier-
+# tailed, $s_j^2$ carries *more* sampling dispersion than credited — which would push
+# the fit *toward* $d_0 = \infty$, not away from it. Check on the four HCAST tasks with
+# enough runs (n ≥ 9) to see a within-task distribution:
+
+# %%
+high_n_hcast_tasks = (
+    successful_runs_with_derived_times
+    .query("task_source == 'HCAST'")
+    .groupby("task_id")
+    .filter(lambda task_runs: len(task_runs) >= 9)
+)
+normality_by_task_rows = []
+for task_id, task_runs in high_n_hcast_tasks.groupby("task_id"):
+    log_times = np.log(task_runs["minutes_derived"].to_numpy())
+    normality_by_task_rows.append({
+        "task_id": task_id,
+        "n_successful_runs": len(log_times),
+        "shapiro_p": stats.shapiro(log_times).pvalue,
+        "excess_kurtosis": stats.kurtosis(log_times),
+        "skew": stats.skew(log_times),
+    })
+normality_by_high_n_task = pd.DataFrame(normality_by_task_rows).set_index("task_id")
+print(normality_by_high_n_task.round(3))
+
+# %%
+standardized_log_times = pd.concat([
+    task_runs.assign(standardized_log_time=stats.zscore(
+        np.log(task_runs["minutes_derived"]), ddof=1))
+    for _, task_runs in high_n_hcast_tasks.groupby("task_id")
+])
+fig = px.ecdf(
+    standardized_log_times, x="standardized_log_time", color="task_id",
+    title="Within-task log-time shape vs normal (high-n HCAST tasks; "
+          "black dashed = standard normal CDF)",
+    labels={"standardized_log_time": "z-scored ln(completion minutes)"},
+)
+normal_grid = np.linspace(-3, 3, 200)
+fig.add_scatter(x=normal_grid, y=stats.norm.cdf(normal_grid), mode="lines",
+                line=dict(color="black", dash="dash"), name="N(0,1)")
+fig.write_image(FIGURES / "b_within_task_normality.png", width=900, height=500, scale=2)
+show(fig)
+
+# %% [markdown]
+# Two of four are close to normal; two (`orm_somebugs` n=57, excess kurtosis +9.5;
+# `pico_ctf/166` n=19, +3.5) are markedly **heavier-tailed** than lognormal. Heavy tails
+# inflate the true sampling dispersion of $s_j^2$ beyond the χ² model — so the −0.12
+# dispersion *deficit* that drove $d_0 = \infty$ is, if anything, understated. **The
+# complete-pooling result is robust to this check: correcting the sampling model would
+# reinforce it, not overturn it.** The caveat heavy tails *do* introduce is separate:
+# σ (a second moment) is an incomplete summary of these distributions, and the
+# CLT-based SEM = σ̃/√n understates gmean uncertainty at small n — a point in favour of
+# the nonparametric bootstrap in (a0) as the honest floor, and a reason to read the
+# parametric (c)/(d) as a smooth complement rather than a replacement.
+
+# %% [markdown]
 # ## Output
 
 # %%

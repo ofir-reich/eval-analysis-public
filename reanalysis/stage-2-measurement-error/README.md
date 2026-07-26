@@ -94,6 +94,28 @@ HCAST/RE-Bench (the frontier-driving tasks) and much less on SWAA and possibly
 estimates — whether METR's −26…−36% SIMEX haircut grows or shrinks under per-task σ is
 exactly what (d) will measure.
 
+**Two robustness checks on the stark HCAST result:**
+
+- **(a) The $d_0 = \infty$ boundary doesn't move the numbers (c)/(d) consume.** A
+  bootstrap over the 60 HCAST tasks detects finite heterogeneity in only ~⅓ of
+  resamples (median $d_0 \approx 11$), so the boundary is a coin-flip and a full-Bayes
+  posterior would keep mass on finite $d_0$. But recomputing shrunken σ̃ under
+  $d_0 \in \{\infty, 20, 10\}$: median fixed at $s_0$, mean shifts ~1%; only a few
+  high-$s_j$ tasks move (the most extreme, 0.89 → 1.30, and only at the implausibly
+  heterogeneous $d_0 = 10$). Since $d_j \le 2$ for 46/60 tasks, every plausible prior
+  gives heavy shrinkage. The result is a statement about the *story* (n=2–3 can't
+  resolve heterogeneity), not the aggregate scale.
+- **(b) Non-normal within-task log-times would *reinforce*, not overturn, the result.**
+  Of four HCAST tasks with n ≥ 9, two are near-normal and two markedly heavier-tailed
+  (`orm_somebugs` n=57, excess kurtosis +9.5; `pico_ctf/166` +3.5). Heavy tails inflate
+  the true sampling dispersion of $s_j^2$ beyond the χ² model — so the −0.12 dispersion
+  *deficit* driving $d_0 = \infty$ is if anything understated. The honest caveat heavy
+  tails leave is separate: σ is an incomplete summary and the CLT SEM = σ̃/√n is
+  optimistic at small n — which is why (a0)'s assumption-free bootstrap remains the
+  reported floor and (c)/(d) are read as smooth complements.
+
+![within-task normality](figures/b_within_task_normality.png)
+
 ![sigma ECDF by source](figures/b_sigma_ecdf_by_source.png)
 
 ![shrinkage](figures/b_shrinkage.png)
