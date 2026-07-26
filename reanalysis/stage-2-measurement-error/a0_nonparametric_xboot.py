@@ -77,7 +77,7 @@ def show(fig):
     """Display inline in interactive sessions; no-op in headless script runs
     (plotly's fallback there opens browser windows — figures are on disk anyway)."""
     if IS_INTERACTIVE:
-        show(fig)
+        fig.show()
 
 N_BOOT = int(os.environ.get("N_BOOT", 500))
 REGULARIZATION = 1e-5          # headline value from reports/time-horizon-1-0/fig_params

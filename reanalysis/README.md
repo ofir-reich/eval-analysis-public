@@ -15,7 +15,7 @@ that uncertainty through to time horizons and doubling times.
 | Stage | Question | Status |
 |---|---|---|
 | [1 — Export archaeology](stage-1-export-archaeology/) | What exactly is in the public export, and can per-run human times be recovered? | ✅ done |
-| [2 — Measurement error](stage-2-measurement-error/) | How does per-task uncertainty in `human_minutes` propagate to horizons and doubling times? | (a0) ✅, (b)–(d) planned |
+| [2 — Measurement error](stage-2-measurement-error/) | How does per-task uncertainty in `human_minutes` propagate to horizons and doubling times? | (a0) ✅, (b) ✅, (c)–(d) planned |
 | 3 — Survival analysis | What happens when failed human baselines are treated as censored observations instead of discarded? | planned |
 | 4 — Cohort selection | Could baseliner self-selection bias task times? (design; needs baseliner IDs from METR) | planned |
 

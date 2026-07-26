@@ -63,7 +63,7 @@ def show(fig):
     """Display inline in interactive sessions; no-op in headless script runs
     (plotly's fallback there opens browser windows — figures are on disk anyway)."""
     if IS_INTERACTIVE:
-        show(fig)
+        fig.show()
 
 runs = pd.read_json(
     REPO / "reports" / "time-horizon-1-0" / "data" / "raw" / "runs.jsonl", lines=True
