@@ -50,9 +50,6 @@ open. Both outcomes are informative.
 (e.g. `baseliner_0417`), enough to tell *same person* from *different person* across tasks.
 No names, demographics, or other attributes needed. That single field is the whole ask.
 
-Happy to work under any arrangement METR prefers, including a restricted or on-premise
-setup with only aggregate results published, and to share results before publication.
-
 ### Nice to have
 
 - A flag distinguishing "gave up" from "hit the time cap", which would let Stage 3 drop its
