@@ -573,24 +573,34 @@ survival_by_task.to_csv(DATA_OUT / f"survival_by_task{SUFFIX}.csv")
 bound_by_all_censored_task.to_csv(DATA_OUT / f"lower_bounds_all_censored{SUFFIX}.csv")
 
 # %%
-fig = px.bar(
+SCENARIO_ORDER = ["published", "censored_mle", "censored_mle + bounds", "max_impute"]
+
+fig = px.scatter(
     scenario_summary, x="scenario", y="gmean_frontier_horizon_min_vs_published",
-    color="quantile", barmode="group",
-    title="Frontier horizon under censoring correction (1.0 = METR's published value)",
+    color="quantile", symbol="quantile",
+    category_orders={"scenario": SCENARIO_ORDER},
+    title="Time horizon under censoring correction<br>"
+          "<sub>1.0 = METR's published value; geometric mean over the "
+          "SOTA-at-release agents</sub>",
     labels={"gmean_frontier_horizon_min_vs_published": "horizon ÷ published horizon",
             "scenario": ""},
 )
+fig.update_traces(marker=dict(size=11))
 fig.add_hline(y=1.0, line_dash="dash", line_color="gray")
 fig.write_image(FIGURES / f"horizon_by_scenario{SUFFIX}.png", width=880, height=500, scale=2)
 show(fig)
 
 # %%
-fig = px.bar(
+fig = px.scatter(
     scenario_summary, x="scenario", y="doubling_days",
-    color="quantile", barmode="group",
-    title="Doubling time under censoring correction",
+    color="quantile", symbol="quantile",
+    category_orders={"scenario": SCENARIO_ORDER},
+    title="Doubling time under censoring correction<br>"
+          "<sub>dotted lines mark the published values; note the narrow vertical "
+          "range</sub>",
     labels={"doubling_days": "doubling time (days)", "scenario": ""},
 )
+fig.update_traces(marker=dict(size=11))
 for quantile_label in ["p50", "p80"]:
     fig.add_hline(
         y=float(published_by_quantile.loc[quantile_label, "doubling_days"]),

@@ -19,28 +19,33 @@ that uncertainty through to time horizons and doubling times.
 | [3 — Survival analysis](stage-3-survival/) | What happens when failed human baselines are treated as censored observations instead of discarded? | ✅ done (v1.0 + v1.1) |
 | [4 — Cohort selection](stage-4-cohort-selection/) | Are long-task baseliners systematically faster, *tilting* the x-axis and hence the trend? | proposal — needs pseudonymous baseliner IDs |
 
-## Results so far, in one paragraph
+## Results so far
 
-The trend survives; the absolute numbers do not. **Nothing we tried moves the doubling
-time by more than ~6%** — random per-task noise averages out across ~170 tasks (its 95%
-interval widens by ~2 days even when *every* task is perturbed at full estimated noise),
-and even a coherent ±1σ bias applied to all tasks at once shifts it under ±10%, because
-rescaling every task slides the horizon-vs-date line without tilting it. The **absolute
-horizons are a different story**: the same coherent ±1σ bias multiplies them by ×2.4 or
-×0.45, and two specific corrections move them substantially. METR's own SIMEX
-errors-in-variables correction *lowers* the most capable agent's 50%-horizon (−19% on
-v1.0, −36% on v1.1, the latter matching their published figure) and raises every agent's
-80%-horizon by 25–40%; our never-before-applied censoring correction pushes the other way,
-*raising* the 50%-horizon by 23–45% by treating the 28% of human baseline attempts that
-failed as right-censored rather than discarding them. These two are comparable in size and
-opposite in sign, and which one wins depends on the suite (net +18% on v1.0, −21% on
-v1.1) — so the honest summary is that the headline horizon carries roughly **±20%
-unresolved uncertainty from the x-axis alone**, while the doubling time is robust. Along
-the way we found that the 16 tasks whose `human_minutes` is a researcher estimate are
-*exactly* the 16 tasks where every human baseliner failed, and that 7 of those published
-values are **provably too low** by arithmetic alone. The one error structure that could
-still move the trend — a length-dependent *tilt* from baseliner self-selection — needs one
-field METR has not released, which is what [Stage 4](stage-4-cohort-selection/) asks for.
+Short version: **the trend is robust, the absolute horizons are not.**
+
+- **The doubling time barely moves — under ~6% in every scenario we tried.** Random
+  per-task noise averages out over ~170 tasks, and even a coherent bias applied to all
+  tasks at once mostly cancels, because rescaling every task slides the horizon-vs-date
+  line without tilting it.
+- **Absolute horizons are a different story.** A coherent ±1σ error in the baseline times
+  moves them by more than a factor of two in either direction, so the headline "time
+  horizon" numbers are far more fragile than the growth rate.
+- **Two real corrections pull in opposite directions.** METR's own errors-in-variables
+  (SIMEX) correction *lowers* the most capable agent's 50%-horizon and raises everyone's
+  80%-horizon; treating failed human baselines as censored rather than discarding them
+  *raises* the 50%-horizon by a comparable amount. Which one wins depends on the task
+  suite, so the headline horizon carries roughly **±20% of unresolved uncertainty from the
+  x-axis alone** — METR's published downward correction is not the last word.
+- **Two things are simply wrong in the published data.** The tasks whose `human_minutes`
+  is a researcher estimate turn out to be *exactly* the tasks where every human baseliner
+  failed — and for several of them the recorded attempt durations already prove the
+  published value is too low, by arithmetic alone.
+- **One open risk could still move the trend:** if the people who took the long tasks were
+  systematically faster, the x-axis is *tilted* rather than shifted, and a tilt does change
+  the slope. Testing that needs one field METR has not released — see
+  [Stage 4](stage-4-cohort-selection/).
+
+Per-stage numbers and figures are in the stage READMEs linked above.
 
 ## Relation to prior work
 
