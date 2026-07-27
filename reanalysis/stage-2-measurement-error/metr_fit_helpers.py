@@ -10,6 +10,7 @@ from pathlib import Path
 
 import numpy as np
 import pandas as pd
+import plotly.express as px
 import yaml
 
 from horizon.utils.logistic import get_x_for_quantile, logistic_regression
@@ -120,3 +121,49 @@ def fit_doubling_days(
     years, log2_horizon = map(np.array, zip(*points))
     slope = np.polyfit(years, log2_horizon, 1)[0]
     return 365.25 / slope
+
+
+def dodged_confidence_interval_figure(
+    ci_by_agent_condition: pd.DataFrame,
+    agents_sorted: list[str],
+    condition_order: list[str],
+    title: str,
+    row_offset: float = 0.26,
+) -> "px.scatter":
+    """Horizontal interval plot, one row per agent, with the conditions **vertically
+    offset** so their intervals sit side by side instead of on top of each other, and
+    intervals drawn as bare capless lines (the style METR uses in the paper).
+
+    Expects columns agent / condition / p50_median / ci_lower / ci_upper.
+    """
+    y_position_by_agent = {agent: index for index, agent in enumerate(agents_sorted)}
+    offset_by_condition = {
+        condition: (position - (len(condition_order) - 1) / 2) * row_offset
+        for position, condition in enumerate(condition_order)
+    }
+    plot_data = ci_by_agent_condition[
+        ci_by_agent_condition["agent"].isin(y_position_by_agent)
+    ].copy()
+    plot_data["y_position"] = (
+        plot_data["agent"].map(y_position_by_agent)
+        + plot_data["condition"].map(offset_by_condition)
+    )
+    plot_data["error_upper"] = plot_data["ci_upper"] - plot_data["p50_median"]
+    plot_data["error_lower"] = plot_data["p50_median"] - plot_data["ci_lower"]
+
+    figure = px.scatter(
+        plot_data, x="p50_median", y="y_position", color="condition",
+        error_x="error_upper", error_x_minus="error_lower", log_x=True,
+        category_orders={"condition": condition_order}, hover_name="agent",
+        title=title,
+        labels={"p50_median": "50%-success time horizon (minutes)", "y_position": ""},
+    )
+    figure.update_traces(marker=dict(size=6), error_x=dict(width=0, thickness=1.6))
+    figure.update_yaxes(
+        tickmode="array",
+        tickvals=list(y_position_by_agent.values()),
+        ticktext=list(y_position_by_agent.keys()),
+        range=[-0.75, len(agents_sorted) - 0.25],
+    )
+    figure.update_layout(legend=dict(orientation="h", y=1.04, x=0))
+    return figure

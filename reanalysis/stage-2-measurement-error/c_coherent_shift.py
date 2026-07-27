@@ -149,28 +149,34 @@ scenario_summary.to_csv(DATA_OUT / f"c_coherent_shift{SUFFIX}.csv", index=False)
 # slope of log-horizon-vs-date almost untouched.
 
 # %%
-doubling_plot_data = scenario_summary.query("scenario != 'baseline'").copy()
-fig = px.bar(
-    doubling_plot_data, x="scenario", y="doubling_vs_baseline",
-    color="quantile", barmode="group",
-    title="Doubling-time sensitivity to a coherent ±1σ̃ / ±1 SEM shift "
-          "(1.0 = unchanged vs baseline)",
+SCENARIO_ORDER = ["−1σ̃ (all tasks)", "−1 SEM (all tasks)", "baseline",
+                  "+1 SEM (all tasks)", "+1σ̃ (all tasks)"]
+
+fig = px.scatter(
+    scenario_summary, x="scenario", y="doubling_vs_baseline",
+    color="quantile", symbol="quantile",
+    category_orders={"scenario": SCENARIO_ORDER},
+    title="Doubling-time sensitivity to a coherent ±1σ̃ / ±1 SEM shift<br>"
+          "<sub>1.0 = unchanged vs baseline; note the narrow vertical range</sub>",
     labels={"doubling_vs_baseline": "doubling time ÷ baseline doubling time",
             "scenario": ""},
 )
+fig.update_traces(marker=dict(size=11))
 fig.add_hline(y=1.0, line_dash="dash", line_color="gray")
 fig.write_image(FIGURES / f"c_doubling_sensitivity{SUFFIX}.png", width=900, height=500, scale=2)
 show(fig)
 
 # %%
-horizon_plot_data = scenario_summary.copy()
-fig = px.bar(
-    horizon_plot_data, x="scenario", y="gmean_frontier_horizon_min",
-    color="quantile", barmode="group", log_y=True,
-    title="Frontier-agent horizon (geo-mean) under each coherent-shift scenario",
-    labels={"gmean_frontier_horizon_min": "gmean frontier horizon (min, log axis)",
+fig = px.scatter(
+    scenario_summary, x="scenario", y="gmean_frontier_horizon_min",
+    color="quantile", symbol="quantile", log_y=True,
+    category_orders={"scenario": SCENARIO_ORDER},
+    title="Time horizon under each coherent-shift scenario<br>"
+          "<sub>geometric mean over the state-of-the-art-at-release agents</sub>",
+    labels={"gmean_frontier_horizon_min": "time horizon (minutes, log axis)",
             "scenario": ""},
 )
+fig.update_traces(marker=dict(size=11))
 fig.write_image(FIGURES / f"c_horizon_levels{SUFFIX}.png", width=900, height=500, scale=2)
 show(fig)
 

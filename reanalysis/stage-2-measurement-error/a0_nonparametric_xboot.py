@@ -57,6 +57,8 @@ from horizon.utils.logistic import get_x_for_quantile, logistic_regression
 from horizon.wrangle.bootstrap import bootstrap_sample
 from horizon.wrangle.out_of_sample_extrapolation import get_frontier_agents
 
+import metr_fit_helpers as metr   # shared figure/fit helpers (see (a)/(c)/(d))
+
 plotly.io.templates.default = "plotly_white"
 pd.set_option("display.max_columns", None, "display.width", 200)
 
@@ -233,24 +235,14 @@ print(f"\nmedian CI log-width widening (frontier agents): "
       f"{ci_widening_by_frontier_agent['widening_pct'].median():.1f}%")
 
 agents_sorted_by_official_p50 = official_fits_by_agent.set_index("agent")["p50"].sort_values().index
-ci_plot_data = ci_by_agent_condition[
-    ci_by_agent_condition["agent"].isin(frontier_agents)
-].copy()
-ci_plot_data["error_upper"] = ci_plot_data["ci_upper"] - ci_plot_data["p50_median"]
-ci_plot_data["error_lower"] = ci_plot_data["p50_median"] - ci_plot_data["ci_lower"]
-ci_plot_data["agent"] = pd.Categorical(
-    ci_plot_data["agent"],
-    [a for a in agents_sorted_by_official_p50 if a in frontier_agents], ordered=True,
+agents_sorted = [
+    agent for agent in agents_sorted_by_official_p50 if agent in frontier_agents
+]
+fig = metr.dodged_confidence_interval_figure(
+    ci_by_agent_condition, agents_sorted, ["metr", "metr+x", "x_only"],
+    title="50%-horizon 95% bootstrap interval — with vs without x-axis resampling",
 )
-fig = px.scatter(
-    ci_plot_data.sort_values("agent"), y="agent", x="p50_median", color="condition",
-    error_x="error_upper", error_x_minus="error_lower",
-    log_x=True,
-    title="p50 horizon, 95% bootstrap CI — with vs without x-axis resampling (frontier agents)",
-    labels={"p50_median": "p50 horizon (minutes)", "agent": ""},
-)
-fig.update_layout(height=600)
-fig.write_image(FIGURES / "a0_ci_comparison.png", width=850, height=600, scale=2)
+fig.write_image(FIGURES / "a0_ci_comparison.png", width=850, height=620, scale=2)
 show(fig)
 
 # %% [markdown]

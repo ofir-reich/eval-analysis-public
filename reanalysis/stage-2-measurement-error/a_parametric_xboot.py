@@ -185,21 +185,14 @@ if "a0_widening_pct" in ci_logwidth_per_condition_by_agent:
 agents_sorted_by_official_p50 = (
     official_fits_by_agent.set_index("agent")["p50"].sort_values().index
 )
-ci_plot_data = ci_by_agent_condition.copy()
-ci_plot_data["error_upper"] = ci_plot_data["ci_upper"] - ci_plot_data["p50_median"]
-ci_plot_data["error_lower"] = ci_plot_data["p50_median"] - ci_plot_data["ci_lower"]
-ci_plot_data["agent"] = pd.Categorical(
-    ci_plot_data["agent"],
-    [a for a in agents_sorted_by_official_p50 if a in frontier_agents], ordered=True,
+agents_sorted = [
+    agent for agent in agents_sorted_by_official_p50 if agent in frontier_agents
+]
+fig = metr.dodged_confidence_interval_figure(
+    ci_by_agent_condition, agents_sorted, ["metr", "metr+x_param", "x_param_only"],
+    title="50%-horizon 95% interval — parametric per-task x-noise vs METR baseline",
 )
-fig = px.scatter(
-    ci_plot_data.sort_values("agent"), y="agent", x="p50_median", color="condition",
-    error_x="error_upper", error_x_minus="error_lower", log_x=True,
-    title="p50 horizon 95% CI — parametric per-task x-noise vs METR baseline (frontier)",
-    labels={"p50_median": "p50 horizon (minutes)", "agent": ""},
-)
-fig.update_layout(height=600)
-fig.write_image(FIGURES / f"a_ci_comparison{SUFFIX}.png", width=850, height=600, scale=2)
+fig.write_image(FIGURES / f"a_ci_comparison{SUFFIX}.png", width=850, height=620, scale=2)
 show(fig)
 
 # %% [markdown]

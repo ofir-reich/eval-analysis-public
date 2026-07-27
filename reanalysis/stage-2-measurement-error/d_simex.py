@@ -196,13 +196,32 @@ print(simex_correction_by_agent[
 ].round(1).to_string(index=False))
 
 # %%
-fig = px.box(
-    frontier_correction, x="quantile", y="pct_change", color="noise_model",
-    title="SIMEX horizon correction across frontier agents — per-task σ vs METR global",
-    labels={"pct_change": "horizon change at λ=−1 (%)", "quantile": ""},
+# The correction is NOT uniform across agents — it depends on where an agent's horizon
+# sits relative to the bulk of the task-length distribution. Plot it against the agent's
+# own uncorrected p50 as a single capability axis, so both quantiles of one agent share x.
+capability_by_agent = (
+    frontier_correction.query("quantile == 'p50' and noise_model == 'per_task (b)'")
+    .set_index("agent")["naive_horizon_min"]
 )
+correction_plot_data = frontier_correction.assign(
+    agent_capability_min=frontier_correction["agent"].map(capability_by_agent)
+)
+fig = px.scatter(
+    correction_plot_data,
+    x="agent_capability_min", y="pct_change",
+    color="quantile", symbol="noise_model", hover_name="agent", log_x=True,
+    title="SIMEX correction depends on the agent, not just on σ<br>"
+          "<sub>p80 rises for every capable agent; p50 flips sign and only bites at the "
+          "top end</sub>",
+    labels={"agent_capability_min":
+            "agent's uncorrected 50%-horizon (minutes, log axis)",
+            "pct_change": "horizon change at λ=−1 (%)",
+            "quantile": "", "noise_model": "σ model"},
+)
+fig.update_traces(marker=dict(size=9))
+fig.update_layout(legend_title_text="")
 fig.add_hline(y=0, line_dash="dash", line_color="gray")
-fig.write_image(FIGURES / f"d_simex_correction{SUFFIX}.png", width=850, height=500, scale=2)
+fig.write_image(FIGURES / f"d_simex_correction{SUFFIX}.png", width=880, height=530, scale=2)
 show(fig)
 
 # %% [markdown]

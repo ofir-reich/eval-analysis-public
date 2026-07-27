@@ -17,7 +17,7 @@ Three escalating tiers:
 
 | tier | method | assumption |
 |---|---|---|
-| 1 | **hard bounds** — gmean of censoring times bounds the true gmean from below | none |
+| 1 | **hard bounds** — the geometric mean of censoring times bounds the true one from below | none |
 | 2 | **Kaplan–Meier** — nonparametric survival of completion time | non-informative censoring |
 | 3 | **censored-lognormal MLE**, σ̃ from [Stage 2(b)](../stage-2-measurement-error/) | lognormal, σ known |
 
@@ -32,7 +32,7 @@ cap**.
 
 And the censoring is concentrated exactly where it does the most damage: human success
 rate falls from 97.5% on sub-minute tasks to **39.9%** at 256–960 min and **20%** beyond
-960 min. The long tasks that determine frontier horizons are the ones whose
+960 min. The long tasks that determine the top-end horizons are the ones whose
 `human_minutes` rests on the most heavily filtered data.
 
 ![success rate by length](figures/success_rate_by_length.png)
@@ -82,7 +82,7 @@ For a per-task point estimate, model completion time as lognormal and take **σ 
 stable even on a task with one success and several censored runs. The censored terms can
 only push μ up, so the correction is one-directional by construction.
 
-**Correction factor (MLE ÷ naive gmean) across the 59 correctable tasks: median 1.47×,
+**Correction factor (MLE ÷ naive geometric mean) across the 59 correctable tasks: median 1.47×,
 75th pct 2.04×, max 9.4×.** On tasks longer than 60 minutes the corrected `human_minutes`
 is **1.41–1.50×** the published value.
 
@@ -102,17 +102,17 @@ the data supports.
 Four x-axis scenarios through METR's own weighted-logistic fit (the `published` scenario
 reproduces their headline p50/p80 exactly):
 
-| scenario | frontier p50 | frontier p80 | newest agent p50 | doubling time |
+| scenario | p50, geo-mean over SOTA-at-release agents | p80, same | Claude Opus 4.5 p50 | doubling time |
 |---|---|---|---|---|
 | `published` | 16.4 min | 4.0 min | 246.8 min | 201.1 d |
 | `max_impute` (crude) | ×1.39 | ×1.43 | ×1.59 | 189.3 d (−5.9%) |
 | `censored_mle` | ×1.30 | ×1.31 | ×1.47 | 192.2 d (−4.5%) |
 | `censored_mle + bounds` | ×1.37 | ×1.46 | ×1.45 | 190.6 d (−5.2%) |
 
-**Frontier horizons rise 30–46%; the newest frontier agent's p50 rises ~45%** (Claude Opus
-4.5: 247 → 357 min). The doubling time *shortens* by about 5% (201 → 191 days) — long
+**Horizons rise 30–46%; the most capable agent's p50 rises ~45%** (Claude Opus 4.5:
+247 → 357 min). The doubling time *shortens* by about 5% (201 → 191 days) — long
 tasks stretch more than short ones, so recent agents gain more than old ones and the
-frontier slope steepens slightly. Consistent with Stage 2: the x-axis moves levels far
+trend slope steepens slightly. Consistent with Stage 2: the x-axis moves levels far
 more than it moves the trend.
 
 ![horizon by scenario](figures/horizon_by_scenario.png)
@@ -122,7 +122,7 @@ more than it moves the trend.
 ## How much rides on the borrowed σ?
 
 σ is the one parameter Tier 3 imports rather than estimates. Rescaling it 0.75× / 1× /
-1.5× (HCAST σ̃ = 0.67 / 0.89 / 1.33) moves the frontier p50 correction to
+1.5× (HCAST $\tilde\sigma$ = 0.67 / 0.89 / 1.33) moves the p50 correction to
 **×1.25 / ×1.30 / ×1.41**. The correction *grows* with σ: a wider distribution makes each
 exact success weaker evidence about the location, so the censored observations dominate
 more.
@@ -134,10 +134,10 @@ is *larger* than 0.89 — making our central estimate the **conservative** one.
 ## Net effect: censoring correction vs SIMEX
 
 These are the two largest known x-axis corrections and they point in **opposite
-directions**. Applying both — the first time that has been done — on each suite's newest
-frontier agent:
+directions**. Applying both — the first time that has been done — to each suite's most
+capable agent:
 
-| correction on newest-agent p50 | v1.0 (Claude Opus 4.5) | v1.1 (Claude Opus 4.6) |
+| correction on most-capable-agent p50 | v1.0 (Claude Opus 4.5) | v1.1 (Claude Opus 4.6) |
 |---|---|---|
 | SIMEX errors-in-variables ([Stage 2d](../stage-2-measurement-error/), per-task σ) | ×0.812 (−18.8%) | ×0.641 (−35.9%) |
 | censoring correction (this stage) | ×1.447 (+44.7%) | ×1.227 (+22.7%) |
@@ -166,8 +166,8 @@ finding replicates, including the structural one:
 | …identical to the HCAST `estimate` set? | **yes** | **yes** |
 | provably understated (Tier 1) | 7/16, median 2.9× | 10/23, median 2.44× |
 | Tier-3 correction factor (median) | 1.47× | 1.54× |
-| frontier p50 | ×1.37 | ×1.27 |
-| newest-agent p50 | ×1.45 | ×1.23 |
+| p50, geo-mean over SOTA-at-release agents | ×1.37 | ×1.27 |
+| most-capable-agent p50 | ×1.45 | ×1.23 |
 | doubling time | −5.2% | −1.8% |
 | σ sensitivity (0.75/1/1.5×) | ×1.25 / ×1.30 / ×1.41 | ×1.18 / ×1.21 / ×1.30 |
 

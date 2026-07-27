@@ -15,7 +15,7 @@ That distinction is what makes this the most consequential open question we have
 Every error structure examined in [Stage 2](../stage-2-measurement-error/) was either
 independent noise, which averages out (perturbing all 170 tasks widened the doubling-time
 CI by ~2 days), or a coherent shift, which moves absolute horizons a lot but the trend
-barely at all (a full ±1σ shift moves the frontier horizon ×2.4 yet the doubling time under
+barely at all (a full ±1σ shift moves the absolute horizon ×2.4 yet the doubling time under
 ±10%, because a uniform rescale slides log-horizons without changing the slope). A
 **length-dependent tilt is the one error structure that changes the slope** — so it bears
 directly on the doubling time and the extrapolated forecasts, which have survived every
