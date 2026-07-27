@@ -125,7 +125,7 @@ for condition in ["metr", "metr+x_param", "x_param_only"]:
         delayed(one_replicate)(i, condition) for i in range(N_BOOT)
     )
     horizons_by_replicate_by_condition[condition] = pd.DataFrame(replicate_results)
-    horizons_by_replicate_by_condition[condition].to_csv(cache_path, index=False)
+    horizons_by_replicate_by_condition[condition].to_csv(cache_path, index=False, float_format=metr.CSV_FLOAT_FORMAT)
     print(f"{condition}: {len(horizons_by_replicate_by_condition[condition])} replicates")
 
 # %% [markdown]
@@ -156,7 +156,7 @@ for condition, horizons_by_replicate in horizons_by_replicate_by_condition.items
             "ci_logwidth": np.log(ci_upper / ci_lower),
         })
 ci_by_agent_condition = pd.DataFrame(ci_rows)
-ci_by_agent_condition.to_csv(DATA_OUT / f"a_ci_by_agent{SUFFIX}.csv", index=False)
+ci_by_agent_condition.to_csv(DATA_OUT / f"a_ci_by_agent{SUFFIX}.csv", index=False, float_format=metr.CSV_FLOAT_FORMAT)
 
 ci_logwidth_per_condition_by_agent = ci_by_agent_condition.pivot(
     index="agent", columns="condition", values="ci_logwidth"
@@ -220,7 +220,7 @@ doubling_days_summary_by_condition["ci_width_days"] = (
 )
 print(doubling_days_summary_by_condition.round(1).to_string())
 doubling_days_per_condition_by_replicate.to_csv(
-    DATA_OUT / f"a_doubling_times{SUFFIX}.csv", index=False)
+    DATA_OUT / f"a_doubling_times{SUFFIX}.csv", index=False, float_format=metr.CSV_FLOAT_FORMAT)
 
 fig = px.ecdf(
     doubling_days_per_condition_by_replicate.melt(

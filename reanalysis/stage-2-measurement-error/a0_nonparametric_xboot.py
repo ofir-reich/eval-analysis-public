@@ -49,13 +49,11 @@ import numpy as np
 import pandas as pd
 import plotly
 import plotly.express as px
-import yaml
 from joblib import Parallel, delayed
 from scipy import stats
 
 from horizon.utils.logistic import get_x_for_quantile, logistic_regression
 from horizon.wrangle.bootstrap import bootstrap_sample
-from horizon.wrangle.out_of_sample_extrapolation import get_frontier_agents
 
 import metr_fit_helpers as metr   # shared figure/fit helpers (see (a)/(c)/(d))
 
@@ -184,21 +182,17 @@ for condition in ["metr", "metr+x", "x_only"]:
         delayed(one_replicate)(i, condition) for i in range(N_BOOT)
     )
     p50_per_agent_by_replicate_by_condition[condition] = pd.DataFrame(replicate_results)
-    p50_per_agent_by_replicate_by_condition[condition].to_csv(cache_path, index=False)
+    p50_per_agent_by_replicate_by_condition[condition].to_csv(cache_path, index=False, float_format=metr.CSV_FLOAT_FORMAT)
     print(f"{condition}: {len(p50_per_agent_by_replicate_by_condition[condition])} replicates")
 
 # %% [markdown]
 # ## Effect on per-agent horizon CIs
 
 # %%
-release_dates = yaml.safe_load(
-    (REPO / "data" / "external" / "release_dates.yaml").read_text()
+frontier_agents, release_dates, official_fits_by_agent = (
+    metr.load_frontier_agents_and_dates()   # sorted, so CSV row order is reproducible
 )
-official_fits_by_agent = pd.read_csv(
-    REPORT / "data" / "wrangled" / "logistic_fits" / "headline.csv"
-)
-frontier_agents = get_frontier_agents(official_fits_by_agent, release_dates, 50)
-print(f"frontier agents ({len(frontier_agents)}):", sorted(frontier_agents))
+print(f"SOTA-at-release agents ({len(frontier_agents)}):", frontier_agents)
 
 ci_rows = []
 for condition, p50_per_agent_by_replicate in p50_per_agent_by_replicate_by_condition.items():
@@ -214,7 +208,7 @@ for condition, p50_per_agent_by_replicate in p50_per_agent_by_replicate_by_condi
             "ci_logwidth": np.log(ci_upper / ci_lower),
         })
 ci_by_agent_condition = pd.DataFrame(ci_rows)
-ci_by_agent_condition.to_csv(DATA_OUT / "a0_ci_by_agent.csv", index=False)
+ci_by_agent_condition.to_csv(DATA_OUT / "a0_ci_by_agent.csv", index=False, float_format=metr.CSV_FLOAT_FORMAT)
 
 ci_logwidth_per_condition_by_agent = ci_by_agent_condition.pivot(
     index="agent", columns="condition", values="ci_logwidth"
@@ -231,7 +225,7 @@ ci_widening_by_frontier_agent = ci_logwidth_per_condition_by_agent.loc[
     ci_logwidth_per_condition_by_agent.index.isin(frontier_agents)
 ].sort_values("widening_pct", ascending=False)
 print(ci_widening_by_frontier_agent.round(1).to_string())
-print(f"\nmedian CI log-width widening (frontier agents): "
+print(f"\nmedian p50 interval widening (SOTA-at-release agents): "
       f"{ci_widening_by_frontier_agent['widening_pct'].median():.1f}%")
 
 agents_sorted_by_official_p50 = official_fits_by_agent.set_index("agent")["p50"].sort_values().index
@@ -288,7 +282,7 @@ doubling_days_summary_by_condition["ci_width_days"] = (
 )
 print(doubling_days_summary_by_condition.round(1).to_string())
 doubling_days_per_condition_by_replicate.to_csv(
-    DATA_OUT / "a0_doubling_times.csv", index=False
+    DATA_OUT / "a0_doubling_times.csv", index=False, float_format=metr.CSV_FLOAT_FORMAT
 )
 
 fig = px.ecdf(

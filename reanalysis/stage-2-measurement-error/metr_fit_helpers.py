@@ -32,6 +32,10 @@ REPORT = REPO / "reports" / f"time-horizon-{DATASET_VERSION}"
 REGULARIZATION = 1e-5          # headline value from reports/time-horizon-*/fig_params
 WEIGHT_COLUMN = "invsqrt_task_weight"
 DEFAULT_QUANTILES = (0.5, 0.8)
+# Round floats on CSV write so re-running a script is byte-stable: BLAS summation order
+# varies run to run and perturbs the last couple of digits, which otherwise shows up as
+# spurious diffs in every committed data file.
+CSV_FLOAT_FORMAT = "%.10g"
 
 
 def derived_human_runs_csv() -> Path:
@@ -86,7 +90,10 @@ def load_frontier_agents_and_dates() -> tuple[list[str], dict, pd.DataFrame]:
     official_fits_by_agent = pd.read_csv(
         REPORT / "data" / "wrangled" / "logistic_fits" / "headline.csv"
     )
-    frontier_agents = get_frontier_agents(official_fits_by_agent, release_dates, 50)
+    # METR returns a set; sort it so downstream row order (and hence every CSV we write)
+    # is reproducible — set iteration order varies between processes under hash
+    # randomisation. Nothing downstream depends on the ordering itself.
+    frontier_agents = sorted(get_frontier_agents(official_fits_by_agent, release_dates, 50))
     return frontier_agents, release_dates, official_fits_by_agent
 
 

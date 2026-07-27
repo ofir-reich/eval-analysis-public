@@ -568,9 +568,9 @@ for column in ["gmean_frontier_horizon_min", "newest_agent_horizon_min", "doubli
         lambda row: row[column] / published_by_quantile.loc[row["quantile"], column], axis=1
     )
 print(scenario_summary.round(3).to_string(index=False))
-scenario_summary.to_csv(DATA_OUT / f"scenario_summary{SUFFIX}.csv", index=False)
-survival_by_task.to_csv(DATA_OUT / f"survival_by_task{SUFFIX}.csv")
-bound_by_all_censored_task.to_csv(DATA_OUT / f"lower_bounds_all_censored{SUFFIX}.csv")
+scenario_summary.to_csv(DATA_OUT / f"scenario_summary{SUFFIX}.csv", index=False, float_format=metr.CSV_FLOAT_FORMAT)
+survival_by_task.to_csv(DATA_OUT / f"survival_by_task{SUFFIX}.csv", float_format=metr.CSV_FLOAT_FORMAT)
+bound_by_all_censored_task.to_csv(DATA_OUT / f"lower_bounds_all_censored{SUFFIX}.csv", float_format=metr.CSV_FLOAT_FORMAT)
 
 # %%
 SCENARIO_ORDER = ["published", "censored_mle", "censored_mle + bounds", "max_impute"]
@@ -658,7 +658,7 @@ for sigma_multiplier in [0.75, 1.0, 1.5]:
 sigma_sensitivity = pd.DataFrame(sigma_sensitivity_rows)
 print("Sensitivity of the censoring correction to the borrowed σ:")
 print(sigma_sensitivity.round(3).to_string(index=False))
-sigma_sensitivity.to_csv(DATA_OUT / f"sigma_sensitivity{SUFFIX}.csv", index=False)
+sigma_sensitivity.to_csv(DATA_OUT / f"sigma_sensitivity{SUFFIX}.csv", index=False, float_format=metr.CSV_FLOAT_FORMAT)
 
 # %% [markdown]
 # ## Net effect: censoring correction vs SIMEX

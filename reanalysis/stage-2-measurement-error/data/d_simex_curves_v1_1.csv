@@ -1,421 +1,421 @@
 noise_model,lambda,agent,quantile,mean_log2_horizon
-per_task (b),0.0,Claude 3 Opus (Inspect),p50,1.9826785692951427
-per_task (b),0.0,Claude 3.5 Sonnet (New) (Inspect),p50,4.359160704332649
-per_task (b),0.0,Claude 3.5 Sonnet (Old) (Inspect),p50,3.510376708117211
-per_task (b),0.0,Claude 3.7 Sonnet (Inspect),p50,5.91621236359729
-per_task (b),0.0,Claude 4 Opus (Inspect),p50,6.649128587523157
-per_task (b),0.0,Claude 4.1 Opus (Inspect),p50,6.6506497437298995
-per_task (b),0.0,Claude Opus 4.5 (Inspect),p50,8.194730234431045
-per_task (b),0.0,Claude Opus 4.6 (Inspect),p50,9.489460306905862
-per_task (b),0.0,GPT-4 0314,p50,1.9954584102038109
-per_task (b),0.0,GPT-4 1106 (Inspect),p50,2.0161250456345523
-per_task (b),0.0,GPT-4 Turbo (Inspect),p50,1.900253163765679
-per_task (b),0.0,GPT-4o (Inspect),p50,2.8055391419210323
-per_task (b),0.0,GPT-5 (Inspect),p50,7.665425298676173
-per_task (b),0.0,GPT-5.1-Codex-Max (Inspect),p50,7.805516210509477
-per_task (b),0.0,GPT-5.2,p50,8.46045303924596
-per_task (b),0.0,GPT-5.3-Codex,p50,8.44927549693632
-per_task (b),0.0,Gemini 3 Pro,p50,7.8094522843373575
-per_task (b),0.0,human,p50,6.7336970538815635
-per_task (b),0.0,o1 (Inspect),p50,5.279158794410452
-per_task (b),0.0,o1-preview,p50,4.345296052578428
-per_task (b),0.0,o3 (Inspect),p50,6.903672610751966
-per_task (b),0.0,Claude 3 Opus (Inspect),p80,-0.6461738908286055
-per_task (b),0.0,Claude 3.5 Sonnet (New) (Inspect),p80,1.3761107918051092
-per_task (b),0.0,Claude 3.5 Sonnet (Old) (Inspect),p80,0.7413652492540136
-per_task (b),0.0,Claude 3.7 Sonnet (Inspect),p80,3.595955930059975
-per_task (b),0.0,Claude 4 Opus (Inspect),p80,4.352599773504491
-per_task (b),0.0,Claude 4.1 Opus (Inspect),p80,4.551870402545402
-per_task (b),0.0,Claude Opus 4.5 (Inspect),p80,5.627332040985494
-per_task (b),0.0,Claude Opus 4.6 (Inspect),p80,6.1266959454559595
-per_task (b),0.0,GPT-4 0314,p80,-0.168835148654448
-per_task (b),0.0,GPT-4 1106 (Inspect),p80,-0.35285603826547207
-per_task (b),0.0,GPT-4 Turbo (Inspect),p80,-0.10790799738307175
-per_task (b),0.0,GPT-4o (Inspect),p80,0.3414267431729614
-per_task (b),0.0,GPT-5 (Inspect),p80,5.2597406670002975
-per_task (b),0.0,GPT-5.1-Codex-Max (Inspect),p80,5.661991799702347
-per_task (b),0.0,GPT-5.2,p80,6.044452017709796
-per_task (b),0.0,GPT-5.3-Codex,p80,5.774507892029558
-per_task (b),0.0,Gemini 3 Pro,p80,5.758698904985673
-per_task (b),0.0,human,p80,3.61693131875495
-per_task (b),0.0,o1 (Inspect),p80,2.825810186493917
-per_task (b),0.0,o1-preview,p80,2.144224172454743
-per_task (b),0.0,o3 (Inspect),p80,4.906005606173148
-per_task (b),0.5,Claude 3 Opus (Inspect),p50,1.864508650796176
-per_task (b),0.5,Claude 3.5 Sonnet (New) (Inspect),p50,4.283326550292688
-per_task (b),0.5,Claude 3.5 Sonnet (Old) (Inspect),p50,3.4197116632920386
-per_task (b),0.5,Claude 3.7 Sonnet (Inspect),p50,5.871974077726627
-per_task (b),0.5,Claude 4 Opus (Inspect),p50,6.6316169555258
-per_task (b),0.5,Claude 4.1 Opus (Inspect),p50,6.622248746863323
-per_task (b),0.5,Claude Opus 4.5 (Inspect),p50,8.325433029622236
-per_task (b),0.5,Claude Opus 4.6 (Inspect),p50,9.816459610723326
-per_task (b),0.5,GPT-4 0314,p50,1.877686215913633
-per_task (b),0.5,GPT-4 1106 (Inspect),p50,1.8956762548938528
-per_task (b),0.5,GPT-4 Turbo (Inspect),p50,1.7708599437630423
-per_task (b),0.5,GPT-4o (Inspect),p50,2.6966999243709067
-per_task (b),0.5,GPT-5 (Inspect),p50,7.729239617387797
-per_task (b),0.5,GPT-5.1-Codex-Max (Inspect),p50,7.870838258451165
-per_task (b),0.5,GPT-5.2,p50,8.630678694212689
-per_task (b),0.5,GPT-5.3-Codex,p50,8.623125987443787
-per_task (b),0.5,Gemini 3 Pro,p50,7.869581555526915
-per_task (b),0.5,human,p50,6.7979929612293155
-per_task (b),0.5,o1 (Inspect),p50,5.219919080450825
-per_task (b),0.5,o1-preview,p50,4.267328309658313
-per_task (b),0.5,o3 (Inspect),p50,6.882122273537488
-per_task (b),0.5,Claude 3 Opus (Inspect),p80,-0.8826767838789304
-per_task (b),0.5,Claude 3.5 Sonnet (New) (Inspect),p80,1.1251754317942901
-per_task (b),0.5,Claude 3.5 Sonnet (Old) (Inspect),p80,0.5001483495056565
-per_task (b),0.5,Claude 3.7 Sonnet (Inspect),p80,3.3648023502202484
-per_task (b),0.5,Claude 4 Opus (Inspect),p80,4.112106192992557
-per_task (b),0.5,Claude 4.1 Opus (Inspect),p80,4.317635002114395
-per_task (b),0.5,Claude Opus 4.5 (Inspect),p80,5.421448394139027
-per_task (b),0.5,Claude Opus 4.6 (Inspect),p80,6.014579162180351
-per_task (b),0.5,GPT-4 0314,p80,-0.40127313113237106
-per_task (b),0.5,GPT-4 1106 (Inspect),p80,-0.5905348847994777
-per_task (b),0.5,GPT-4 Turbo (Inspect),p80,-0.356614263769896
-per_task (b),0.5,GPT-4o (Inspect),p80,0.09974742337729245
-per_task (b),0.5,GPT-5 (Inspect),p80,5.025744101279379
-per_task (b),0.5,GPT-5.1-Codex-Max (Inspect),p80,5.412706610013844
-per_task (b),0.5,GPT-5.2,p80,5.840194417271867
-per_task (b),0.5,GPT-5.3-Codex,p80,5.576532830768219
-per_task (b),0.5,Gemini 3 Pro,p80,5.497399707649254
-per_task (b),0.5,human,p80,3.4218777985675293
-per_task (b),0.5,o1 (Inspect),p80,2.58598689919944
-per_task (b),0.5,o1-preview,p80,1.9023945521021677
-per_task (b),0.5,o3 (Inspect),p80,4.65664243987484
-per_task (b),1.0,Claude 3 Opus (Inspect),p50,1.7330060103086455
-per_task (b),1.0,Claude 3.5 Sonnet (New) (Inspect),p50,4.205345725316839
-per_task (b),1.0,Claude 3.5 Sonnet (Old) (Inspect),p50,3.317220391677157
-per_task (b),1.0,Claude 3.7 Sonnet (Inspect),p50,5.838561994755939
-per_task (b),1.0,Claude 4 Opus (Inspect),p50,6.6367058444036795
-per_task (b),1.0,Claude 4.1 Opus (Inspect),p50,6.6196925465603735
-per_task (b),1.0,Claude Opus 4.5 (Inspect),p50,8.492714156823219
-per_task (b),1.0,Claude Opus 4.6 (Inspect),p50,10.143626348550423
-per_task (b),1.0,GPT-4 0314,p50,1.739854554421363
-per_task (b),1.0,GPT-4 1106 (Inspect),p50,1.7563821436731226
-per_task (b),1.0,GPT-4 Turbo (Inspect),p50,1.6177949050063056
-per_task (b),1.0,GPT-4o (Inspect),p50,2.571592018384915
-per_task (b),1.0,GPT-5 (Inspect),p50,7.821066633648502
-per_task (b),1.0,GPT-5.1-Codex-Max (Inspect),p50,7.968509538048436
-per_task (b),1.0,GPT-5.2,p50,8.821438176536807
-per_task (b),1.0,GPT-5.3-Codex,p50,8.813704577585177
-per_task (b),1.0,Gemini 3 Pro,p50,7.967601580172
-per_task (b),1.0,human,p50,6.851875993750833
-per_task (b),1.0,o1 (Inspect),p50,5.1648785758621605
-per_task (b),1.0,o1-preview,p50,4.182455784072371
-per_task (b),1.0,o3 (Inspect),p50,6.8895864263733495
-per_task (b),1.0,Claude 3 Opus (Inspect),p80,-1.1375594758735508
-per_task (b),1.0,Claude 3.5 Sonnet (New) (Inspect),p80,0.863449649128824
-per_task (b),1.0,Claude 3.5 Sonnet (Old) (Inspect),p80,0.22439846082092918
-per_task (b),1.0,Claude 3.7 Sonnet (Inspect),p80,3.1137875776168245
-per_task (b),1.0,Claude 4 Opus (Inspect),p80,3.8593270352005606
-per_task (b),1.0,Claude 4.1 Opus (Inspect),p80,4.065840826256174
-per_task (b),1.0,Claude Opus 4.5 (Inspect),p80,5.220301165906855
-per_task (b),1.0,Claude Opus 4.6 (Inspect),p80,5.921258623842138
-per_task (b),1.0,GPT-4 0314,p80,-0.6574029390931816
-per_task (b),1.0,GPT-4 1106 (Inspect),p80,-0.858368301073641
-per_task (b),1.0,GPT-4 Turbo (Inspect),p80,-0.6424251028912213
-per_task (b),1.0,GPT-4o (Inspect),p80,-0.17096238188698276
-per_task (b),1.0,GPT-5 (Inspect),p80,4.806718143964554
-per_task (b),1.0,GPT-5.1-Codex-Max (Inspect),p80,5.196511813548581
-per_task (b),1.0,GPT-5.2,p80,5.671499919427525
-per_task (b),1.0,GPT-5.3-Codex,p80,5.407197369484066
-per_task (b),1.0,Gemini 3 Pro,p80,5.273731364101436
-per_task (b),1.0,human,p80,3.2508214203034713
-per_task (b),1.0,o1 (Inspect),p80,2.34071462484717
-per_task (b),1.0,o1-preview,p80,1.6347640152696143
-per_task (b),1.0,o3 (Inspect),p80,4.4190229922601905
-per_task (b),1.5,Claude 3 Opus (Inspect),p50,1.662683142253326
-per_task (b),1.5,Claude 3.5 Sonnet (New) (Inspect),p50,4.144931731977438
-per_task (b),1.5,Claude 3.5 Sonnet (Old) (Inspect),p50,3.2533434503775336
-per_task (b),1.5,Claude 3.7 Sonnet (Inspect),p50,5.814761921669342
-per_task (b),1.5,Claude 4 Opus (Inspect),p50,6.650389315571591
-per_task (b),1.5,Claude 4.1 Opus (Inspect),p50,6.6286069545298485
-per_task (b),1.5,Claude Opus 4.5 (Inspect),p50,8.657068302156983
-per_task (b),1.5,Claude Opus 4.6 (Inspect),p50,10.41873378440866
-per_task (b),1.5,GPT-4 0314,p50,1.661508783447363
-per_task (b),1.5,GPT-4 1106 (Inspect),p50,1.6760403382792892
-per_task (b),1.5,GPT-4 Turbo (Inspect),p50,1.533416703840003
-per_task (b),1.5,GPT-4o (Inspect),p50,2.4890974567799535
-per_task (b),1.5,GPT-5 (Inspect),p50,7.928935009381147
-per_task (b),1.5,GPT-5.1-Codex-Max (Inspect),p50,8.083596674746653
-per_task (b),1.5,GPT-5.2,p50,9.02938452115398
-per_task (b),1.5,GPT-5.3-Codex,p50,9.012530638688833
-per_task (b),1.5,Gemini 3 Pro,p50,8.083371394041476
-per_task (b),1.5,human,p50,6.909571021861921
-per_task (b),1.5,o1 (Inspect),p50,5.120538710884689
-per_task (b),1.5,o1-preview,p50,4.113232445975376
-per_task (b),1.5,o3 (Inspect),p50,6.911927243259422
-per_task (b),1.5,Claude 3 Opus (Inspect),p80,-1.257507393036228
-per_task (b),1.5,Claude 3.5 Sonnet (New) (Inspect),p80,0.6469921712587666
-per_task (b),1.5,Claude 3.5 Sonnet (Old) (Inspect),p80,0.07036762387997093
-per_task (b),1.5,Claude 3.7 Sonnet (Inspect),p80,2.886407297507251
-per_task (b),1.5,Claude 4 Opus (Inspect),p80,3.652570238629181
-per_task (b),1.5,Claude 4.1 Opus (Inspect),p80,3.842331254273114
-per_task (b),1.5,Claude Opus 4.5 (Inspect),p80,5.070137145923041
-per_task (b),1.5,Claude Opus 4.6 (Inspect),p80,5.8746528222560075
-per_task (b),1.5,GPT-4 0314,p80,-0.8002934748781451
-per_task (b),1.5,GPT-4 1106 (Inspect),p80,-1.0033953325454839
-per_task (b),1.5,GPT-4 Turbo (Inspect),p80,-0.7896490892632039
-per_task (b),1.5,GPT-4o (Inspect),p80,-0.34442751600869925
-per_task (b),1.5,GPT-5 (Inspect),p80,4.615357362499871
-per_task (b),1.5,GPT-5.1-Codex-Max (Inspect),p80,5.010662595852508
-per_task (b),1.5,GPT-5.2,p80,5.529232334144082
-per_task (b),1.5,GPT-5.3-Codex,p80,5.272958098133269
-per_task (b),1.5,Gemini 3 Pro,p80,5.083509853441706
-per_task (b),1.5,human,p80,3.1011665140835643
-per_task (b),1.5,o1 (Inspect),p80,2.126886167920749
-per_task (b),1.5,o1-preview,p80,1.4431485204260233
-per_task (b),1.5,o3 (Inspect),p80,4.201766609195897
-per_task (b),2.0,Claude 3 Opus (Inspect),p50,1.5402329238399588
-per_task (b),2.0,Claude 3.5 Sonnet (New) (Inspect),p50,4.078762941182659
-per_task (b),2.0,Claude 3.5 Sonnet (Old) (Inspect),p50,3.160257401711289
-per_task (b),2.0,Claude 3.7 Sonnet (Inspect),p50,5.797679703882816
-per_task (b),2.0,Claude 4 Opus (Inspect),p50,6.675990873745743
-per_task (b),2.0,Claude 4.1 Opus (Inspect),p50,6.649026231850692
-per_task (b),2.0,Claude Opus 4.5 (Inspect),p50,8.8248766986253
-per_task (b),2.0,Claude Opus 4.6 (Inspect),p50,10.76144423385344
-per_task (b),2.0,GPT-4 0314,p50,1.5475959142116578
-per_task (b),2.0,GPT-4 1106 (Inspect),p50,1.5563171879027946
-per_task (b),2.0,GPT-4 Turbo (Inspect),p50,1.4026502624986126
-per_task (b),2.0,GPT-4o (Inspect),p50,2.3804664768570265
-per_task (b),2.0,GPT-5 (Inspect),p50,8.033979004215563
-per_task (b),2.0,GPT-5.1-Codex-Max (Inspect),p50,8.203885789891823
-per_task (b),2.0,GPT-5.2,p50,9.231193091708269
-per_task (b),2.0,GPT-5.3-Codex,p50,9.205808947165885
-per_task (b),2.0,Gemini 3 Pro,p50,8.19105797724335
-per_task (b),2.0,human,p50,6.992721588761578
-per_task (b),2.0,o1 (Inspect),p50,5.077167832800426
-per_task (b),2.0,o1-preview,p50,4.036196067542713
-per_task (b),2.0,o3 (Inspect),p50,6.945789625564789
-per_task (b),2.0,Claude 3 Opus (Inspect),p80,-1.5116051790515466
-per_task (b),2.0,Claude 3.5 Sonnet (New) (Inspect),p80,0.39891545832002145
-per_task (b),2.0,Claude 3.5 Sonnet (Old) (Inspect),p80,-0.20551369622588908
-per_task (b),2.0,Claude 3.7 Sonnet (Inspect),p80,2.655994812500369
-per_task (b),2.0,Claude 4 Opus (Inspect),p80,3.4266598023018897
-per_task (b),2.0,Claude 4.1 Opus (Inspect),p80,3.618410170755594
-per_task (b),2.0,Claude Opus 4.5 (Inspect),p80,4.9178812241352405
-per_task (b),2.0,Claude Opus 4.6 (Inspect),p80,5.788798056227531
-per_task (b),2.0,GPT-4 0314,p80,-1.0211550104758855
-per_task (b),2.0,GPT-4 1106 (Inspect),p80,-1.2396141314360776
-per_task (b),2.0,GPT-4 Turbo (Inspect),p80,-1.0399205764120465
-per_task (b),2.0,GPT-4o (Inspect),p80,-0.5871522382413776
-per_task (b),2.0,GPT-5 (Inspect),p80,4.440492428635984
-per_task (b),2.0,GPT-5.1-Codex-Max (Inspect),p80,4.834410370081276
-per_task (b),2.0,GPT-5.2,p80,5.399519727162277
-per_task (b),2.0,GPT-5.3-Codex,p80,5.138797325113538
-per_task (b),2.0,Gemini 3 Pro,p80,4.921484737379736
-per_task (b),2.0,human,p80,2.9274317565900123
-per_task (b),2.0,o1 (Inspect),p80,1.8793439160041425
-per_task (b),2.0,o1-preview,p80,1.1694660784935351
-per_task (b),2.0,o3 (Inspect),p80,3.9877436232154975
-metr_global,0.0,Claude 3 Opus (Inspect),p50,1.9826785692951427
-metr_global,0.0,Claude 3.5 Sonnet (New) (Inspect),p50,4.359160704332649
-metr_global,0.0,Claude 3.5 Sonnet (Old) (Inspect),p50,3.510376708117211
-metr_global,0.0,Claude 3.7 Sonnet (Inspect),p50,5.91621236359729
-metr_global,0.0,Claude 4 Opus (Inspect),p50,6.649128587523157
-metr_global,0.0,Claude 4.1 Opus (Inspect),p50,6.6506497437298995
-metr_global,0.0,Claude Opus 4.5 (Inspect),p50,8.194730234431045
-metr_global,0.0,Claude Opus 4.6 (Inspect),p50,9.489460306905862
-metr_global,0.0,GPT-4 0314,p50,1.9954584102038109
-metr_global,0.0,GPT-4 1106 (Inspect),p50,2.0161250456345523
-metr_global,0.0,GPT-4 Turbo (Inspect),p50,1.900253163765679
-metr_global,0.0,GPT-4o (Inspect),p50,2.8055391419210323
-metr_global,0.0,GPT-5 (Inspect),p50,7.665425298676173
-metr_global,0.0,GPT-5.1-Codex-Max (Inspect),p50,7.805516210509477
-metr_global,0.0,GPT-5.2,p50,8.46045303924596
-metr_global,0.0,GPT-5.3-Codex,p50,8.44927549693632
-metr_global,0.0,Gemini 3 Pro,p50,7.8094522843373575
-metr_global,0.0,human,p50,6.7336970538815635
-metr_global,0.0,o1 (Inspect),p50,5.279158794410452
-metr_global,0.0,o1-preview,p50,4.345296052578428
-metr_global,0.0,o3 (Inspect),p50,6.903672610751966
-metr_global,0.0,Claude 3 Opus (Inspect),p80,-0.6461738908286055
-metr_global,0.0,Claude 3.5 Sonnet (New) (Inspect),p80,1.3761107918051092
-metr_global,0.0,Claude 3.5 Sonnet (Old) (Inspect),p80,0.7413652492540136
-metr_global,0.0,Claude 3.7 Sonnet (Inspect),p80,3.595955930059975
-metr_global,0.0,Claude 4 Opus (Inspect),p80,4.352599773504491
-metr_global,0.0,Claude 4.1 Opus (Inspect),p80,4.551870402545402
-metr_global,0.0,Claude Opus 4.5 (Inspect),p80,5.627332040985494
-metr_global,0.0,Claude Opus 4.6 (Inspect),p80,6.1266959454559595
-metr_global,0.0,GPT-4 0314,p80,-0.168835148654448
-metr_global,0.0,GPT-4 1106 (Inspect),p80,-0.35285603826547207
-metr_global,0.0,GPT-4 Turbo (Inspect),p80,-0.10790799738307175
-metr_global,0.0,GPT-4o (Inspect),p80,0.3414267431729614
-metr_global,0.0,GPT-5 (Inspect),p80,5.2597406670002975
-metr_global,0.0,GPT-5.1-Codex-Max (Inspect),p80,5.661991799702347
-metr_global,0.0,GPT-5.2,p80,6.044452017709796
-metr_global,0.0,GPT-5.3-Codex,p80,5.774507892029558
-metr_global,0.0,Gemini 3 Pro,p80,5.758698904985673
-metr_global,0.0,human,p80,3.61693131875495
-metr_global,0.0,o1 (Inspect),p80,2.825810186493917
-metr_global,0.0,o1-preview,p80,2.144224172454743
-metr_global,0.0,o3 (Inspect),p80,4.906005606173148
-metr_global,0.5,Claude 3 Opus (Inspect),p50,1.8816104201251667
-metr_global,0.5,Claude 3.5 Sonnet (New) (Inspect),p50,4.289473058537781
-metr_global,0.5,Claude 3.5 Sonnet (Old) (Inspect),p50,3.4299963859327693
-metr_global,0.5,Claude 3.7 Sonnet (Inspect),p50,5.8712564873038176
-metr_global,0.5,Claude 4 Opus (Inspect),p50,6.627897916270676
-metr_global,0.5,Claude 4.1 Opus (Inspect),p50,6.618687613982836
-metr_global,0.5,Claude Opus 4.5 (Inspect),p50,8.314326124224236
-metr_global,0.5,Claude Opus 4.6 (Inspect),p50,9.798069265385195
-metr_global,0.5,GPT-4 0314,p50,1.896826604434278
-metr_global,0.5,GPT-4 1106 (Inspect),p50,1.9138881339044895
-metr_global,0.5,GPT-4 Turbo (Inspect),p50,1.7918304801285123
-metr_global,0.5,GPT-4o (Inspect),p50,2.7112258529781963
-metr_global,0.5,GPT-5 (Inspect),p50,7.720700419981387
-metr_global,0.5,GPT-5.1-Codex-Max (Inspect),p50,7.862040541023223
-metr_global,0.5,GPT-5.2,p50,8.618083170701265
-metr_global,0.5,GPT-5.3-Codex,p50,8.610357241480108
-metr_global,0.5,Gemini 3 Pro,p50,7.860965986458785
-metr_global,0.5,human,p50,6.787857209780844
-metr_global,0.5,o1 (Inspect),p50,5.222113733295357
-metr_global,0.5,o1-preview,p50,4.274305909113761
-metr_global,0.5,o3 (Inspect),p50,6.877606203973929
-metr_global,0.5,Claude 3 Opus (Inspect),p80,-0.8477968912701259
-metr_global,0.5,Claude 3.5 Sonnet (New) (Inspect),p80,1.1517023881836292
-metr_global,0.5,Claude 3.5 Sonnet (Old) (Inspect),p80,0.531664468225829
-metr_global,0.5,Claude 3.7 Sonnet (Inspect),p80,3.3833004595060654
-metr_global,0.5,Claude 4 Opus (Inspect),p80,4.127387192149526
-metr_global,0.5,Claude 4.1 Opus (Inspect),p80,4.332049274794058
-metr_global,0.5,Claude Opus 4.5 (Inspect),p80,5.429466620954457
-metr_global,0.5,Claude Opus 4.6 (Inspect),p80,6.017756467885948
-metr_global,0.5,GPT-4 0314,p80,-0.363784200868549
-metr_global,0.5,GPT-4 1106 (Inspect),p80,-0.5538646528665175
-metr_global,0.5,GPT-4 Turbo (Inspect),p80,-0.31585762825148395
-metr_global,0.5,GPT-4o (Inspect),p80,0.1343697728711038
-metr_global,0.5,GPT-5 (Inspect),p80,5.036613909542805
-metr_global,0.5,GPT-5.1-Codex-Max (Inspect),p80,5.422538488069696
-metr_global,0.5,GPT-5.2,p80,5.846802368152072
-metr_global,0.5,GPT-5.3-Codex,p80,5.583689668329929
-metr_global,0.5,Gemini 3 Pro,p80,5.507287226053844
-metr_global,0.5,human,p80,3.4419012738879644
-metr_global,0.5,o1 (Inspect),p80,2.6091139915604993
-metr_global,0.5,o1-preview,p80,1.931560924604877
-metr_global,0.5,o3 (Inspect),p80,4.6700721049943805
-metr_global,1.0,Claude 3 Opus (Inspect),p50,1.767099889738507
-metr_global,1.0,Claude 3.5 Sonnet (New) (Inspect),p50,4.218674625147753
-metr_global,1.0,Claude 3.5 Sonnet (Old) (Inspect),p50,3.338241009524365
-metr_global,1.0,Claude 3.7 Sonnet (Inspect),p50,5.83734658052165
-metr_global,1.0,Claude 4 Opus (Inspect),p50,6.628587236158668
-metr_global,1.0,Claude 4.1 Opus (Inspect),p50,6.611869633736996
-metr_global,1.0,Claude Opus 4.5 (Inspect),p50,8.468304731477053
-metr_global,1.0,Claude Opus 4.6 (Inspect),p50,10.103694631700371
-metr_global,1.0,GPT-4 0314,p50,1.7789186516210895
-metr_global,1.0,GPT-4 1106 (Inspect),p50,1.7930559335906813
-metr_global,1.0,GPT-4 Turbo (Inspect),p50,1.6594371967132613
-metr_global,1.0,GPT-4o (Inspect),p50,2.601514778273943
-metr_global,1.0,GPT-5 (Inspect),p50,7.803095156092573
-metr_global,1.0,GPT-5.1-Codex-Max (Inspect),p50,7.949190817198332
-metr_global,1.0,GPT-5.2,p50,8.79460724571754
-metr_global,1.0,GPT-5.3-Codex,p50,8.786102286828402
-metr_global,1.0,Gemini 3 Pro,p50,7.948243213195298
-metr_global,1.0,human,p50,6.831787268847832
-metr_global,1.0,o1 (Inspect),p50,5.169870674804578
-metr_global,1.0,o1-preview,p50,4.197262146468379
-metr_global,1.0,o3 (Inspect),p50,6.879584428605888
-metr_global,1.0,Claude 3 Opus (Inspect),p80,-1.070433879208476
-metr_global,1.0,Claude 3.5 Sonnet (New) (Inspect),p80,0.9190655416371909
-metr_global,1.0,Claude 3.5 Sonnet (Old) (Inspect),p80,0.28679319489603844
-metr_global,1.0,Claude 3.7 Sonnet (Inspect),p80,3.1536462640381147
-metr_global,1.0,Claude 4 Opus (Inspect),p80,3.891120088679062
-metr_global,1.0,Claude 4.1 Opus (Inspect),p80,4.095775571882457
-metr_global,1.0,Claude Opus 4.5 (Inspect),p80,5.236677536766482
-metr_global,1.0,Claude Opus 4.6 (Inspect),p80,5.92809972748463
-metr_global,1.0,GPT-4 0314,p80,-0.582752005774699
-metr_global,1.0,GPT-4 1106 (Inspect),p80,-0.7868803481956852
-metr_global,1.0,GPT-4 Turbo (Inspect),p80,-0.5643490200179797
-metr_global,1.0,GPT-4o (Inspect),p80,-0.10213412528612321
-metr_global,1.0,GPT-5 (Inspect),p80,4.827297494374942
-metr_global,1.0,GPT-5.1-Codex-Max (Inspect),p80,5.215440959461717
-metr_global,1.0,GPT-5.2,p80,5.683923687267411
-metr_global,1.0,GPT-5.3-Codex,p80,5.4217508131139835
-metr_global,1.0,Gemini 3 Pro,p80,5.292862545561195
-metr_global,1.0,human,p80,3.2895737047757847
-metr_global,1.0,o1 (Inspect),p80,2.3875559763646734
-metr_global,1.0,o1-preview,p80,1.6934818635302133
-metr_global,1.0,o3 (Inspect),p80,4.44632228882361
-metr_global,1.5,Claude 3 Opus (Inspect),p50,1.7088782273884109
-metr_global,1.5,Claude 3.5 Sonnet (New) (Inspect),p50,4.163149290485221
-metr_global,1.5,Claude 3.5 Sonnet (Old) (Inspect),p50,3.2823657844167338
-metr_global,1.5,Claude 3.7 Sonnet (Inspect),p50,5.812383632705148
-metr_global,1.5,Claude 4 Opus (Inspect),p50,6.637456238213791
-metr_global,1.5,Claude 4.1 Opus (Inspect),p50,6.615797753749491
-metr_global,1.5,Claude Opus 4.5 (Inspect),p50,8.619465776154009
-metr_global,1.5,Claude Opus 4.6 (Inspect),p50,10.362503780711062
-metr_global,1.5,GPT-4 0314,p50,1.714695528949959
-metr_global,1.5,GPT-4 1106 (Inspect),p50,1.726185168892305
-metr_global,1.5,GPT-4 Turbo (Inspect),p50,1.5907349239148056
-metr_global,1.5,GPT-4o (Inspect),p50,2.5303775655547063
-metr_global,1.5,GPT-5 (Inspect),p50,7.900375648622212
-metr_global,1.5,GPT-5.1-Codex-Max (Inspect),p50,8.053083571658288
-metr_global,1.5,GPT-5.2,p50,8.987176699736143
-metr_global,1.5,GPT-5.3-Codex,p50,8.970801875704513
-metr_global,1.5,Gemini 3 Pro,p50,8.052532568630149
-metr_global,1.5,human,p50,6.87942811265551
-metr_global,1.5,o1 (Inspect),p50,5.127203813272786
-metr_global,1.5,o1-preview,p50,4.134277645521577
-metr_global,1.5,o3 (Inspect),p50,6.896023133146969
-metr_global,1.5,Claude 3 Opus (Inspect),p80,-1.167665977179897
-metr_global,1.5,Claude 3.5 Sonnet (New) (Inspect),p80,0.7243865725363046
-metr_global,1.5,Claude 3.5 Sonnet (Old) (Inspect),p80,0.15646623043998628
-metr_global,1.5,Claude 3.7 Sonnet (Inspect),p80,2.944687166888092
-metr_global,1.5,Claude 4 Opus (Inspect),p80,3.6993343510230727
-metr_global,1.5,Claude 4.1 Opus (Inspect),p80,3.8889650523902723
-metr_global,1.5,Claude Opus 4.5 (Inspect),p80,5.0934914380948015
-metr_global,1.5,Claude Opus 4.6 (Inspect),p80,5.882220860741227
-metr_global,1.5,GPT-4 0314,p80,-0.7001631433685371
-metr_global,1.5,GPT-4 1106 (Inspect),p80,-0.9062607843139241
-metr_global,1.5,GPT-4 Turbo (Inspect),p80,-0.6827398066078285
-metr_global,1.5,GPT-4o (Inspect),p80,-0.24962206144860233
-metr_global,1.5,GPT-5 (Inspect),p80,4.646353829817961
-metr_global,1.5,GPT-5.1-Codex-Max (Inspect),p80,5.038516008053979
-metr_global,1.5,GPT-5.2,p80,5.547105778498908
-metr_global,1.5,GPT-5.3-Codex,p80,5.292506702336888
-metr_global,1.5,Gemini 3 Pro,p80,5.11153454550364
-metr_global,1.5,human,p80,3.1565376693699934
-metr_global,1.5,o1 (Inspect),p80,2.1930853361295166
-metr_global,1.5,o1-preview,p80,1.524806478380029
-metr_global,1.5,o3 (Inspect),p80,4.241819931025365
-metr_global,2.0,Claude 3 Opus (Inspect),p50,1.6012468228256451
-metr_global,2.0,Claude 3.5 Sonnet (New) (Inspect),p50,4.102030611122941
-metr_global,2.0,Claude 3.5 Sonnet (Old) (Inspect),p50,3.1979706878197396
-metr_global,2.0,Claude 3.7 Sonnet (Inspect),p50,5.793834205191974
-metr_global,2.0,Claude 4 Opus (Inspect),p50,6.657922262260176
-metr_global,2.0,Claude 4.1 Opus (Inspect),p50,6.631183598461464
-metr_global,2.0,Claude Opus 4.5 (Inspect),p50,8.774037513293898
-metr_global,2.0,Claude Opus 4.6 (Inspect),p50,10.683515788397997
-metr_global,2.0,GPT-4 0314,p50,1.6160725299883651
-metr_global,2.0,GPT-4 1106 (Inspect),p50,1.621552337232886
-metr_global,2.0,GPT-4 Turbo (Inspect),p50,1.4764480432235338
-metr_global,2.0,GPT-4o (Inspect),p50,2.433961281181946
-metr_global,2.0,GPT-5 (Inspect),p50,7.995461717380519
-metr_global,2.0,GPT-5.1-Codex-Max (Inspect),p50,8.162356207608168
-metr_global,2.0,GPT-5.2,p50,9.174403795667263
-metr_global,2.0,GPT-5.3-Codex,p50,9.150084340317935
-metr_global,2.0,Gemini 3 Pro,p50,8.149478263295457
-metr_global,2.0,human,p50,6.951637162634281
-metr_global,2.0,o1 (Inspect),p50,5.085543890677244
-metr_global,2.0,o1-preview,p50,4.063218822740372
-metr_global,2.0,o3 (Inspect),p50,6.923307766301716
-metr_global,2.0,Claude 3 Opus (Inspect),p80,-1.391303752523358
-metr_global,2.0,Claude 3.5 Sonnet (New) (Inspect),p80,0.4997081590872831
-metr_global,2.0,Claude 3.5 Sonnet (Old) (Inspect),p80,-0.09251497343873462
-metr_global,2.0,Claude 3.7 Sonnet (Inspect),p80,2.733106820824611
-metr_global,2.0,Claude 4 Opus (Inspect),p80,3.487794962187802
-metr_global,2.0,Claude 4.1 Opus (Inspect),p80,3.6785237184957724
-metr_global,2.0,Claude Opus 4.5 (Inspect),p80,4.948147641088197
-metr_global,2.0,Claude Opus 4.6 (Inspect),p80,5.799563074470723
-metr_global,2.0,GPT-4 0314,p80,-0.8916783188856142
-metr_global,2.0,GPT-4 1106 (Inspect),p80,-1.1127892782527722
-metr_global,2.0,GPT-4 Turbo (Inspect),p80,-0.9026753206542825
-metr_global,2.0,GPT-4o (Inspect),p80,-0.46405131876802846
-metr_global,2.0,GPT-5 (Inspect),p80,4.479987963765892
-metr_global,2.0,GPT-5.1-Codex-Max (Inspect),p80,4.869656890683431
-metr_global,2.0,GPT-5.2,p80,5.422010304741843
-metr_global,2.0,GPT-5.3-Codex,p80,5.1638456643847555
-metr_global,2.0,Gemini 3 Pro,p80,4.956667151749233
-metr_global,2.0,human,p80,2.999499348299088
-metr_global,2.0,o1 (Inspect),p80,1.9676154331368545
-metr_global,2.0,o1-preview,p80,1.276371408144416
-metr_global,2.0,o3 (Inspect),p80,4.041413064093654
+per_task (b),0,Claude 3 Opus (Inspect),p50,1.982678569
+per_task (b),0,Claude 3.5 Sonnet (New) (Inspect),p50,4.359160704
+per_task (b),0,Claude 3.5 Sonnet (Old) (Inspect),p50,3.510376708
+per_task (b),0,Claude 3.7 Sonnet (Inspect),p50,5.916212364
+per_task (b),0,Claude 4 Opus (Inspect),p50,6.649128588
+per_task (b),0,Claude 4.1 Opus (Inspect),p50,6.650649744
+per_task (b),0,Claude Opus 4.5 (Inspect),p50,8.194730234
+per_task (b),0,Claude Opus 4.6 (Inspect),p50,9.489460307
+per_task (b),0,GPT-4 0314,p50,1.99545841
+per_task (b),0,GPT-4 1106 (Inspect),p50,2.016125046
+per_task (b),0,GPT-4 Turbo (Inspect),p50,1.900253164
+per_task (b),0,GPT-4o (Inspect),p50,2.805539142
+per_task (b),0,GPT-5 (Inspect),p50,7.665425299
+per_task (b),0,GPT-5.1-Codex-Max (Inspect),p50,7.805516211
+per_task (b),0,GPT-5.2,p50,8.460453039
+per_task (b),0,GPT-5.3-Codex,p50,8.449275497
+per_task (b),0,Gemini 3 Pro,p50,7.809452284
+per_task (b),0,human,p50,6.733697054
+per_task (b),0,o1 (Inspect),p50,5.279158794
+per_task (b),0,o1-preview,p50,4.345296053
+per_task (b),0,o3 (Inspect),p50,6.903672611
+per_task (b),0,Claude 3 Opus (Inspect),p80,-0.6461738908
+per_task (b),0,Claude 3.5 Sonnet (New) (Inspect),p80,1.376110792
+per_task (b),0,Claude 3.5 Sonnet (Old) (Inspect),p80,0.7413652493
+per_task (b),0,Claude 3.7 Sonnet (Inspect),p80,3.59595593
+per_task (b),0,Claude 4 Opus (Inspect),p80,4.352599774
+per_task (b),0,Claude 4.1 Opus (Inspect),p80,4.551870403
+per_task (b),0,Claude Opus 4.5 (Inspect),p80,5.627332041
+per_task (b),0,Claude Opus 4.6 (Inspect),p80,6.126695945
+per_task (b),0,GPT-4 0314,p80,-0.1688351487
+per_task (b),0,GPT-4 1106 (Inspect),p80,-0.3528560383
+per_task (b),0,GPT-4 Turbo (Inspect),p80,-0.1079079974
+per_task (b),0,GPT-4o (Inspect),p80,0.3414267432
+per_task (b),0,GPT-5 (Inspect),p80,5.259740667
+per_task (b),0,GPT-5.1-Codex-Max (Inspect),p80,5.6619918
+per_task (b),0,GPT-5.2,p80,6.044452018
+per_task (b),0,GPT-5.3-Codex,p80,5.774507892
+per_task (b),0,Gemini 3 Pro,p80,5.758698905
+per_task (b),0,human,p80,3.616931319
+per_task (b),0,o1 (Inspect),p80,2.825810186
+per_task (b),0,o1-preview,p80,2.144224172
+per_task (b),0,o3 (Inspect),p80,4.906005606
+per_task (b),0.5,Claude 3 Opus (Inspect),p50,1.864508651
+per_task (b),0.5,Claude 3.5 Sonnet (New) (Inspect),p50,4.28332655
+per_task (b),0.5,Claude 3.5 Sonnet (Old) (Inspect),p50,3.419711663
+per_task (b),0.5,Claude 3.7 Sonnet (Inspect),p50,5.871974078
+per_task (b),0.5,Claude 4 Opus (Inspect),p50,6.631616956
+per_task (b),0.5,Claude 4.1 Opus (Inspect),p50,6.622248747
+per_task (b),0.5,Claude Opus 4.5 (Inspect),p50,8.32543303
+per_task (b),0.5,Claude Opus 4.6 (Inspect),p50,9.816459611
+per_task (b),0.5,GPT-4 0314,p50,1.877686216
+per_task (b),0.5,GPT-4 1106 (Inspect),p50,1.895676255
+per_task (b),0.5,GPT-4 Turbo (Inspect),p50,1.770859944
+per_task (b),0.5,GPT-4o (Inspect),p50,2.696699924
+per_task (b),0.5,GPT-5 (Inspect),p50,7.729239617
+per_task (b),0.5,GPT-5.1-Codex-Max (Inspect),p50,7.870838258
+per_task (b),0.5,GPT-5.2,p50,8.630678694
+per_task (b),0.5,GPT-5.3-Codex,p50,8.623125987
+per_task (b),0.5,Gemini 3 Pro,p50,7.869581556
+per_task (b),0.5,human,p50,6.797992961
+per_task (b),0.5,o1 (Inspect),p50,5.21991908
+per_task (b),0.5,o1-preview,p50,4.26732831
+per_task (b),0.5,o3 (Inspect),p50,6.882122274
+per_task (b),0.5,Claude 3 Opus (Inspect),p80,-0.8826767839
+per_task (b),0.5,Claude 3.5 Sonnet (New) (Inspect),p80,1.125175432
+per_task (b),0.5,Claude 3.5 Sonnet (Old) (Inspect),p80,0.5001483495
+per_task (b),0.5,Claude 3.7 Sonnet (Inspect),p80,3.36480235
+per_task (b),0.5,Claude 4 Opus (Inspect),p80,4.112106193
+per_task (b),0.5,Claude 4.1 Opus (Inspect),p80,4.317635002
+per_task (b),0.5,Claude Opus 4.5 (Inspect),p80,5.421448394
+per_task (b),0.5,Claude Opus 4.6 (Inspect),p80,6.014579162
+per_task (b),0.5,GPT-4 0314,p80,-0.4012731311
+per_task (b),0.5,GPT-4 1106 (Inspect),p80,-0.5905348848
+per_task (b),0.5,GPT-4 Turbo (Inspect),p80,-0.3566142638
+per_task (b),0.5,GPT-4o (Inspect),p80,0.09974742337
+per_task (b),0.5,GPT-5 (Inspect),p80,5.025744101
+per_task (b),0.5,GPT-5.1-Codex-Max (Inspect),p80,5.41270661
+per_task (b),0.5,GPT-5.2,p80,5.840194417
+per_task (b),0.5,GPT-5.3-Codex,p80,5.576532831
+per_task (b),0.5,Gemini 3 Pro,p80,5.497399708
+per_task (b),0.5,human,p80,3.421877799
+per_task (b),0.5,o1 (Inspect),p80,2.585986899
+per_task (b),0.5,o1-preview,p80,1.902394552
+per_task (b),0.5,o3 (Inspect),p80,4.65664244
+per_task (b),1,Claude 3 Opus (Inspect),p50,1.73300601
+per_task (b),1,Claude 3.5 Sonnet (New) (Inspect),p50,4.205345725
+per_task (b),1,Claude 3.5 Sonnet (Old) (Inspect),p50,3.317220392
+per_task (b),1,Claude 3.7 Sonnet (Inspect),p50,5.838561995
+per_task (b),1,Claude 4 Opus (Inspect),p50,6.636705844
+per_task (b),1,Claude 4.1 Opus (Inspect),p50,6.619692547
+per_task (b),1,Claude Opus 4.5 (Inspect),p50,8.492714157
+per_task (b),1,Claude Opus 4.6 (Inspect),p50,10.14362635
+per_task (b),1,GPT-4 0314,p50,1.739854554
+per_task (b),1,GPT-4 1106 (Inspect),p50,1.756382144
+per_task (b),1,GPT-4 Turbo (Inspect),p50,1.617794905
+per_task (b),1,GPT-4o (Inspect),p50,2.571592018
+per_task (b),1,GPT-5 (Inspect),p50,7.821066634
+per_task (b),1,GPT-5.1-Codex-Max (Inspect),p50,7.968509538
+per_task (b),1,GPT-5.2,p50,8.821438177
+per_task (b),1,GPT-5.3-Codex,p50,8.813704578
+per_task (b),1,Gemini 3 Pro,p50,7.96760158
+per_task (b),1,human,p50,6.851875994
+per_task (b),1,o1 (Inspect),p50,5.164878576
+per_task (b),1,o1-preview,p50,4.182455784
+per_task (b),1,o3 (Inspect),p50,6.889586426
+per_task (b),1,Claude 3 Opus (Inspect),p80,-1.137559476
+per_task (b),1,Claude 3.5 Sonnet (New) (Inspect),p80,0.8634496491
+per_task (b),1,Claude 3.5 Sonnet (Old) (Inspect),p80,0.2243984608
+per_task (b),1,Claude 3.7 Sonnet (Inspect),p80,3.113787578
+per_task (b),1,Claude 4 Opus (Inspect),p80,3.859327035
+per_task (b),1,Claude 4.1 Opus (Inspect),p80,4.065840826
+per_task (b),1,Claude Opus 4.5 (Inspect),p80,5.220301166
+per_task (b),1,Claude Opus 4.6 (Inspect),p80,5.921258624
+per_task (b),1,GPT-4 0314,p80,-0.6574029391
+per_task (b),1,GPT-4 1106 (Inspect),p80,-0.8583683011
+per_task (b),1,GPT-4 Turbo (Inspect),p80,-0.6424251029
+per_task (b),1,GPT-4o (Inspect),p80,-0.1709623819
+per_task (b),1,GPT-5 (Inspect),p80,4.806718144
+per_task (b),1,GPT-5.1-Codex-Max (Inspect),p80,5.196511814
+per_task (b),1,GPT-5.2,p80,5.671499919
+per_task (b),1,GPT-5.3-Codex,p80,5.407197369
+per_task (b),1,Gemini 3 Pro,p80,5.273731364
+per_task (b),1,human,p80,3.25082142
+per_task (b),1,o1 (Inspect),p80,2.340714625
+per_task (b),1,o1-preview,p80,1.634764015
+per_task (b),1,o3 (Inspect),p80,4.419022992
+per_task (b),1.5,Claude 3 Opus (Inspect),p50,1.662683142
+per_task (b),1.5,Claude 3.5 Sonnet (New) (Inspect),p50,4.144931732
+per_task (b),1.5,Claude 3.5 Sonnet (Old) (Inspect),p50,3.25334345
+per_task (b),1.5,Claude 3.7 Sonnet (Inspect),p50,5.814761922
+per_task (b),1.5,Claude 4 Opus (Inspect),p50,6.650389316
+per_task (b),1.5,Claude 4.1 Opus (Inspect),p50,6.628606955
+per_task (b),1.5,Claude Opus 4.5 (Inspect),p50,8.657068302
+per_task (b),1.5,Claude Opus 4.6 (Inspect),p50,10.41873378
+per_task (b),1.5,GPT-4 0314,p50,1.661508783
+per_task (b),1.5,GPT-4 1106 (Inspect),p50,1.676040338
+per_task (b),1.5,GPT-4 Turbo (Inspect),p50,1.533416704
+per_task (b),1.5,GPT-4o (Inspect),p50,2.489097457
+per_task (b),1.5,GPT-5 (Inspect),p50,7.928935009
+per_task (b),1.5,GPT-5.1-Codex-Max (Inspect),p50,8.083596675
+per_task (b),1.5,GPT-5.2,p50,9.029384521
+per_task (b),1.5,GPT-5.3-Codex,p50,9.012530639
+per_task (b),1.5,Gemini 3 Pro,p50,8.083371394
+per_task (b),1.5,human,p50,6.909571022
+per_task (b),1.5,o1 (Inspect),p50,5.120538711
+per_task (b),1.5,o1-preview,p50,4.113232446
+per_task (b),1.5,o3 (Inspect),p50,6.911927243
+per_task (b),1.5,Claude 3 Opus (Inspect),p80,-1.257507393
+per_task (b),1.5,Claude 3.5 Sonnet (New) (Inspect),p80,0.6469921712
+per_task (b),1.5,Claude 3.5 Sonnet (Old) (Inspect),p80,0.07036762386
+per_task (b),1.5,Claude 3.7 Sonnet (Inspect),p80,2.886407297
+per_task (b),1.5,Claude 4 Opus (Inspect),p80,3.652570239
+per_task (b),1.5,Claude 4.1 Opus (Inspect),p80,3.842331254
+per_task (b),1.5,Claude Opus 4.5 (Inspect),p80,5.070137146
+per_task (b),1.5,Claude Opus 4.6 (Inspect),p80,5.874652822
+per_task (b),1.5,GPT-4 0314,p80,-0.8002934749
+per_task (b),1.5,GPT-4 1106 (Inspect),p80,-1.003395333
+per_task (b),1.5,GPT-4 Turbo (Inspect),p80,-0.7896490893
+per_task (b),1.5,GPT-4o (Inspect),p80,-0.344427516
+per_task (b),1.5,GPT-5 (Inspect),p80,4.615357362
+per_task (b),1.5,GPT-5.1-Codex-Max (Inspect),p80,5.010662596
+per_task (b),1.5,GPT-5.2,p80,5.529232334
+per_task (b),1.5,GPT-5.3-Codex,p80,5.272958098
+per_task (b),1.5,Gemini 3 Pro,p80,5.083509853
+per_task (b),1.5,human,p80,3.101166514
+per_task (b),1.5,o1 (Inspect),p80,2.126886168
+per_task (b),1.5,o1-preview,p80,1.44314852
+per_task (b),1.5,o3 (Inspect),p80,4.201766609
+per_task (b),2,Claude 3 Opus (Inspect),p50,1.540232924
+per_task (b),2,Claude 3.5 Sonnet (New) (Inspect),p50,4.078762941
+per_task (b),2,Claude 3.5 Sonnet (Old) (Inspect),p50,3.160257402
+per_task (b),2,Claude 3.7 Sonnet (Inspect),p50,5.797679704
+per_task (b),2,Claude 4 Opus (Inspect),p50,6.675990874
+per_task (b),2,Claude 4.1 Opus (Inspect),p50,6.649026232
+per_task (b),2,Claude Opus 4.5 (Inspect),p50,8.824876699
+per_task (b),2,Claude Opus 4.6 (Inspect),p50,10.76144423
+per_task (b),2,GPT-4 0314,p50,1.547595914
+per_task (b),2,GPT-4 1106 (Inspect),p50,1.556317188
+per_task (b),2,GPT-4 Turbo (Inspect),p50,1.402650262
+per_task (b),2,GPT-4o (Inspect),p50,2.380466477
+per_task (b),2,GPT-5 (Inspect),p50,8.033979004
+per_task (b),2,GPT-5.1-Codex-Max (Inspect),p50,8.20388579
+per_task (b),2,GPT-5.2,p50,9.231193092
+per_task (b),2,GPT-5.3-Codex,p50,9.205808947
+per_task (b),2,Gemini 3 Pro,p50,8.191057977
+per_task (b),2,human,p50,6.992721589
+per_task (b),2,o1 (Inspect),p50,5.077167833
+per_task (b),2,o1-preview,p50,4.036196068
+per_task (b),2,o3 (Inspect),p50,6.945789626
+per_task (b),2,Claude 3 Opus (Inspect),p80,-1.511605179
+per_task (b),2,Claude 3.5 Sonnet (New) (Inspect),p80,0.3989154583
+per_task (b),2,Claude 3.5 Sonnet (Old) (Inspect),p80,-0.2055136963
+per_task (b),2,Claude 3.7 Sonnet (Inspect),p80,2.655994812
+per_task (b),2,Claude 4 Opus (Inspect),p80,3.426659802
+per_task (b),2,Claude 4.1 Opus (Inspect),p80,3.618410171
+per_task (b),2,Claude Opus 4.5 (Inspect),p80,4.917881224
+per_task (b),2,Claude Opus 4.6 (Inspect),p80,5.788798056
+per_task (b),2,GPT-4 0314,p80,-1.021155011
+per_task (b),2,GPT-4 1106 (Inspect),p80,-1.239614131
+per_task (b),2,GPT-4 Turbo (Inspect),p80,-1.039920576
+per_task (b),2,GPT-4o (Inspect),p80,-0.5871522383
+per_task (b),2,GPT-5 (Inspect),p80,4.440492429
+per_task (b),2,GPT-5.1-Codex-Max (Inspect),p80,4.83441037
+per_task (b),2,GPT-5.2,p80,5.399519727
+per_task (b),2,GPT-5.3-Codex,p80,5.138797325
+per_task (b),2,Gemini 3 Pro,p80,4.921484737
+per_task (b),2,human,p80,2.927431757
+per_task (b),2,o1 (Inspect),p80,1.879343916
+per_task (b),2,o1-preview,p80,1.169466078
+per_task (b),2,o3 (Inspect),p80,3.987743623
+metr_global,0,Claude 3 Opus (Inspect),p50,1.982678569
+metr_global,0,Claude 3.5 Sonnet (New) (Inspect),p50,4.359160704
+metr_global,0,Claude 3.5 Sonnet (Old) (Inspect),p50,3.510376708
+metr_global,0,Claude 3.7 Sonnet (Inspect),p50,5.916212364
+metr_global,0,Claude 4 Opus (Inspect),p50,6.649128588
+metr_global,0,Claude 4.1 Opus (Inspect),p50,6.650649744
+metr_global,0,Claude Opus 4.5 (Inspect),p50,8.194730234
+metr_global,0,Claude Opus 4.6 (Inspect),p50,9.489460307
+metr_global,0,GPT-4 0314,p50,1.99545841
+metr_global,0,GPT-4 1106 (Inspect),p50,2.016125046
+metr_global,0,GPT-4 Turbo (Inspect),p50,1.900253164
+metr_global,0,GPT-4o (Inspect),p50,2.805539142
+metr_global,0,GPT-5 (Inspect),p50,7.665425299
+metr_global,0,GPT-5.1-Codex-Max (Inspect),p50,7.805516211
+metr_global,0,GPT-5.2,p50,8.460453039
+metr_global,0,GPT-5.3-Codex,p50,8.449275497
+metr_global,0,Gemini 3 Pro,p50,7.809452284
+metr_global,0,human,p50,6.733697054
+metr_global,0,o1 (Inspect),p50,5.279158794
+metr_global,0,o1-preview,p50,4.345296053
+metr_global,0,o3 (Inspect),p50,6.903672611
+metr_global,0,Claude 3 Opus (Inspect),p80,-0.6461738908
+metr_global,0,Claude 3.5 Sonnet (New) (Inspect),p80,1.376110792
+metr_global,0,Claude 3.5 Sonnet (Old) (Inspect),p80,0.7413652493
+metr_global,0,Claude 3.7 Sonnet (Inspect),p80,3.59595593
+metr_global,0,Claude 4 Opus (Inspect),p80,4.352599774
+metr_global,0,Claude 4.1 Opus (Inspect),p80,4.551870403
+metr_global,0,Claude Opus 4.5 (Inspect),p80,5.627332041
+metr_global,0,Claude Opus 4.6 (Inspect),p80,6.126695945
+metr_global,0,GPT-4 0314,p80,-0.1688351487
+metr_global,0,GPT-4 1106 (Inspect),p80,-0.3528560383
+metr_global,0,GPT-4 Turbo (Inspect),p80,-0.1079079974
+metr_global,0,GPT-4o (Inspect),p80,0.3414267432
+metr_global,0,GPT-5 (Inspect),p80,5.259740667
+metr_global,0,GPT-5.1-Codex-Max (Inspect),p80,5.6619918
+metr_global,0,GPT-5.2,p80,6.044452018
+metr_global,0,GPT-5.3-Codex,p80,5.774507892
+metr_global,0,Gemini 3 Pro,p80,5.758698905
+metr_global,0,human,p80,3.616931319
+metr_global,0,o1 (Inspect),p80,2.825810186
+metr_global,0,o1-preview,p80,2.144224172
+metr_global,0,o3 (Inspect),p80,4.906005606
+metr_global,0.5,Claude 3 Opus (Inspect),p50,1.88161042
+metr_global,0.5,Claude 3.5 Sonnet (New) (Inspect),p50,4.289473059
+metr_global,0.5,Claude 3.5 Sonnet (Old) (Inspect),p50,3.429996386
+metr_global,0.5,Claude 3.7 Sonnet (Inspect),p50,5.871256487
+metr_global,0.5,Claude 4 Opus (Inspect),p50,6.627897916
+metr_global,0.5,Claude 4.1 Opus (Inspect),p50,6.618687614
+metr_global,0.5,Claude Opus 4.5 (Inspect),p50,8.314326124
+metr_global,0.5,Claude Opus 4.6 (Inspect),p50,9.798069265
+metr_global,0.5,GPT-4 0314,p50,1.896826604
+metr_global,0.5,GPT-4 1106 (Inspect),p50,1.913888134
+metr_global,0.5,GPT-4 Turbo (Inspect),p50,1.79183048
+metr_global,0.5,GPT-4o (Inspect),p50,2.711225853
+metr_global,0.5,GPT-5 (Inspect),p50,7.72070042
+metr_global,0.5,GPT-5.1-Codex-Max (Inspect),p50,7.862040541
+metr_global,0.5,GPT-5.2,p50,8.618083171
+metr_global,0.5,GPT-5.3-Codex,p50,8.610357241
+metr_global,0.5,Gemini 3 Pro,p50,7.860965986
+metr_global,0.5,human,p50,6.78785721
+metr_global,0.5,o1 (Inspect),p50,5.222113733
+metr_global,0.5,o1-preview,p50,4.274305909
+metr_global,0.5,o3 (Inspect),p50,6.877606204
+metr_global,0.5,Claude 3 Opus (Inspect),p80,-0.8477968913
+metr_global,0.5,Claude 3.5 Sonnet (New) (Inspect),p80,1.151702388
+metr_global,0.5,Claude 3.5 Sonnet (Old) (Inspect),p80,0.5316644682
+metr_global,0.5,Claude 3.7 Sonnet (Inspect),p80,3.38330046
+metr_global,0.5,Claude 4 Opus (Inspect),p80,4.127387192
+metr_global,0.5,Claude 4.1 Opus (Inspect),p80,4.332049275
+metr_global,0.5,Claude Opus 4.5 (Inspect),p80,5.429466621
+metr_global,0.5,Claude Opus 4.6 (Inspect),p80,6.017756468
+metr_global,0.5,GPT-4 0314,p80,-0.3637842009
+metr_global,0.5,GPT-4 1106 (Inspect),p80,-0.5538646529
+metr_global,0.5,GPT-4 Turbo (Inspect),p80,-0.3158576283
+metr_global,0.5,GPT-4o (Inspect),p80,0.1343697729
+metr_global,0.5,GPT-5 (Inspect),p80,5.03661391
+metr_global,0.5,GPT-5.1-Codex-Max (Inspect),p80,5.422538488
+metr_global,0.5,GPT-5.2,p80,5.846802368
+metr_global,0.5,GPT-5.3-Codex,p80,5.583689668
+metr_global,0.5,Gemini 3 Pro,p80,5.507287226
+metr_global,0.5,human,p80,3.441901274
+metr_global,0.5,o1 (Inspect),p80,2.609113992
+metr_global,0.5,o1-preview,p80,1.931560925
+metr_global,0.5,o3 (Inspect),p80,4.670072105
+metr_global,1,Claude 3 Opus (Inspect),p50,1.76709989
+metr_global,1,Claude 3.5 Sonnet (New) (Inspect),p50,4.218674625
+metr_global,1,Claude 3.5 Sonnet (Old) (Inspect),p50,3.33824101
+metr_global,1,Claude 3.7 Sonnet (Inspect),p50,5.837346581
+metr_global,1,Claude 4 Opus (Inspect),p50,6.628587236
+metr_global,1,Claude 4.1 Opus (Inspect),p50,6.611869634
+metr_global,1,Claude Opus 4.5 (Inspect),p50,8.468304731
+metr_global,1,Claude Opus 4.6 (Inspect),p50,10.10369463
+metr_global,1,GPT-4 0314,p50,1.778918652
+metr_global,1,GPT-4 1106 (Inspect),p50,1.793055934
+metr_global,1,GPT-4 Turbo (Inspect),p50,1.659437197
+metr_global,1,GPT-4o (Inspect),p50,2.601514778
+metr_global,1,GPT-5 (Inspect),p50,7.803095156
+metr_global,1,GPT-5.1-Codex-Max (Inspect),p50,7.949190817
+metr_global,1,GPT-5.2,p50,8.794607246
+metr_global,1,GPT-5.3-Codex,p50,8.786102287
+metr_global,1,Gemini 3 Pro,p50,7.948243213
+metr_global,1,human,p50,6.831787269
+metr_global,1,o1 (Inspect),p50,5.169870675
+metr_global,1,o1-preview,p50,4.197262146
+metr_global,1,o3 (Inspect),p50,6.879584429
+metr_global,1,Claude 3 Opus (Inspect),p80,-1.070433879
+metr_global,1,Claude 3.5 Sonnet (New) (Inspect),p80,0.9190655416
+metr_global,1,Claude 3.5 Sonnet (Old) (Inspect),p80,0.2867931949
+metr_global,1,Claude 3.7 Sonnet (Inspect),p80,3.153646264
+metr_global,1,Claude 4 Opus (Inspect),p80,3.891120089
+metr_global,1,Claude 4.1 Opus (Inspect),p80,4.095775572
+metr_global,1,Claude Opus 4.5 (Inspect),p80,5.236677537
+metr_global,1,Claude Opus 4.6 (Inspect),p80,5.928099727
+metr_global,1,GPT-4 0314,p80,-0.5827520058
+metr_global,1,GPT-4 1106 (Inspect),p80,-0.7868803482
+metr_global,1,GPT-4 Turbo (Inspect),p80,-0.56434902
+metr_global,1,GPT-4o (Inspect),p80,-0.1021341253
+metr_global,1,GPT-5 (Inspect),p80,4.827297494
+metr_global,1,GPT-5.1-Codex-Max (Inspect),p80,5.215440959
+metr_global,1,GPT-5.2,p80,5.683923687
+metr_global,1,GPT-5.3-Codex,p80,5.421750813
+metr_global,1,Gemini 3 Pro,p80,5.292862546
+metr_global,1,human,p80,3.289573705
+metr_global,1,o1 (Inspect),p80,2.387555976
+metr_global,1,o1-preview,p80,1.693481864
+metr_global,1,o3 (Inspect),p80,4.446322289
+metr_global,1.5,Claude 3 Opus (Inspect),p50,1.708878227
+metr_global,1.5,Claude 3.5 Sonnet (New) (Inspect),p50,4.16314929
+metr_global,1.5,Claude 3.5 Sonnet (Old) (Inspect),p50,3.282365784
+metr_global,1.5,Claude 3.7 Sonnet (Inspect),p50,5.812383633
+metr_global,1.5,Claude 4 Opus (Inspect),p50,6.637456238
+metr_global,1.5,Claude 4.1 Opus (Inspect),p50,6.615797754
+metr_global,1.5,Claude Opus 4.5 (Inspect),p50,8.619465776
+metr_global,1.5,Claude Opus 4.6 (Inspect),p50,10.36250378
+metr_global,1.5,GPT-4 0314,p50,1.714695529
+metr_global,1.5,GPT-4 1106 (Inspect),p50,1.726185169
+metr_global,1.5,GPT-4 Turbo (Inspect),p50,1.590734924
+metr_global,1.5,GPT-4o (Inspect),p50,2.530377566
+metr_global,1.5,GPT-5 (Inspect),p50,7.900375649
+metr_global,1.5,GPT-5.1-Codex-Max (Inspect),p50,8.053083572
+metr_global,1.5,GPT-5.2,p50,8.9871767
+metr_global,1.5,GPT-5.3-Codex,p50,8.970801876
+metr_global,1.5,Gemini 3 Pro,p50,8.052532569
+metr_global,1.5,human,p50,6.879428113
+metr_global,1.5,o1 (Inspect),p50,5.127203813
+metr_global,1.5,o1-preview,p50,4.134277646
+metr_global,1.5,o3 (Inspect),p50,6.896023133
+metr_global,1.5,Claude 3 Opus (Inspect),p80,-1.167665977
+metr_global,1.5,Claude 3.5 Sonnet (New) (Inspect),p80,0.7243865725
+metr_global,1.5,Claude 3.5 Sonnet (Old) (Inspect),p80,0.1564662304
+metr_global,1.5,Claude 3.7 Sonnet (Inspect),p80,2.944687167
+metr_global,1.5,Claude 4 Opus (Inspect),p80,3.699334351
+metr_global,1.5,Claude 4.1 Opus (Inspect),p80,3.888965052
+metr_global,1.5,Claude Opus 4.5 (Inspect),p80,5.093491438
+metr_global,1.5,Claude Opus 4.6 (Inspect),p80,5.882220861
+metr_global,1.5,GPT-4 0314,p80,-0.7001631434
+metr_global,1.5,GPT-4 1106 (Inspect),p80,-0.9062607843
+metr_global,1.5,GPT-4 Turbo (Inspect),p80,-0.6827398066
+metr_global,1.5,GPT-4o (Inspect),p80,-0.2496220614
+metr_global,1.5,GPT-5 (Inspect),p80,4.64635383
+metr_global,1.5,GPT-5.1-Codex-Max (Inspect),p80,5.038516008
+metr_global,1.5,GPT-5.2,p80,5.547105778
+metr_global,1.5,GPT-5.3-Codex,p80,5.292506702
+metr_global,1.5,Gemini 3 Pro,p80,5.111534546
+metr_global,1.5,human,p80,3.156537669
+metr_global,1.5,o1 (Inspect),p80,2.193085336
+metr_global,1.5,o1-preview,p80,1.524806478
+metr_global,1.5,o3 (Inspect),p80,4.241819931
+metr_global,2,Claude 3 Opus (Inspect),p50,1.601246823
+metr_global,2,Claude 3.5 Sonnet (New) (Inspect),p50,4.102030611
+metr_global,2,Claude 3.5 Sonnet (Old) (Inspect),p50,3.197970688
+metr_global,2,Claude 3.7 Sonnet (Inspect),p50,5.793834205
+metr_global,2,Claude 4 Opus (Inspect),p50,6.657922262
+metr_global,2,Claude 4.1 Opus (Inspect),p50,6.631183598
+metr_global,2,Claude Opus 4.5 (Inspect),p50,8.774037513
+metr_global,2,Claude Opus 4.6 (Inspect),p50,10.68351579
+metr_global,2,GPT-4 0314,p50,1.61607253
+metr_global,2,GPT-4 1106 (Inspect),p50,1.621552337
+metr_global,2,GPT-4 Turbo (Inspect),p50,1.476448043
+metr_global,2,GPT-4o (Inspect),p50,2.433961281
+metr_global,2,GPT-5 (Inspect),p50,7.995461717
+metr_global,2,GPT-5.1-Codex-Max (Inspect),p50,8.162356208
+metr_global,2,GPT-5.2,p50,9.174403796
+metr_global,2,GPT-5.3-Codex,p50,9.15008434
+metr_global,2,Gemini 3 Pro,p50,8.149478263
+metr_global,2,human,p50,6.951637163
+metr_global,2,o1 (Inspect),p50,5.085543891
+metr_global,2,o1-preview,p50,4.063218823
+metr_global,2,o3 (Inspect),p50,6.923307766
+metr_global,2,Claude 3 Opus (Inspect),p80,-1.391303753
+metr_global,2,Claude 3.5 Sonnet (New) (Inspect),p80,0.4997081591
+metr_global,2,Claude 3.5 Sonnet (Old) (Inspect),p80,-0.09251497344
+metr_global,2,Claude 3.7 Sonnet (Inspect),p80,2.733106821
+metr_global,2,Claude 4 Opus (Inspect),p80,3.487794962
+metr_global,2,Claude 4.1 Opus (Inspect),p80,3.678523718
+metr_global,2,Claude Opus 4.5 (Inspect),p80,4.948147641
+metr_global,2,Claude Opus 4.6 (Inspect),p80,5.799563074
+metr_global,2,GPT-4 0314,p80,-0.8916783189
+metr_global,2,GPT-4 1106 (Inspect),p80,-1.112789278
+metr_global,2,GPT-4 Turbo (Inspect),p80,-0.9026753207
+metr_global,2,GPT-4o (Inspect),p80,-0.4640513188
+metr_global,2,GPT-5 (Inspect),p80,4.479987964
+metr_global,2,GPT-5.1-Codex-Max (Inspect),p80,4.869656891
+metr_global,2,GPT-5.2,p80,5.422010305
+metr_global,2,GPT-5.3-Codex,p80,5.163845664
+metr_global,2,Gemini 3 Pro,p80,4.956667152
+metr_global,2,human,p80,2.999499348
+metr_global,2,o1 (Inspect),p80,1.967615433
+metr_global,2,o1-preview,p80,1.276371408
+metr_global,2,o3 (Inspect),p80,4.041413064

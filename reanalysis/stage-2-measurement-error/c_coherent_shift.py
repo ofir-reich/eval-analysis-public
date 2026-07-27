@@ -137,7 +137,7 @@ scenario_summary["doubling_vs_baseline"] = scenario_summary.apply(
     / baseline_by_quantile.loc[row["quantile"], "doubling_days"], axis=1
 )
 print(scenario_summary.round(3).to_string(index=False))
-scenario_summary.to_csv(DATA_OUT / f"c_coherent_shift{SUFFIX}.csv", index=False)
+scenario_summary.to_csv(DATA_OUT / f"c_coherent_shift{SUFFIX}.csv", index=False, float_format=metr.CSV_FLOAT_FORMAT)
 
 # %% [markdown]
 # ## The headline: horizons swing hugely; the trend barely moves

@@ -476,6 +476,6 @@ show(fig)
 # ## Output
 
 # %%
-sigma_by_task.to_csv(DATA_OUT / f"b_sigma_by_task{SUFFIX}.csv")
+sigma_by_task.to_csv(DATA_OUT / f"b_sigma_by_task{SUFFIX}.csv", float_format=metr.CSV_FLOAT_FORMAT)
 print(f"wrote {DATA_OUT / f'b_sigma_by_task{SUFFIX}.csv'} ({len(sigma_by_task)} tasks)")
 sigma_by_task.head()

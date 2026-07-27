@@ -145,7 +145,7 @@ else:
         for (noise_model, lam), horizons in zip(jobs, results)
         for (agent, quantile), mean_log2_horizon in horizons.items()
     ])
-    simex_curve_rows.to_csv(simex_cache, index=False)
+    simex_curve_rows.to_csv(simex_cache, index=False, float_format=metr.CSV_FLOAT_FORMAT)
     print(f"computed SIMEX curves ({len(simex_curve_rows)} rows)")
 
 # %% [markdown]
@@ -170,7 +170,7 @@ for (noise_model, agent, quantile), curve in simex_curve_rows.groupby(
         "pct_change": 100 * (2 ** (corrected_log2 - naive_log2) - 1),
     })
 simex_correction_by_agent = pd.DataFrame(corrected_rows)
-simex_correction_by_agent.to_csv(DATA_OUT / f"d_simex_corrections{SUFFIX}.csv", index=False)
+simex_correction_by_agent.to_csv(DATA_OUT / f"d_simex_corrections{SUFFIX}.csv", index=False, float_format=metr.CSV_FLOAT_FORMAT)
 
 # %% [markdown]
 # ## Frontier summary: per-task vs METR-global haircut
