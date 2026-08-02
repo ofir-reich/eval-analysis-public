@@ -79,7 +79,7 @@ python d_simex.py
 cd ../stage-3-survival && python analysis.py
 ```
 
-- **v1.1 replication:** rerun any Stage-2/3 script with `DATASET_VERSION=1-1`
+- **Extending to v1.1:** rerun any Stage-2/3 script with `DATASET_VERSION=1-1`
   (outputs get a `_v1_1` suffix; Stage 1 handles both suites in one run; a0 is
   v1.0-only).
 - **Caches:** the committed `data/` CSVs double as caches for the expensive steps (the

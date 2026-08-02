@@ -15,20 +15,10 @@ Sub-analyses (all done):
 | **(c)** [Coherent ±1σ shift](#c--coherent-1σ-shift-systematic-error-worst-case) | shift *all* tasks the same direction (systematic-error worst case) | parametric |
 | **(d)** [SIMEX with per-task σ](#d--simex-with-per-task-σ) | errors-in-variables *point-estimate* correction vs METR's global σ | parametric |
 
-### A note on "frontier agents"
+## Bottom line
 
-METR's trend is fitted over the agents that were **state of the art on their release
-date** (the running maximum of the 50%-horizon), which their code calls the *frontier*
-set. We keep that definition but avoid the bare word "frontier", since these models are
-no longer frontier: v1.0's most capable member is **Claude Opus 4.5** and v1.1's is
-**Claude Opus 4.6**. Below they are the **SOTA-at-release agents** (17 of them on v1.0,
-14 on v1.1), and the newest one is named explicitly wherever it carries the headline.
-(Throughout, this set is held fixed at METR's published membership even under corrected
-x-axes — comparability is the point, though a large enough correction could in
-principle change who was SOTA at release.)
-
-**Bottom line for Stage 2.** The x-axis matters for the *absolute* horizon numbers but
-barely for the *trend*. The doubling time is remarkably robust: independent x-noise
+The x-axis matters for the *absolute* horizon numbers but barely for the *doubling
+time*, which is remarkably robust: independent x-noise
 averages out (its 95% interval widens ~2 days even with every task perturbed, (a)), and a
 coherent systematic bias — even a full ±1σ — moves it by at most ~10% while swinging
 absolute horizons by ~×2.3 ((c)). The place where the x-axis changes a *published point estimate*
@@ -42,9 +32,21 @@ the long HCAST/RE-Bench tasks that drive the top end are a touch noisier than 0.
 (b)). Shared fit machinery for (a0)/(a)/(c)/(d):
 [`metr_fit_helpers.py`](metr_fit_helpers.py), which reproduces METR's published p50/p80 exactly.
 
+### A note on "frontier agents"
+
+METR's doubling time is fitted over the agents that were **state of the art on their
+release date** (the running maximum of the 50%-horizon), which their code calls the
+*frontier* set. We keep that definition but avoid the bare word "frontier", since these
+models are no longer frontier: v1.0's most capable member is **Claude Opus 4.5** and
+v1.1's is **Claude Opus 4.6**. Below they are the **SOTA-at-release agents** (17 of
+them on v1.0, 14 on v1.1), and the newest one is named explicitly wherever it carries
+the headline. (Throughout, this set is held fixed at METR's published membership even
+under corrected x-axes — comparability is the point, though a large enough correction
+could in principle change who was SOTA at release.)
+
 Everything below is on **Time Horizon v1.0** (the paper's suite). The whole chain also
 runs on **v1.1** (228 tasks; agents from GPT-4 (Mar 2023) onward; Inspect harness) via
-`DATASET_VERSION=1-1` — see [the v1.1 replication](#v11-replication) at the end, which
+`DATASET_VERSION=1-1` — see [Extending to v1.1](#extending-to-v11) at the end, which
 under METR's own extrapolant lands within ~2 points of their published Opus 4.6 SIMEX
 headline (−33.8% vs −36%).
 
@@ -179,7 +181,7 @@ replicate, with $\mathrm{SEM}_j = \tilde\sigma_j/\sqrt{n_j}$ (baselined) or 1.05
 family→task→run resampling. Same code and 500 replicates as (a0), so they're directly
 comparable.
 
-**Result: the independent-noise floor roughly quadruples, but the trend holds.**
+**Result: the independent-noise floor roughly quadruples, but the doubling time holds.**
 
 - Per-agent p50 intervals widen by a **median 13.6%** in log-width across the 17
   SOTA-at-release agents (vs a0's 3.8% floor) — the extra width comes almost entirely from noising the
@@ -188,7 +190,7 @@ comparable.
 - The **doubling-time** 95% CI: [171.7, 224.4] days (`metr`) → [168.8, 223.5]
   (`metr+x_param`), only ~2 days wider; the pure-x doubling spread is ±5 days. Even with
   *every* task independently perturbed at full per-task σ, independent x-noise still
-  averages out across the trend regression.
+  averages out across the doubling-time regression.
 
 ![parametric CI comparison](figures/a_ci_comparison.png)
 
@@ -207,7 +209,7 @@ selection, a shared convention, the flooring scheme) — does not. We bound it b
 refitting (researcher-estimate tasks, which have no baseliner spread, shift by METR's
 estimate-error σ = 1.05 — the same value (d) uses for them).
 
-**Result: absolute horizons swing hugely; the trend barely moves.**
+**Result: absolute horizons swing hugely; the doubling time barely moves.**
 
 - A coherent ±1σ̃ bias multiplies the geometric-mean p50 horizon of the SOTA-at-release
   agents by **×2.29 / ×0.44**
@@ -217,14 +219,14 @@ estimate-error σ = 1.05 — the same value (d) uses for them).
   a coherent shift is nearly a uniform rescale, which slides log-horizons vertically
   without changing the slope. The small residual asymmetry is real: the shift is larger
   for the long HCAST/RE-Bench tasks than for short SWAA, so pushing all tasks *up*
-  steepens the recent trend slightly (faster doubling).
+  steepens the fitted slope slightly (faster doubling).
 - The **p80/p50 ratio is preserved** (0.233–0.256 across scenarios) — a pure shift moves
   both quantiles by the same factor. This is the systematic-error counterpart to the
   errors-in-variables *attenuation* in (d), which instead widens the p50/p80 gap.
 
 This is the quantitative hook for **Stage 4**: baseliner selection is precisely a
 coherent shift, and (c) shows it would badly bias the absolute horizon claims while
-sparing the doubling-time trend.
+sparing the doubling time.
 
 ![coherent-shift doubling sensitivity](figures/c_doubling_sensitivity.png)
 
@@ -285,7 +287,7 @@ guess.**
   the errors-in-variables correction — not overstates it, as we had hypothesised.**
 - On **v1.1** the same pipeline lands close to METR's own published headline: Claude
   Opus 4.6 p50 **−33.8%** under their global σ *and* their exponential extrapolant,
-  against their reported **−36%**. See the [v1.1 replication](#v11-replication) for the
+  against their reported **−36%**. See [Extending to v1.1](#extending-to-v11) for the
   full comparison, including the p80 discrepancy.
 
 Caveats: the extrapolant matters most for p80 — under METR's exponential, Opus 4.5's
@@ -302,7 +304,7 @@ Code: [`d_simex.py`](d_simex.py) / [notebook](d_simex.ipynb). Outputs:
 [`data/d_simex_curves.csv`](data/d_simex_curves.csv),
 [`data/d_simex_corrections.csv`](data/d_simex_corrections.csv).
 
-## v1.1 replication
+## Extending to v1.1
 
 Rerunning the whole chain on **Time Horizon v1.1** (228 tasks; agents from GPT-4
 (Mar 2023) onward; Inspect harness; 14 SOTA-at-release agents) —
@@ -339,12 +341,12 @@ Three takeaways:
    headline fit we replicate — so read our pipeline as closely parallel to METR's, not
    as a re-execution of it. Our per-task σ again lands slightly deeper (p50 −35.6%
    exponential / −35.9% quadratic).
-3. **The trend is *even more* robust on v1.1 under a coherent shift** (doubling moves
+3. **The doubling time is *even more* robust on v1.1 under a coherent shift** (it moves
    only ±1.5% vs v1.0's ±7%), but the independent-noise bootstrap (a) pulls the
    doubling-time *median* down ~9% (129 → 117 d) — a larger central effect than v1.0's
    ~0%, because v1.1's wider horizon range gives x-noise more leverage on the slope. So
-   v1.1 is the case where the x-axis most affects the trend, and it does so as a modest
-   downward bias, not just added width.
+   v1.1 is the case where the x-axis most affects the doubling time, and it does so as a
+   modest downward bias, not just added width.
 
 ![v1.1 SIMEX correction](figures/d_simex_correction_v1_1.png)
 

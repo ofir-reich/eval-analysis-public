@@ -21,6 +21,19 @@ Three escalating tiers:
 | 2 | **Kaplan–Meier** — nonparametric survival of completion time | non-informative censoring |
 | 3 | **censored-lognormal MLE**, σ̃ from [Stage 2(b)](../stage-2-measurement-error/) | lognormal, σ known |
 
+## Bottom line
+
+Failed baselines are ~28% of all human runs, concentrated on exactly the long tasks
+that set the top-end horizons. Correcting for them raises absolute horizons by ~28–47%
+across scenarios — the most capable agent's p50 by ~35% under the pure-censoring
+variant — while shortening the doubling time by only 4–5%. Set against METR's own SIMEX
+correction, which pushes the opposite way, the net revision to the newest agent's p50
+is **+10…+18% on v1.0 and −21…−25% on v1.1**: the two largest known x-axis corrections
+substantially cancel, and the sign of what remains depends on the task suite. Along the
+way, a structural fact about the data: the researcher-"estimate" tasks are *exactly*
+the tasks where every baseliner failed, and for 7 of those 16 the recorded failed
+attempts already prove the published value is too low.
+
 ## How much censoring is there?
 
 **226 of 793 baseline runs (28.5%) ended in failure** — 38% of HCAST and 48% of RE-Bench
@@ -127,9 +140,9 @@ Both are shown because both questions are legitimate — "what does censoring al
 **Horizons rise ~28–47% across scenarios; the most capable agent's p50 rises ~35%
 (pure censoring) to ~45% (elapsed-time-consistent)** — Claude Opus 4.5: 247 → 333–357
 min. The doubling time *shortens* by 4–5% (201 → 191–193 days) — long tasks stretch
-more than short ones, so recent agents gain more than old ones and the trend slope
+more than short ones, so recent agents gain more than old ones and the fitted slope
 steepens slightly. Consistent with Stage 2: the x-axis moves levels far more than it
-moves the trend.
+moves the doubling time.
 
 ![horizon by scenario](figures/horizon_by_scenario.png)
 
@@ -176,10 +189,10 @@ magnitude that has never been applied, and once both are in play the residual un
 in the headline horizon is roughly ±20% with a suite-dependent sign. Reporting the SIMEX
 haircut alone overstates how confidently the horizon should be revised downward.
 
-## v1.1 replication
+## Extending to v1.1
 
-`DATASET_VERSION=1-1` reruns everything on the 228-task GPT-4-era suite. Every qualitative
-finding replicates, including the structural one:
+`DATASET_VERSION=1-1` reruns everything on the 228-task v1.1 suite (agents from GPT-4
+onward). Every qualitative finding carries over, including the structural one:
 
 | | v1.0 | v1.1 |
 |---|---|---|

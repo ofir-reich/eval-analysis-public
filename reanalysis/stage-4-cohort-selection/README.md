@@ -14,8 +14,8 @@ human than every short task's, and the x-axis is not merely biased — it is **t
 That distinction is what makes this the most consequential open question we have found.
 Every error structure examined in [Stage 2](../stage-2-measurement-error/) was either
 independent noise, which averages out (perturbing all 170 tasks widened the doubling-time
-CI by ~2 days), or a coherent shift, which moves absolute horizons a lot but the trend
-barely at all (a full ±1σ shift moves the absolute horizon ×2.3 yet the doubling time under
+CI by ~2 days), or a coherent shift, which moves absolute horizons a lot but the doubling
+time barely at all (a full ±1σ shift moves the absolute horizon ×2.3 yet the doubling time under
 ±10%, because a uniform rescale slides log-horizons without changing the slope). A
 **length-dependent tilt is the one error structure that changes the slope** — so it bears
 directly on the doubling time and the extrapolated forecasts, which have survived every

@@ -78,7 +78,7 @@ The v1.1 equivalent is [`data/human_runs_derived_v1_1.csv`](data/human_runs_deri
 METR's v1.1 release re-cuts the human baseline data: the same 467 HCAST human runs are
 mapped onto a finer set of task ids (94 baselined tasks vs 81), and 20 RE-Bench runs are
 dropped. The flooring is a property of the export pipeline, not of one snapshot, and it
-replicates untouched:
+carries over untouched:
 
 | check | v1.0 | v1.1 |
 |---|---|---|
