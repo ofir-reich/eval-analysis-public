@@ -202,12 +202,13 @@ show(fig)
 #
 # 16 tasks have **zero** successful baseline runs. Every one of them is exactly a task
 # whose `human_minutes` carries `human_source == "estimate"` — and conversely, every
-# HCAST estimate task is one of these 16. METR fell back to a researcher's guess
+# HCAST estimate task is one of these 16. METR fell back to a researcher's estimate
 # precisely when **all** baseliners failed.
 #
-# That reframes the estimate tasks entirely. They are not tasks that happened to lack
-# baselines; they are the tasks humans **could not finish**, and the export contains the
-# proof of how long people tried.
+# Two things follow. First, the estimates are not exogenous guesses — baselining was
+# attempted on every one of these tasks, and the estimate is the fallback. Second, they
+# stand in for tasks humans **could not finish**, and the export contains the record of
+# how long people tried.
 
 # %%
 all_censored_tasks = task_level.query("n_successes == 0")
@@ -227,8 +228,8 @@ print("\n(the 3 RE-Bench estimate tasks DO have successful runs — "
 # If every baseliner on a task failed, with censoring times $c_1 \dots c_n$, then each
 # true completion time satisfies $T_i > c_i$, so **any** summary that is monotone in the
 # $T_i$ is bounded below by the same summary of the $c_i$. In particular
-# $\operatorname{gmean}(T) > \operatorname{gmean}(c)$. No distribution, no model — this
-# is arithmetic, and it can be checked directly against the published number.
+# $\operatorname{gmean}(T) > \operatorname{gmean}(c)$. This needs no distributional
+# model, and it can be checked directly against the published number.
 
 # %%
 censoring_bound_rows = []
@@ -253,9 +254,9 @@ bound_by_all_censored_task = bound_by_all_censored_task.sort_values(
 )
 print(bound_by_all_censored_task.round(2).to_string())
 
-n_provably_understated = (bound_by_all_censored_task["bound_over_published"] > 1).sum()
-print(f"\ntasks PROVABLY understated (lower bound exceeds published): "
-      f"{n_provably_understated} / {len(bound_by_all_censored_task)}")
+n_understated_by_bound = (bound_by_all_censored_task["bound_over_published"] > 1).sum()
+print(f"\ntasks whose published value is below the hard lower bound: "
+      f"{n_understated_by_bound} / {len(bound_by_all_censored_task)}")
 print("median understatement factor among those: "
       f"{bound_by_all_censored_task.query('bound_over_published > 1')['bound_over_published'].median():.2f}×")
 print("tasks where a single baseliner already worked longer than the published estimate: "
@@ -268,7 +269,8 @@ fig = px.scatter(
     bound_plot_data, x="published_human_minutes", y="gmean_censoring_lower_bound",
     size="n_censored", hover_name="task_id", log_x=True, log_y=True,
     title="All-failure tasks: hard lower bound vs published estimate<br>"
-          "<sub>above the dashed line = the published value is provably too low</sub>",
+          "<sub>above the dashed line = the published value is below the hard lower "
+          "bound</sub>",
     labels={"published_human_minutes": "published human_minutes (researcher estimate)",
             "gmean_censoring_lower_bound": "gmean of censoring times (hard lower bound)"},
 )
@@ -469,8 +471,8 @@ show(fig)
 # The largest corrections are the most informative cases. `blackbox/acorn` carries a
 # published `human_minutes` of 12.0 — the time of its **single** successful baseliner —
 # while **six of its nine failed baseliners worked longer than 12 minutes** without
-# solving it. No model is needed to see that 12 minutes is the wrong number; the MLE's
-# 113 minutes is one defensible answer.
+# solving it. The recorded attempts alone show that 12 minutes understates the typical
+# completion time; the MLE's 113 minutes is one defensible answer.
 #
 # It also exposes this tier's main risk: σ is *fixed* at Stage 2's pooled 0.89, but a
 # task where one person finishes in 12 min and others exceed 139 min plainly has a larger
@@ -744,4 +746,5 @@ for censoring_scenario in ["censored_ratio + bounds", "censored_mle + bounds"]:
 #    (v1.0: 4, of which 1 censored); where no δ exists they are clipped to 10 s purely
 #    to keep log(time) finite. The one clipped *censored* run sits on an all-failure
 #    task whose Tier-1 bound is ~0.07× the published value under any treatment of that
-#    run — so no "provably understated" conclusion rests on a clipped value.
+#    run — so the set of tasks understated per the Tier-1 bound does not depend on a
+#    clipped value.

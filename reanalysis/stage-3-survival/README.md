@@ -34,11 +34,13 @@ Three escalating tiers:
 - **This correction and METR's own SIMEX correction pull in opposite directions and
   largely cancel.** The net change to the newest agent's 50%-horizon is **+10% to +18%
   on v1.0, and −21% to −25% on v1.1** — which way the balance tips depends on the task
-  suite. METR's published downward correction is not the last word.
-- **A structural discovery along the way:** the tasks whose `human_minutes` is a
-  researcher's guess are *exactly* the tasks where every human baseliner failed — and
-  for 7 of those 16 tasks, the durations of the recorded failed attempts already prove
-  the published value is too low.
+  suite. Reporting the SIMEX correction alone would therefore overstate how confidently
+  the horizon should be revised downward.
+- **The researcher-estimated tasks are exactly the tasks where every baseliner
+  failed.** The estimates are fallbacks after attempted baselining, not guesses about
+  tasks nobody tried — but that also means they stand in for tasks humans could not
+  finish, and for 7 of the 16 the durations of the recorded failed attempts already
+  exceed the published value, implying it is too low.
 
 ## How much censoring is there?
 
@@ -56,25 +58,28 @@ rate falls from 97.5% on sub-minute tasks to **39.9%** at 256–960 min and **20
 
 ![success rate by length](figures/success_rate_by_length.png)
 
-## The structural finding: "estimate" tasks *are* the all-failure tasks
+## The "estimate" tasks are the all-failure tasks
 
 16 tasks have **zero** successful baseline runs. That set is **exactly** the set of HCAST
 tasks whose `human_minutes` carries `human_source == "estimate"` — the correspondence is
-one-to-one in both directions. METR fell back to a researcher's guess precisely when
+one-to-one in both directions. METR fell back to a researcher's estimate precisely when
 *every* baseliner failed.
 
-This reframes those tasks. They are not tasks that happened to lack baselines; they are
-tasks humans **could not finish**, and the export contains the record of how long people
-tried before giving up. 8.5% of all agent runs are scored against these 16 guesses.
+Two things follow. First, the estimates are not exogenous guesses — baselining was
+attempted on every one of these tasks, and the estimate is the fallback. Second, they
+stand in for tasks humans **could not finish**, and the export contains the record of
+how long people tried before giving up. 8.5% of all agent runs are scored against these
+16 estimates.
 
-## Tier 1 — the published numbers are provably too low (no model needed)
+## Tier 1 — hard lower bounds from the failed attempts
 
 If every baseliner failed at times $c_1 \dots c_n$, then each true completion time
-satisfies $T_i > c_i$, so $\operatorname{gmean}(T) > \operatorname{gmean}(c)$. That is
-arithmetic, not modelling, and it can be checked against the published value:
+satisfies $T_i > c_i$, so $\operatorname{gmean}(T) > \operatorname{gmean}(c)$. This
+needs no distributional model, and it can be checked against the published value:
 
 - **7 of the 16** all-failure tasks have a published `human_minutes` **below** this hard
-  lower bound — provably too low, by a median factor of **2.9×**.
+  lower bound — for those tasks the published value is understated by a median factor
+  of **2.9×**.
 - **13 of 16** have at least one single baseliner who worked longer than the published
   estimate without solving the task.
 - Worst case `blackbox/apron`: published estimate **10 minutes**, while 8 baseliners
@@ -108,8 +113,9 @@ is **1.41–1.50×** the published value.
 
 The extreme case is instructive. `blackbox/acorn` publishes **12.0 minutes** — the time of
 its *single* successful baseliner — while **six of its nine failed baseliners worked
-longer than 12 minutes** without solving it. No model is needed to see that 12 minutes is
-wrong; the MLE's 113 minutes is one defensible answer.
+longer than 12 minutes** without solving it. The recorded attempts alone show that
+12 minutes understates the typical completion time; the MLE's 113 minutes is one
+defensible answer.
 
 Note the identifiability limit: with **no** successes the likelihood rises without bound
 in μ, so the 16 all-failure tasks have no MLE. For them Tier 1's arithmetic floor is all
@@ -190,11 +196,11 @@ what is left over is not robust.** On v1.0 the censoring correction wins and the
 p50 should be revised *up* 10–18%; on v1.1, where SIMEX bites much harder (−36%, close to
 METR's own published figure), SIMEX wins and the net is *down* 21–25%.
 
-The defensible claim is therefore not a specific net number but this: **METR's published
-SIMEX haircut is not the end of the story.** It is opposed by a correction of similar
-magnitude that has never been applied, and once both are in play the residual uncertainty
-in the headline horizon is roughly ±20% with a suite-dependent sign. Reporting the SIMEX
-haircut alone overstates how confidently the horizon should be revised downward.
+The defensible claim is therefore not a specific net number: **the SIMEX correction is
+opposed by a censoring correction of similar magnitude** that had not previously been
+applied, and once both are in play the residual uncertainty in the headline horizon is
+roughly ±20% with a suite-dependent sign. Reporting the SIMEX correction alone would
+overstate how confidently the horizon should be revised downward.
 
 ## Extending to v1.1
 
@@ -206,7 +212,7 @@ onward). Every qualitative finding carries over, including the structural one:
 | censoring rate | 226/793 (28.5%) | 216/773 (27.9%) |
 | all-failure tasks | 16 | 23 |
 | …identical to the HCAST `estimate` set? | **yes** | **yes** |
-| provably understated (Tier 1) | 7/16, median 2.9× | 10/23, median 2.44× |
+| understated per the Tier-1 bound | 7/16, median 2.9× | 10/23, median 2.44× |
 | Tier-3 correction factor (median) | 1.47× | 1.54× |
 | p50, geo-mean over SOTA-at-release agents (mle+bounds / ratio+bounds) | ×1.37 / ×1.35 | ×1.27 / ×1.26 |
 | most-capable-agent p50 (mle+bounds / ratio+bounds) | ×1.45 / ×1.35 | ×1.23 / ×1.17 |
@@ -236,7 +242,7 @@ rule, not a coincidence of task selection.
    4, of which 1 censored); where Stage 1 has no δ they are clipped to 10 s purely to
    keep log(time) finite. The one clipped *censored* run sits on an all-failure task
    whose Tier-1 bound is ~0.07× the published value under any treatment of that run, so
-   the "provably understated" set does not depend on a clipped value.
+   the set of tasks understated per the Tier-1 bound does not depend on a clipped value.
 
 Code: [`analysis.py`](analysis.py) (jupytext; paired executed notebook
 [`analysis.ipynb`](analysis.ipynb)) — runs on v1.1 too via `DATASET_VERSION=1-1`. Outputs:

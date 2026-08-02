@@ -35,7 +35,7 @@ Short version: **the doubling time is robust, the absolute horizons are not.**
   80%-horizon; treating failed human baselines as censored rather than discarding them
   *raises* the 50%-horizon by a comparable amount. Which one wins depends on the task
   suite, so the headline horizon carries roughly **±20% of unresolved uncertainty from the
-  x-axis alone** — METR's published downward correction is not the last word.
+  x-axis alone**.
 - **The researcher-estimated tasks deserve a second look.** They turn out to be *exactly*
   the tasks where every human baseliner failed. The export is upfront that these are
   estimates rather than baselines, so this is disclosed rather than hidden — but the
