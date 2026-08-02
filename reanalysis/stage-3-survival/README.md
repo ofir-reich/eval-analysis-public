@@ -23,16 +23,22 @@ Three escalating tiers:
 
 ## Bottom line
 
-Failed baselines are ~28% of all human runs, concentrated on exactly the long tasks
-that set the top-end horizons. Correcting for them raises absolute horizons by ~28–47%
-across scenarios — the most capable agent's p50 by ~35% under the pure-censoring
-variant — while shortening the doubling time by only 4–5%. Set against METR's own SIMEX
-correction, which pushes the opposite way, the net revision to the newest agent's p50
-is **+10…+18% on v1.0 and −21…−25% on v1.1**: the two largest known x-axis corrections
-substantially cancel, and the sign of what remains depends on the task suite. Along the
-way, a structural fact about the data: the researcher-"estimate" tasks are *exactly*
-the tasks where every baseliner failed, and for 7 of those 16 the recorded failed
-attempts already prove the published value is too low.
+- **Over a quarter of all human baseline attempts ended in failure, and the published
+  numbers ignore them.** A failure is information — the person needed *more* time than
+  they spent — so dropping failures biases the published task times low. The failures
+  concentrate on exactly the long tasks that set the top-end horizons.
+- **Correcting for them raises the absolute time horizons substantially.** Across
+  correction methods, horizons rise by 28% to 47%; the most capable agent's 50%-horizon
+  rises ~35% under the cleanest ("pure censoring") variant. The doubling time barely
+  moves — it shortens by 4% to 5%.
+- **This correction and METR's own SIMEX correction pull in opposite directions and
+  largely cancel.** The net change to the newest agent's 50%-horizon is **+10% to +18%
+  on v1.0, and −21% to −25% on v1.1** — which way the balance tips depends on the task
+  suite. METR's published downward correction is not the last word.
+- **A structural discovery along the way:** the tasks whose `human_minutes` is a
+  researcher's guess are *exactly* the tasks where every human baseliner failed — and
+  for 7 of those 16 tasks, the durations of the recorded failed attempts already prove
+  the published value is too low.
 
 ## How much censoring is there?
 

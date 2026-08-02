@@ -28,3 +28,6 @@ reports/*/metrics/
 # OS
 .DS_Store
 Thumbs.db
+
+# Rendered documents (the markdown is the source of truth)
+*.pdf

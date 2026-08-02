@@ -16,20 +16,27 @@ Sub-analyses (all done), in dependency order:
 
 ## Bottom line
 
-The x-axis matters for the *absolute* horizon numbers but barely for the *doubling
-time*, which is remarkably robust: independent x-noise averages out (its 95% interval
-widens ~2 days even with every task perturbed, in the x-bootstrap), and a coherent
-systematic bias — even a full ±1σ — moves it by at most ~10% while swinging absolute
-horizons by ~×2.3. The place where the x-axis changes a *published point estimate*
-rather than just its error bar is the errors-in-variables attenuation corrected by
-SIMEX — and that effect is **strongly uneven across agents**, which the per-agent
-figure there shows and a summary median hides: the 80%-horizon rises 25–40% for
-essentially every capable agent, while the 50%-horizon barely moves for most and drops
-sharply only at the very top (−19% for Claude Opus 4.5). Our per-task σ makes that
-correction *slightly larger*, not smaller, than METR's global σ=0.78 — overturning our
-initial guess — because the long HCAST/RE-Bench tasks that drive the top end are a
-touch noisier than 0.78. Shared fit machinery for all sub-analyses:
-[`metr_fit_helpers.py`](metr_fit_helpers.py), which reproduces METR's published p50/p80 exactly.
+Uncertainty in the human baseline times matters a lot for the *absolute* time horizons
+and very little for the *doubling time*:
+
+- **The absolute horizons are fragile.** If the baseline times share a systematic bias
+  — every task measured against humans who were uniformly faster or slower than the
+  reference population — the headline horizon moves by up to ~×2.3 in either direction.
+  The published horizon numbers depend on there being no such shared bias.
+- **The doubling time is robust.** Independent per-task noise averages out across ~170
+  tasks (it widens the doubling-time confidence interval by only ~2 days), and even a
+  fully systematic bias moves the doubling time by at most ~10%, because rescaling
+  every task's time shifts the fitted line up or down without changing its slope.
+- **One known bias does change published point estimates, not just error bars.** Noise
+  in the baseline times flattens the fitted success curves (errors-in-variables
+  attenuation); SIMEX corrects for it. The correction is very different for different
+  agents: the 80%-horizon rises 25–40% for essentially every capable agent, while the
+  50%-horizon barely moves for mid-pack agents and drops sharply for the most capable
+  one (−19% for Claude Opus 4.5).
+- **METR assumed slightly too little noise, not too much.** Our per-task noise
+  estimates come out a bit above METR's global assumption on the long tasks that drive
+  the top-end horizons — so METR's published SIMEX correction slightly understates the
+  effect.
 
 ### A note on "frontier agents"
 
@@ -42,6 +49,10 @@ them on v1.0, 14 on v1.1), and the newest one is named explicitly wherever it ca
 the headline. (Throughout, this set is held fixed at METR's published membership even
 under corrected x-axes — comparability is the point, though a large enough correction
 could in principle change who was SOTA at release.)
+
+All sub-analyses share the fit machinery in
+[`metr_fit_helpers.py`](metr_fit_helpers.py), which reproduces METR's published
+p50/p80 exactly.
 
 Everything below is on **Time Horizon v1.0** (the paper's suite). The whole chain also
 runs on **v1.1** (228 tasks; agents from GPT-4 (Mar 2023) onward; Inspect harness) via
