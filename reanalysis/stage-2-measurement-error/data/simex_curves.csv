@@ -1,0 +1,681 @@
+noise_model,lambda,agent,quantile,mean_log2_horizon
+per_task,0,Claude 3 Opus,p50,2.837620762
+per_task,0,Claude 3.5 Sonnet (New),p50,4.928586131
+per_task,0,Claude 3.5 Sonnet (Old),p50,4.304846925
+per_task,0,Claude 3.7 Sonnet,p50,5.788123057
+per_task,0,Claude 4 Opus,p50,6.384875138
+per_task,0,Claude 4 Sonnet,p50,6.202823858
+per_task,0,Claude 4.1 Opus,p50,6.771661627
+per_task,0,Claude Opus 4.5,p50,7.947092208
+per_task,0,Claude Sonnet 4.5,p50,6.864537955
+per_task,0,DeepSeek-R1,p50,4.801552703
+per_task,0,DeepSeek-R1-0528,p50,5.034052021
+per_task,0,DeepSeek-V3,p50,4.309089727
+per_task,0,DeepSeek-V3-0324,p50,4.620254908
+per_task,0,GPT-2,p50,-4.216841914
+per_task,0,GPT-4 0125,p50,2.666042686
+per_task,0,GPT-4 0314,p50,2.590749182
+per_task,0,GPT-4 1106,p50,3.231821846
+per_task,0,GPT-4 Turbo,p50,2.959298229
+per_task,0,GPT-4o,p50,3.346936641
+per_task,0,GPT-5,p50,7.031401022
+per_task,0,GPT-5.1-Codex-Max,p50,7.342107557
+per_task,0,Gemini 2.5 Pro Preview,p50,5.328487585
+per_task,0,Grok 4,p50,6.71214879
+per_task,0,Kimi K2 Thinking,p50,5.848540916
+per_task,0,Qwen2-72B,p50,1.342915613
+per_task,0,Qwen2.5-72B,p50,2.539480912
+per_task,0,davinci-002 (GPT-3),p50,-2.795291835
+per_task,0,gpt-3.5-turbo-instruct,p50,-0.7387767014
+per_task,0,gpt-oss-120b,p50,5.495381251
+per_task,0,human,p50,6.850556676
+per_task,0,o1,p50,5.376835795
+per_task,0,o1-preview,p50,4.539452159
+per_task,0,o3,p50,6.514813433
+per_task,0,o4-mini,p50,6.26206304
+per_task,0,Claude 3 Opus,p80,0.6582947167
+per_task,0,Claude 3.5 Sonnet (New),p80,2.562579794
+per_task,0,Claude 3.5 Sonnet (Old),p80,2.067663
+per_task,0,Claude 3.7 Sonnet,p80,4.348996776
+per_task,0,Claude 4 Opus,p80,4.74882133
+per_task,0,Claude 4 Sonnet,p80,4.456061865
+per_task,0,Claude 4.1 Opus,p80,4.770293281
+per_task,0,Claude Opus 4.5,p80,5.171498543
+per_task,0,Claude Sonnet 4.5,p80,4.705719133
+per_task,0,DeepSeek-R1,p80,2.492996845
+per_task,0,DeepSeek-R1-0528,p80,2.2238986
+per_task,0,DeepSeek-V3,p80,2.439514831
+per_task,0,DeepSeek-V3-0324,p80,2.897768863
+per_task,0,GPT-2,p80,-6.287720045
+per_task,0,GPT-4 0125,p80,0.9365799984
+per_task,0,GPT-4 0314,p80,0.4515686045
+per_task,0,GPT-4 1106,p80,1.007331923
+per_task,0,GPT-4 Turbo,p80,1.317687513
+per_task,0,GPT-4o,p80,1.247541039
+per_task,0,GPT-5,p80,5.043709621
+per_task,0,GPT-5.1-Codex-Max,p80,5.32333531
+per_task,0,Gemini 2.5 Pro Preview,p80,3.651416503
+per_task,0,Grok 4,p80,4.21655651
+per_task,0,Kimi K2 Thinking,p80,3.907365932
+per_task,0,Qwen2-72B,p80,-0.7486588319
+per_task,0,Qwen2.5-72B,p80,0.406411886
+per_task,0,davinci-002 (GPT-3),p80,-4.152318397
+per_task,0,gpt-3.5-turbo-instruct,p80,-1.969283575
+per_task,0,gpt-oss-120b,p80,3.062159679
+per_task,0,human,p80,3.28689063
+per_task,0,o1,p80,2.93464805
+per_task,0,o1-preview,p80,2.682237338
+per_task,0,o3,p80,4.770864447
+per_task,0,o4-mini,p80,4.332548715
+per_task,0.5,Claude 3 Opus,p50,2.739240296
+per_task,0.5,Claude 3.5 Sonnet (New),p50,4.8823622
+per_task,0.5,Claude 3.5 Sonnet (Old),p50,4.235825868
+per_task,0.5,Claude 3.7 Sonnet,p50,5.781902523
+per_task,0.5,Claude 4 Opus,p50,6.384258265
+per_task,0.5,Claude 4 Sonnet,p50,6.198722557
+per_task,0.5,Claude 4.1 Opus,p50,6.795623833
+per_task,0.5,Claude Opus 4.5,p50,8.087840913
+per_task,0.5,Claude Sonnet 4.5,p50,6.901171327
+per_task,0.5,DeepSeek-R1,p50,4.75122072
+per_task,0.5,DeepSeek-R1-0528,p50,4.998294343
+per_task,0.5,DeepSeek-V3,p50,4.233639036
+per_task,0.5,DeepSeek-V3-0324,p50,4.5577412
+per_task,0.5,GPT-2,p50,-4.236599265
+per_task,0.5,GPT-4 0125,p50,2.543422567
+per_task,0.5,GPT-4 0314,p50,2.489091121
+per_task,0.5,GPT-4 1106,p50,3.138665174
+per_task,0.5,GPT-4 Turbo,p50,2.833349545
+per_task,0.5,GPT-4o,p50,3.249676031
+per_task,0.5,GPT-5,p50,7.070348881
+per_task,0.5,GPT-5.1-Codex-Max,p50,7.398744283
+per_task,0.5,Gemini 2.5 Pro Preview,p50,5.296595416
+per_task,0.5,Grok 4,p50,6.74790264
+per_task,0.5,Kimi K2 Thinking,p50,5.82893826
+per_task,0.5,Qwen2-72B,p50,1.256742818
+per_task,0.5,Qwen2.5-72B,p50,2.436234276
+per_task,0.5,davinci-002 (GPT-3),p50,-2.797944946
+per_task,0.5,gpt-3.5-turbo-instruct,p50,-0.7837093085
+per_task,0.5,gpt-oss-120b,p50,5.470797847
+per_task,0.5,human,p50,6.910660062
+per_task,0.5,o1,p50,5.348089034
+per_task,0.5,o1-preview,p50,4.474467214
+per_task,0.5,o3,p50,6.520588469
+per_task,0.5,o4-mini,p50,6.268388646
+per_task,0.5,Claude 3 Opus,p80,0.4569148672
+per_task,0.5,Claude 3.5 Sonnet (New),p80,2.354558362
+per_task,0.5,Claude 3.5 Sonnet (Old),p80,1.84897644
+per_task,0.5,Claude 3.7 Sonnet,p80,4.188390403
+per_task,0.5,Claude 4 Opus,p80,4.578979515
+per_task,0.5,Claude 4 Sonnet,p80,4.280124388
+per_task,0.5,Claude 4.1 Opus,p80,4.59783814
+per_task,0.5,Claude Opus 4.5,p80,5.044402675
+per_task,0.5,Claude Sonnet 4.5,p80,4.527527451
+per_task,0.5,DeepSeek-R1,p80,2.291305245
+per_task,0.5,DeepSeek-R1-0528,p80,2.027310241
+per_task,0.5,DeepSeek-V3,p80,2.204945586
+per_task,0.5,DeepSeek-V3-0324,p80,2.671530136
+per_task,0.5,GPT-2,p80,-6.323205888
+per_task,0.5,GPT-4 0125,p80,0.7018872568
+per_task,0.5,GPT-4 0314,p80,0.2520433593
+per_task,0.5,GPT-4 1106,p80,0.7979905538
+per_task,0.5,GPT-4 Turbo,p80,1.062052931
+per_task,0.5,GPT-4o,p80,1.024190533
+per_task,0.5,GPT-5,p80,4.870192367
+per_task,0.5,GPT-5.1-Codex-Max,p80,5.153291419
+per_task,0.5,Gemini 2.5 Pro Preview,p80,3.46126076
+per_task,0.5,Grok 4,p80,4.035879685
+per_task,0.5,Kimi K2 Thinking,p80,3.715011615
+per_task,0.5,Qwen2-72B,p80,-0.8852833254
+per_task,0.5,Qwen2.5-72B,p80,0.2052873862
+per_task,0.5,davinci-002 (GPT-3),p80,-4.170403649
+per_task,0.5,gpt-3.5-turbo-instruct,p80,-2.015512183
+per_task,0.5,gpt-oss-120b,p80,2.864245704
+per_task,0.5,human,p80,3.115359227
+per_task,0.5,o1,p80,2.741869753
+per_task,0.5,o1-preview,p80,2.458789923
+per_task,0.5,o3,p80,4.594906835
+per_task,0.5,o4-mini,p80,4.157120362
+per_task,1,Claude 3 Opus,p50,2.640659712
+per_task,1,Claude 3.5 Sonnet (New),p50,4.821995086
+per_task,1,Claude 3.5 Sonnet (Old),p50,4.158408261
+per_task,1,Claude 3.7 Sonnet,p50,5.745684577
+per_task,1,Claude 4 Opus,p50,6.364859451
+per_task,1,Claude 4 Sonnet,p50,6.175056426
+per_task,1,Claude 4.1 Opus,p50,6.807890233
+per_task,1,Claude Opus 4.5,p50,8.217668407
+per_task,1,Claude Sonnet 4.5,p50,6.926921075
+per_task,1,DeepSeek-R1,p50,4.685052023
+per_task,1,DeepSeek-R1-0528,p50,4.950314611
+per_task,1,DeepSeek-V3,p50,4.148213792
+per_task,1,DeepSeek-V3-0324,p50,4.480132809
+per_task,1,GPT-2,p50,-4.253596057
+per_task,1,GPT-4 0125,p50,2.434130754
+per_task,1,GPT-4 0314,p50,2.394029873
+per_task,1,GPT-4 1106,p50,3.04891608
+per_task,1,GPT-4 Turbo,p50,2.719626435
+per_task,1,GPT-4o,p50,3.155664153
+per_task,1,GPT-5,p50,7.098978677
+per_task,1,GPT-5.1-Codex-Max,p50,7.443325464
+per_task,1,Gemini 2.5 Pro Preview,p50,5.241651823
+per_task,1,Grok 4,p50,6.770679653
+per_task,1,Kimi K2 Thinking,p50,5.791124582
+per_task,1,Qwen2-72B,p50,1.182408131
+per_task,1,Qwen2.5-72B,p50,2.344726589
+per_task,1,davinci-002 (GPT-3),p50,-2.799325392
+per_task,1,gpt-3.5-turbo-instruct,p50,-0.8111575094
+per_task,1,gpt-oss-120b,p50,5.43115205
+per_task,1,human,p50,6.956446903
+per_task,1,o1,p50,5.304077288
+per_task,1,o1-preview,p50,4.395833909
+per_task,1,o3,p50,6.50781685
+per_task,1,o4-mini,p50,6.255794282
+per_task,1,Claude 3 Opus,p80,0.2642582495
+per_task,1,Claude 3.5 Sonnet (New),p80,2.135894015
+per_task,1,Claude 3.5 Sonnet (Old),p80,1.641180292
+per_task,1,Claude 3.7 Sonnet,p80,3.990305031
+per_task,1,Claude 4 Opus,p80,4.381626173
+per_task,1,Claude 4 Sonnet,p80,4.076872531
+per_task,1,Claude 4.1 Opus,p80,4.40473368
+per_task,1,Claude Opus 4.5,p80,4.903477582
+per_task,1,Claude Sonnet 4.5,p80,4.329160998
+per_task,1,DeepSeek-R1,p80,2.065979652
+per_task,1,DeepSeek-R1-0528,p80,1.828667688
+per_task,1,DeepSeek-V3,p80,1.979027305
+per_task,1,DeepSeek-V3-0324,p80,2.446680818
+per_task,1,GPT-2,p80,-6.353287996
+per_task,1,GPT-4 0125,p80,0.5048590478
+per_task,1,GPT-4 0314,p80,0.07801804754
+per_task,1,GPT-4 1106,p80,0.6180358907
+per_task,1,GPT-4 Turbo,p80,0.8459952743
+per_task,1,GPT-4o,p80,0.8299633363
+per_task,1,GPT-5,p80,4.685718244
+per_task,1,GPT-5.1-Codex-Max,p80,4.986058241
+per_task,1,Gemini 2.5 Pro Preview,p80,3.247348593
+per_task,1,Grok 4,p80,3.841065917
+per_task,1,Kimi K2 Thinking,p80,3.512719545
+per_task,1,Qwen2-72B,p80,-0.9984369778
+per_task,1,Qwen2.5-72B,p80,0.04329352739
+per_task,1,davinci-002 (GPT-3),p80,-4.19154458
+per_task,1,gpt-3.5-turbo-instruct,p80,-2.048603752
+per_task,1,gpt-oss-120b,p80,2.651250988
+per_task,1,human,p80,2.94035894
+per_task,1,o1,p80,2.534655544
+per_task,1,o1-preview,p80,2.237204748
+per_task,1,o3,p80,4.410431249
+per_task,1,o4-mini,p80,3.966662938
+per_task,1.5,Claude 3 Opus,p50,2.557012195
+per_task,1.5,Claude 3.5 Sonnet (New),p50,4.782032895
+per_task,1.5,Claude 3.5 Sonnet (Old),p50,4.094716761
+per_task,1.5,Claude 3.7 Sonnet,p50,5.742119501
+per_task,1.5,Claude 4 Opus,p50,6.389045442
+per_task,1.5,Claude 4 Sonnet,p50,6.189703937
+per_task,1.5,Claude 4.1 Opus,p50,6.864003475
+per_task,1.5,Claude Opus 4.5,p50,8.387736241
+per_task,1.5,Claude Sonnet 4.5,p50,6.988927041
+per_task,1.5,DeepSeek-R1,p50,4.639540519
+per_task,1.5,DeepSeek-R1-0528,p50,4.920931069
+per_task,1.5,DeepSeek-V3,p50,4.078562251
+per_task,1.5,DeepSeek-V3-0324,p50,4.418287219
+per_task,1.5,GPT-2,p50,-4.268753479
+per_task,1.5,GPT-4 0125,p50,2.329889687
+per_task,1.5,GPT-4 0314,p50,2.305102002
+per_task,1.5,GPT-4 1106,p50,2.961380006
+per_task,1.5,GPT-4 Turbo,p50,2.610887207
+per_task,1.5,GPT-4o,p50,3.066463113
+per_task,1.5,GPT-5,p50,7.176273444
+per_task,1.5,GPT-5.1-Codex-Max,p50,7.552815893
+per_task,1.5,Gemini 2.5 Pro Preview,p50,5.210140747
+per_task,1.5,Grok 4,p50,6.823304343
+per_task,1.5,Kimi K2 Thinking,p50,5.784142319
+per_task,1.5,Qwen2-72B,p50,1.099226442
+per_task,1.5,Qwen2.5-72B,p50,2.250437669
+per_task,1.5,davinci-002 (GPT-3),p50,-2.802912107
+per_task,1.5,gpt-3.5-turbo-instruct,p50,-0.8638785445
+per_task,1.5,gpt-oss-120b,p50,5.415323063
+per_task,1.5,human,p50,7.032661541
+per_task,1.5,o1,p50,5.282559925
+per_task,1.5,o1-preview,p50,4.333220896
+per_task,1.5,o3,p50,6.540207236
+per_task,1.5,o4-mini,p50,6.282403423
+per_task,1.5,Claude 3 Opus,p80,0.1050680206
+per_task,1.5,Claude 3.5 Sonnet (New),p80,1.932683779
+per_task,1.5,Claude 3.5 Sonnet (Old),p80,1.433996463
+per_task,1.5,Claude 3.7 Sonnet,p80,3.792663306
+per_task,1.5,Claude 4 Opus,p80,4.184509373
+per_task,1.5,Claude 4 Sonnet,p80,3.875029692
+per_task,1.5,Claude 4.1 Opus,p80,4.212116538
+per_task,1.5,Claude Opus 4.5,p80,4.782983086
+per_task,1.5,Claude Sonnet 4.5,p80,4.153131366
+per_task,1.5,DeepSeek-R1,p80,1.862848366
+per_task,1.5,DeepSeek-R1-0528,p80,1.620203578
+per_task,1.5,DeepSeek-V3,p80,1.768180655
+per_task,1.5,DeepSeek-V3-0324,p80,2.226404753
+per_task,1.5,GPT-2,p80,-6.378167746
+per_task,1.5,GPT-4 0125,p80,0.3200465033
+per_task,1.5,GPT-4 0314,p80,-0.08418539713
+per_task,1.5,GPT-4 1106,p80,0.422298239
+per_task,1.5,GPT-4 Turbo,p80,0.6384293554
+per_task,1.5,GPT-4o,p80,0.6287324166
+per_task,1.5,GPT-5,p80,4.498098415
+per_task,1.5,GPT-5.1-Codex-Max,p80,4.797691343
+per_task,1.5,Gemini 2.5 Pro Preview,p80,3.020607739
+per_task,1.5,Grok 4,p80,3.669890999
+per_task,1.5,Kimi K2 Thinking,p80,3.284219999
+per_task,1.5,Qwen2-72B,p80,-1.124040107
+per_task,1.5,Qwen2.5-72B,p80,-0.1334344652
+per_task,1.5,davinci-002 (GPT-3),p80,-4.20760281
+per_task,1.5,gpt-3.5-turbo-instruct,p80,-2.097806091
+per_task,1.5,gpt-oss-120b,p80,2.45045669
+per_task,1.5,human,p80,2.758543914
+per_task,1.5,o1,p80,2.312277828
+per_task,1.5,o1-preview,p80,2.021553447
+per_task,1.5,o3,p80,4.217443682
+per_task,1.5,o4-mini,p80,3.773287875
+per_task,2,Claude 3 Opus,p50,2.465640517
+per_task,2,Claude 3.5 Sonnet (New),p50,4.739249556
+per_task,2,Claude 3.5 Sonnet (Old),p50,4.031020707
+per_task,2,Claude 3.7 Sonnet,p50,5.727067587
+per_task,2,Claude 4 Opus,p50,6.392972191
+per_task,2,Claude 4 Sonnet,p50,6.185996582
+per_task,2,Claude 4.1 Opus,p50,6.890541021
+per_task,2,Claude Opus 4.5,p50,8.498476355
+per_task,2,Claude Sonnet 4.5,p50,7.026661725
+per_task,2,DeepSeek-R1,p50,4.591345421
+per_task,2,DeepSeek-R1-0528,p50,4.88959707
+per_task,2,DeepSeek-V3,p50,4.007677502
+per_task,2,DeepSeek-V3-0324,p50,4.356124274
+per_task,2,GPT-2,p50,-4.283279969
+per_task,2,GPT-4 0125,p50,2.216309647
+per_task,2,GPT-4 0314,p50,2.210854831
+per_task,2,GPT-4 1106,p50,2.875174204
+per_task,2,GPT-4 Turbo,p50,2.502430215
+per_task,2,GPT-4o,p50,2.978571966
+per_task,2,GPT-5,p50,7.218710781
+per_task,2,GPT-5.1-Codex-Max,p50,7.616987612
+per_task,2,Gemini 2.5 Pro Preview,p50,5.172988811
+per_task,2,Grok 4,p50,6.858463635
+per_task,2,Kimi K2 Thinking,p50,5.767079075
+per_task,2,Qwen2-72B,p50,1.006689444
+per_task,2,Qwen2.5-72B,p50,2.157070244
+per_task,2,davinci-002 (GPT-3),p50,-2.81311212
+per_task,2,gpt-3.5-turbo-instruct,p50,-0.9049508476
+per_task,2,gpt-oss-120b,p50,5.393596675
+per_task,2,human,p50,7.080727861
+per_task,2,o1,p50,5.256680015
+per_task,2,o1-preview,p50,4.269273177
+per_task,2,o3,p50,6.553046954
+per_task,2,o4-mini,p50,6.289538038
+per_task,2,Claude 3 Opus,p80,-0.07935113673
+per_task,2,Claude 3.5 Sonnet (New),p80,1.752465308
+per_task,2,Claude 3.5 Sonnet (Old),p80,1.244238992
+per_task,2,Claude 3.7 Sonnet,p80,3.636899272
+per_task,2,Claude 4 Opus,p80,4.042104303
+per_task,2,Claude 4 Sonnet,p80,3.739491886
+per_task,2,Claude 4.1 Opus,p80,4.089807386
+per_task,2,Claude Opus 4.5,p80,4.69793707
+per_task,2,Claude Sonnet 4.5,p80,4.024508753
+per_task,2,DeepSeek-R1,p80,1.679077441
+per_task,2,DeepSeek-R1-0528,p80,1.463358707
+per_task,2,DeepSeek-V3,p80,1.569528645
+per_task,2,DeepSeek-V3-0324,p80,2.036110619
+per_task,2,GPT-2,p80,-6.390162848
+per_task,2,GPT-4 0125,p80,0.09975668127
+per_task,2,GPT-4 0314,p80,-0.2667009771
+per_task,2,GPT-4 1106,p80,0.2331490565
+per_task,2,GPT-4 Turbo,p80,0.4247903921
+per_task,2,GPT-4o,p80,0.4334784162
+per_task,2,GPT-5,p80,4.382980462
+per_task,2,GPT-5.1-Codex-Max,p80,4.678402645
+per_task,2,Gemini 2.5 Pro Preview,p80,2.85109305
+per_task,2,Grok 4,p80,3.533679619
+per_task,2,Kimi K2 Thinking,p80,3.140587211
+per_task,2,Qwen2-72B,p80,-1.280422811
+per_task,2,Qwen2.5-72B,p80,-0.3123103052
+per_task,2,davinci-002 (GPT-3),p80,-4.229432083
+per_task,2,gpt-3.5-turbo-instruct,p80,-2.156245392
+per_task,2,gpt-oss-120b,p80,2.29645487
+per_task,2,human,p80,2.632395574
+per_task,2,o1,p80,2.157733166
+per_task,2,o1-preview,p80,1.827656255
+per_task,2,o3,p80,4.07683775
+per_task,2,o4-mini,p80,3.631988045
+metr_global,0,Claude 3 Opus,p50,2.837620762
+metr_global,0,Claude 3.5 Sonnet (New),p50,4.928586131
+metr_global,0,Claude 3.5 Sonnet (Old),p50,4.304846925
+metr_global,0,Claude 3.7 Sonnet,p50,5.788123057
+metr_global,0,Claude 4 Opus,p50,6.384875138
+metr_global,0,Claude 4 Sonnet,p50,6.202823858
+metr_global,0,Claude 4.1 Opus,p50,6.771661627
+metr_global,0,Claude Opus 4.5,p50,7.947092208
+metr_global,0,Claude Sonnet 4.5,p50,6.864537955
+metr_global,0,DeepSeek-R1,p50,4.801552703
+metr_global,0,DeepSeek-R1-0528,p50,5.034052021
+metr_global,0,DeepSeek-V3,p50,4.309089727
+metr_global,0,DeepSeek-V3-0324,p50,4.620254908
+metr_global,0,GPT-2,p50,-4.216841914
+metr_global,0,GPT-4 0125,p50,2.666042686
+metr_global,0,GPT-4 0314,p50,2.590749182
+metr_global,0,GPT-4 1106,p50,3.231821846
+metr_global,0,GPT-4 Turbo,p50,2.959298229
+metr_global,0,GPT-4o,p50,3.346936641
+metr_global,0,GPT-5,p50,7.031401022
+metr_global,0,GPT-5.1-Codex-Max,p50,7.342107557
+metr_global,0,Gemini 2.5 Pro Preview,p50,5.328487585
+metr_global,0,Grok 4,p50,6.71214879
+metr_global,0,Kimi K2 Thinking,p50,5.848540916
+metr_global,0,Qwen2-72B,p50,1.342915613
+metr_global,0,Qwen2.5-72B,p50,2.539480912
+metr_global,0,davinci-002 (GPT-3),p50,-2.795291835
+metr_global,0,gpt-3.5-turbo-instruct,p50,-0.7387767014
+metr_global,0,gpt-oss-120b,p50,5.495381251
+metr_global,0,human,p50,6.850556676
+metr_global,0,o1,p50,5.376835795
+metr_global,0,o1-preview,p50,4.539452159
+metr_global,0,o3,p50,6.514813433
+metr_global,0,o4-mini,p50,6.26206304
+metr_global,0,Claude 3 Opus,p80,0.6582947167
+metr_global,0,Claude 3.5 Sonnet (New),p80,2.562579794
+metr_global,0,Claude 3.5 Sonnet (Old),p80,2.067663
+metr_global,0,Claude 3.7 Sonnet,p80,4.348996776
+metr_global,0,Claude 4 Opus,p80,4.74882133
+metr_global,0,Claude 4 Sonnet,p80,4.456061865
+metr_global,0,Claude 4.1 Opus,p80,4.770293281
+metr_global,0,Claude Opus 4.5,p80,5.171498543
+metr_global,0,Claude Sonnet 4.5,p80,4.705719133
+metr_global,0,DeepSeek-R1,p80,2.492996845
+metr_global,0,DeepSeek-R1-0528,p80,2.2238986
+metr_global,0,DeepSeek-V3,p80,2.439514831
+metr_global,0,DeepSeek-V3-0324,p80,2.897768863
+metr_global,0,GPT-2,p80,-6.287720045
+metr_global,0,GPT-4 0125,p80,0.9365799984
+metr_global,0,GPT-4 0314,p80,0.4515686045
+metr_global,0,GPT-4 1106,p80,1.007331923
+metr_global,0,GPT-4 Turbo,p80,1.317687513
+metr_global,0,GPT-4o,p80,1.247541039
+metr_global,0,GPT-5,p80,5.043709621
+metr_global,0,GPT-5.1-Codex-Max,p80,5.32333531
+metr_global,0,Gemini 2.5 Pro Preview,p80,3.651416503
+metr_global,0,Grok 4,p80,4.21655651
+metr_global,0,Kimi K2 Thinking,p80,3.907365932
+metr_global,0,Qwen2-72B,p80,-0.7486588319
+metr_global,0,Qwen2.5-72B,p80,0.406411886
+metr_global,0,davinci-002 (GPT-3),p80,-4.152318397
+metr_global,0,gpt-3.5-turbo-instruct,p80,-1.969283575
+metr_global,0,gpt-oss-120b,p80,3.062159679
+metr_global,0,human,p80,3.28689063
+metr_global,0,o1,p80,2.93464805
+metr_global,0,o1-preview,p80,2.682237338
+metr_global,0,o3,p80,4.770864447
+metr_global,0,o4-mini,p80,4.332548715
+metr_global,0.5,Claude 3 Opus,p50,2.758961308
+metr_global,0.5,Claude 3.5 Sonnet (New),p50,4.887452534
+metr_global,0.5,Claude 3.5 Sonnet (Old),p50,4.24602516
+metr_global,0.5,Claude 3.7 Sonnet,p50,5.777754569
+metr_global,0.5,Claude 4 Opus,p50,6.378083514
+metr_global,0.5,Claude 4 Sonnet,p50,6.19379026
+metr_global,0.5,Claude 4.1 Opus,p50,6.787582291
+metr_global,0.5,Claude Opus 4.5,p50,8.069669874
+metr_global,0.5,Claude Sonnet 4.5,p50,6.892210299
+metr_global,0.5,DeepSeek-R1,p50,4.757198046
+metr_global,0.5,DeepSeek-R1-0528,p50,5.001958219
+metr_global,0.5,DeepSeek-V3,p50,4.245015808
+metr_global,0.5,DeepSeek-V3-0324,p50,4.566108906
+metr_global,0.5,GPT-2,p50,-4.285044911
+metr_global,0.5,GPT-4 0125,p50,2.568486071
+metr_global,0.5,GPT-4 0314,p50,2.510202051
+metr_global,0.5,GPT-4 1106,p50,3.156057097
+metr_global,0.5,GPT-4 Turbo,p50,2.858063197
+metr_global,0.5,GPT-4o,p50,3.267601682
+metr_global,0.5,GPT-5,p50,7.060692697
+metr_global,0.5,GPT-5.1-Codex-Max,p50,7.387313386
+metr_global,0.5,Gemini 2.5 Pro Preview,p50,5.297717734
+metr_global,0.5,Grok 4,p50,6.740051012
+metr_global,0.5,Kimi K2 Thinking,p50,5.827359339
+metr_global,0.5,Qwen2-72B,p50,1.279529648
+metr_global,0.5,Qwen2.5-72B,p50,2.457708971
+metr_global,0.5,davinci-002 (GPT-3),p50,-2.769003252
+metr_global,0.5,gpt-3.5-turbo-instruct,p50,-0.744808758
+metr_global,0.5,gpt-oss-120b,p50,5.471504592
+metr_global,0.5,human,p50,6.901909448
+metr_global,0.5,o1,p50,5.349652352
+metr_global,0.5,o1-preview,p50,4.483471288
+metr_global,0.5,o3,p50,6.513885362
+metr_global,0.5,o4-mini,p50,6.262833061
+metr_global,0.5,Claude 3 Opus,p80,0.4991757507
+metr_global,0.5,Claude 3.5 Sonnet (New),p80,2.387842612
+metr_global,0.5,Claude 3.5 Sonnet (Old),p80,1.88714751
+metr_global,0.5,Claude 3.7 Sonnet,p80,4.211371533
+metr_global,0.5,Claude 4 Opus,p80,4.597988362
+metr_global,0.5,Claude 4 Sonnet,p80,4.301477313
+metr_global,0.5,Claude 4.1 Opus,p80,4.615192741
+metr_global,0.5,Claude Opus 4.5,p80,5.056040932
+metr_global,0.5,Claude Sonnet 4.5,p80,4.545772336
+metr_global,0.5,DeepSeek-R1,p80,2.324571465
+metr_global,0.5,DeepSeek-R1-0528,p80,2.057842536
+metr_global,0.5,DeepSeek-V3,p80,2.246807306
+metr_global,0.5,DeepSeek-V3-0324,p80,2.711037822
+metr_global,0.5,GPT-2,p80,-6.452838757
+metr_global,0.5,GPT-4 0125,p80,0.7514407967
+metr_global,0.5,GPT-4 0314,p80,0.2947990685
+metr_global,0.5,GPT-4 1106,p80,0.8394462649
+metr_global,0.5,GPT-4 Turbo,p80,1.114155587
+metr_global,0.5,GPT-4o,p80,1.068141783
+metr_global,0.5,GPT-5,p80,4.886086196
+metr_global,0.5,GPT-5.1-Codex-Max,p80,5.167846532
+metr_global,0.5,Gemini 2.5 Pro Preview,p80,3.491065815
+metr_global,0.5,Grok 4,p80,4.055233182
+metr_global,0.5,Kimi K2 Thinking,p80,3.740739511
+metr_global,0.5,Qwen2-72B,p80,-0.8492403238
+metr_global,0.5,Qwen2.5-72B,p80,0.2483594015
+metr_global,0.5,davinci-002 (GPT-3),p80,-4.220254143
+metr_global,0.5,gpt-3.5-turbo-instruct,p80,-1.98160688
+metr_global,0.5,gpt-oss-120b,p80,2.891839701
+metr_global,0.5,human,p80,3.135030725
+metr_global,0.5,o1,p80,2.770369177
+metr_global,0.5,o1-preview,p80,2.497945164
+metr_global,0.5,o3,p80,4.613539478
+metr_global,0.5,o4-mini,p80,4.178253162
+metr_global,1,Claude 3 Opus,p50,2.678639647
+metr_global,1,Claude 3.5 Sonnet (New),p50,4.832363931
+metr_global,1,Claude 3.5 Sonnet (Old),p50,4.178402965
+metr_global,1,Claude 3.7 Sonnet,p50,5.740071739
+metr_global,1,Claude 4 Opus,p50,6.353741136
+metr_global,1,Claude 4 Sonnet,p50,6.166445746
+metr_global,1,Claude 4.1 Opus,p50,6.792155644
+metr_global,1,Claude Opus 4.5,p50,8.182648038
+metr_global,1,Claude Sonnet 4.5,p50,6.909659989
+metr_global,1,DeepSeek-R1,p50,4.697441038
+metr_global,1,DeepSeek-R1-0528,p50,4.957810249
+metr_global,1,DeepSeek-V3,p50,4.170700716
+metr_global,1,DeepSeek-V3-0324,p50,4.497423942
+metr_global,1,GPT-2,p50,-4.34200464
+metr_global,1,GPT-4 0125,p50,2.481269537
+metr_global,1,GPT-4 0314,p50,2.434272363
+metr_global,1,GPT-4 1106,p50,3.081908316
+metr_global,1,GPT-4 Turbo,p50,2.765684444
+metr_global,1,GPT-4o,p50,3.189524269
+metr_global,1,GPT-5,p50,7.079951447
+metr_global,1,GPT-5.1-Codex-Max,p50,7.421026426
+metr_global,1,Gemini 2.5 Pro Preview,p50,5.24577644
+metr_global,1,Grok 4,p50,6.755334652
+metr_global,1,Kimi K2 Thinking,p50,5.788920163
+metr_global,1,Qwen2-72B,p50,1.226181408
+metr_global,1,Qwen2.5-72B,p50,2.385076519
+metr_global,1,davinci-002 (GPT-3),p50,-2.748274915
+metr_global,1,gpt-3.5-turbo-instruct,p50,-0.7360930104
+metr_global,1,gpt-oss-120b,p50,5.433235904
+metr_global,1,human,p50,6.939850483
+metr_global,1,o1,p50,5.307791515
+metr_global,1,o1-preview,p50,4.414111743
+metr_global,1,o3,p50,6.495383073
+metr_global,1,o4-mini,p50,6.245778538
+metr_global,1,Claude 3 Opus,p80,0.3450637099
+metr_global,1,Claude 3.5 Sonnet (New),p80,2.199831146
+metr_global,1,Claude 3.5 Sonnet (Old),p80,1.713614894
+metr_global,1,Claude 3.7 Sonnet,p80,4.039568591
+metr_global,1,Claude 4 Opus,p80,4.420714242
+metr_global,1,Claude 4 Sonnet,p80,4.120175326
+metr_global,1,Claude 4.1 Opus,p80,4.440253338
+metr_global,1,Claude Opus 4.5,p80,4.925647016
+metr_global,1,Claude Sonnet 4.5,p80,4.364455782
+metr_global,1,DeepSeek-R1,p80,2.131860994
+metr_global,1,DeepSeek-R1-0528,p80,1.886314227
+metr_global,1,DeepSeek-V3,p80,2.058487818
+metr_global,1,DeepSeek-V3-0324,p80,2.52242758
+metr_global,1,GPT-2,p80,-6.591334201
+metr_global,1,GPT-4 0125,p80,0.5973876205
+metr_global,1,GPT-4 0314,p80,0.1585654372
+metr_global,1,GPT-4 1106,p80,0.6951058722
+metr_global,1,GPT-4 Turbo,p80,0.9421533397
+metr_global,1,GPT-4o,p80,0.9114537254
+metr_global,1,GPT-5,p80,4.716894667
+metr_global,1,GPT-5.1-Codex-Max,p80,5.012602165
+metr_global,1,Gemini 2.5 Pro Preview,p80,3.307783427
+metr_global,1,Grok 4,p80,3.880338041
+metr_global,1,Kimi K2 Thinking,p80,3.563096497
+metr_global,1,Qwen2-72B,p80,-0.9299374577
+metr_global,1,Qwen2.5-72B,p80,0.12287164
+metr_global,1,davinci-002 (GPT-3),p80,-4.272273056
+metr_global,1,gpt-3.5-turbo-instruct,p80,-1.98329161
+metr_global,1,gpt-oss-120b,p80,2.707785634
+metr_global,1,human,p80,2.978566847
+metr_global,1,o1,p80,2.591559565
+metr_global,1,o1-preview,p80,2.312197601
+metr_global,1,o3,p80,4.448224605
+metr_global,1,o4-mini,p80,4.009706877
+metr_global,1.5,Claude 3 Opus,p50,2.610526319
+metr_global,1.5,Claude 3.5 Sonnet (New),p50,4.796070242
+metr_global,1.5,Claude 3.5 Sonnet (Old),p50,4.12255697
+metr_global,1.5,Claude 3.7 Sonnet,p50,5.734206808
+metr_global,1.5,Claude 4 Opus,p50,6.370912869
+metr_global,1.5,Claude 4 Sonnet,p50,6.175628954
+metr_global,1.5,Claude 4.1 Opus,p50,6.837497733
+metr_global,1.5,Claude Opus 4.5,p50,8.330493889
+metr_global,1.5,Claude Sonnet 4.5,p50,6.960265433
+metr_global,1.5,DeepSeek-R1,p50,4.656455034
+metr_global,1.5,DeepSeek-R1-0528,p50,4.930728502
+metr_global,1.5,DeepSeek-V3,p50,4.109651194
+metr_global,1.5,DeepSeek-V3-0324,p50,4.44262027
+metr_global,1.5,GPT-2,p50,-4.392160978
+metr_global,1.5,GPT-4 0125,p50,2.395746443
+metr_global,1.5,GPT-4 0314,p50,2.362389185
+metr_global,1.5,GPT-4 1106,p50,3.008814642
+metr_global,1.5,GPT-4 Turbo,p50,2.674802205
+metr_global,1.5,GPT-4o,p50,3.11448771
+metr_global,1.5,GPT-5,p50,7.14374997
+metr_global,1.5,GPT-5.1-Codex-Max,p50,7.512996085
+metr_global,1.5,Gemini 2.5 Pro Preview,p50,5.216116055
+metr_global,1.5,Grok 4,p50,6.797979886
+metr_global,1.5,Kimi K2 Thinking,p50,5.779668422
+metr_global,1.5,Qwen2-72B,p50,1.16480745
+metr_global,1.5,Qwen2.5-72B,p50,2.30867601
+metr_global,1.5,davinci-002 (GPT-3),p50,-2.729161604
+metr_global,1.5,gpt-3.5-turbo-instruct,p50,-0.7477460576
+metr_global,1.5,gpt-oss-120b,p50,5.417012911
+metr_global,1.5,human,p50,7.004479401
+metr_global,1.5,o1,p50,5.28680408
+metr_global,1.5,o1-preview,p50,4.358763049
+metr_global,1.5,o3,p50,6.519561384
+metr_global,1.5,o4-mini,p50,6.265561819
+metr_global,1.5,Claude 3 Opus,p80,0.218239977
+metr_global,1.5,Claude 3.5 Sonnet (New),p80,2.024831043
+metr_global,1.5,Claude 3.5 Sonnet (Old),p80,1.536805218
+metr_global,1.5,Claude 3.7 Sonnet,p80,3.867199059
+metr_global,1.5,Claude 4 Opus,p80,4.24515174
+metr_global,1.5,Claude 4 Sonnet,p80,3.941086279
+metr_global,1.5,Claude 4.1 Opus,p80,4.266743574
+metr_global,1.5,Claude Opus 4.5,p80,4.815463481
+metr_global,1.5,Claude Sonnet 4.5,p80,4.206240232
+metr_global,1.5,DeepSeek-R1,p80,1.956436009
+metr_global,1.5,DeepSeek-R1-0528,p80,1.706538916
+metr_global,1.5,DeepSeek-V3,p80,1.878399825
+metr_global,1.5,DeepSeek-V3-0324,p80,2.333317924
+metr_global,1.5,GPT-2,p80,-6.71326058
+metr_global,1.5,GPT-4 0125,p80,0.4481368681
+metr_global,1.5,GPT-4 0314,p80,0.0299777837
+metr_global,1.5,GPT-4 1106,p80,0.5343929351
+metr_global,1.5,GPT-4 Turbo,p80,0.771027837
+metr_global,1.5,GPT-4o,p80,0.7450179796
+metr_global,1.5,GPT-5,p80,4.547234189
+metr_global,1.5,GPT-5.1-Codex-Max,p80,4.842032451
+metr_global,1.5,Gemini 2.5 Pro Preview,p80,3.110485315
+metr_global,1.5,Grok 4,p80,3.728023184
+metr_global,1.5,Kimi K2 Thinking,p80,3.36238977
+metr_global,1.5,Qwen2-72B,p80,-1.021677973
+metr_global,1.5,Qwen2.5-72B,p80,-0.01832290154
+metr_global,1.5,davinci-002 (GPT-3),p80,-4.326265946
+metr_global,1.5,gpt-3.5-turbo-instruct,p80,-1.996621342
+metr_global,1.5,gpt-oss-120b,p80,2.532503932
+metr_global,1.5,human,p80,2.817657116
+metr_global,1.5,o1,p80,2.396985104
+metr_global,1.5,o1-preview,p80,2.127087949
+metr_global,1.5,o3,p80,4.275777609
+metr_global,1.5,o4-mini,p80,3.839638953
+metr_global,2,Claude 3 Opus,p50,2.532854998
+metr_global,2,Claude 3.5 Sonnet (New),p50,4.75763307
+metr_global,2,Claude 3.5 Sonnet (Old),p50,4.066867988
+metr_global,2,Claude 3.7 Sonnet,p50,5.718950953
+metr_global,2,Claude 4 Opus,p50,6.370777939
+metr_global,2,Claude 4 Sonnet,p50,6.169084099
+metr_global,2,Claude 4.1 Opus,p50,6.857392088
+metr_global,2,Claude Opus 4.5,p50,8.426257712
+metr_global,2,Claude Sonnet 4.5,p50,6.99068885
+metr_global,2,DeepSeek-R1,p50,4.613661296
+metr_global,2,DeepSeek-R1-0528,p50,4.902633896
+metr_global,2,DeepSeek-V3,p50,4.047683781
+metr_global,2,DeepSeek-V3-0324,p50,4.387780615
+metr_global,2,GPT-2,p50,-4.437527244
+metr_global,2,GPT-4 0125,p50,2.300077736
+metr_global,2,GPT-4 0314,p50,2.282905335
+metr_global,2,GPT-4 1106,p50,2.934659858
+metr_global,2,GPT-4 Turbo,p50,2.58301946
+metr_global,2,GPT-4o,p50,3.038724782
+metr_global,2,GPT-5,p50,7.177450047
+metr_global,2,GPT-5.1-Codex-Max,p50,7.56606417
+metr_global,2,Gemini 2.5 Pro Preview,p50,5.181864601
+metr_global,2,Grok 4,p50,6.826812564
+metr_global,2,Kimi K2 Thinking,p50,5.76237973
+metr_global,2,Qwen2-72B,p50,1.090576204
+metr_global,2,Qwen2.5-72B,p50,2.230202243
+metr_global,2,davinci-002 (GPT-3),p50,-2.729648977
+metr_global,2,gpt-3.5-turbo-instruct,p50,-0.7577430108
+metr_global,2,gpt-oss-120b,p50,5.396410795
+metr_global,2,human,p50,7.046359671
+metr_global,2,o1,p50,5.262711941
+metr_global,2,o1-preview,p50,4.302549725
+metr_global,2,o3,p50,6.527480287
+metr_global,2,o4-mini,p50,6.268930814
+metr_global,2,Claude 3 Opus,p80,0.06097739481
+metr_global,2,Claude 3.5 Sonnet (New),p80,1.86799565
+metr_global,2,Claude 3.5 Sonnet (Old),p80,1.374033441
+metr_global,2,Claude 3.7 Sonnet,p80,3.73240522
+metr_global,2,Claude 4 Opus,p80,4.120145729
+metr_global,2,Claude 4 Sonnet,p80,3.823218264
+metr_global,2,Claude 4.1 Opus,p80,4.158927075
+metr_global,2,Claude Opus 4.5,p80,4.738557928
+metr_global,2,Claude Sonnet 4.5,p80,4.0914764
+metr_global,2,DeepSeek-R1,p80,1.799340366
+metr_global,2,DeepSeek-R1-0528,p80,1.572754173
+metr_global,2,DeepSeek-V3,p80,1.708167014
+metr_global,2,DeepSeek-V3-0324,p80,2.169818904
+metr_global,2,GPT-2,p80,-6.797975626
+metr_global,2,GPT-4 0125,p80,0.2628150436
+metr_global,2,GPT-4 0314,p80,-0.1249928042
+metr_global,2,GPT-4 1106,p80,0.3714772678
+metr_global,2,GPT-4 Turbo,p80,0.5911625618
+metr_global,2,GPT-4o,p80,0.5769196266
+metr_global,2,GPT-5,p80,4.445318738
+metr_global,2,GPT-5.1-Codex-Max,p80,4.734278443
+metr_global,2,Gemini 2.5 Pro Preview,p80,2.964008705
+metr_global,2,Grok 4,p80,3.60688634
+metr_global,2,Kimi K2 Thinking,p80,3.235093845
+metr_global,2,Qwen2-72B,p80,-1.150742129
+metr_global,2,Qwen2.5-72B,p80,-0.1695513296
+metr_global,2,davinci-002 (GPT-3),p80,-4.383107701
+metr_global,2,gpt-3.5-turbo-instruct,p80,-2.032111285
+metr_global,2,gpt-oss-120b,p80,2.399931033
+metr_global,2,human,p80,2.704933947
+metr_global,2,o1,p80,2.263823379
+metr_global,2,o1-preview,p80,1.961139502
+metr_global,2,o3,p80,4.151281097
+metr_global,2,o4-mini,p80,3.715178218

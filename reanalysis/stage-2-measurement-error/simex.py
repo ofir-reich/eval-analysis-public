@@ -14,11 +14,11 @@
 # ---
 
 # %% [markdown]
-# # Stage 2(d) — SIMEX with per-task σ
+# # Stage 2 — SIMEX with per-task σ
 #
 # The x-noise in `human_minutes` is a classic **errors-in-variables** problem: noise on
 # the regressor *attenuates* the logistic slope, biasing the fitted curve. Wider CIs
-# ((a)/(a0)) are not the whole story — the **point estimate** is biased too. SIMEX
+# ([the x-bootstrap](xboot.py)) are not the whole story — the **point estimate** is biased too. SIMEX
 # (simulation–extrapolation) corrects it: add *known* extra noise at levels
 # λ = 0.5, 1, 1.5, 2, watch the horizon degrade as a function of λ, and extrapolate the
 # trend back to **λ = −1** (the hypothetical zero-noise fit).
@@ -28,7 +28,7 @@
 # ran SIMEX with a **global** noise scale — SEM² = 0.78²/n (baselined), σ² = 1.05²
 # (estimates), zero noise for SWAA — and reported Opus 4.6 p50 falling **−36%** (7h38m)
 # and p80 **+9%**. Here we rerun the procedure with the **per-task** SEM from
-# [(b)](b_sigma_task.py) — where the noise scale differs by source (HCAST/RE-Bench a
+# [the σ analysis](sigma_task.py) — where the noise scale differs by source (HCAST/RE-Bench a
 # touch *above* 0.78, SWAA well below) — to see whether the haircut grows or shrinks.
 #
 # **Reproduction target check:** we also run METR's own global-σ version here, so any
@@ -72,7 +72,7 @@ METR_SIGMA_ESTIMATE = 1.05
 runs = metr.load_runs()
 official_human_minutes_by_task = metr.official_human_minutes_by_task(runs)
 log_human_minutes_by_task = np.log(official_human_minutes_by_task)
-sigma_by_task = pd.read_csv(DATA_OUT / f"b_sigma_by_task{SUFFIX}.csv", index_col=0)
+sigma_by_task = pd.read_csv(DATA_OUT / f"sigma_by_task{SUFFIX}.csv", index_col=0)
 
 frontier_agents, release_dates, official_fits_by_agent = (
     metr.load_frontier_agents_and_dates()
@@ -95,7 +95,7 @@ metr_global_sem_log = np.where(
     METR_SIGMA_BASELINED / np.sqrt(n_successful_runs.clip(lower=1)),
 )
 metr_global_sem_log = pd.Series(metr_global_sem_log, index=per_task_sem_log.index)
-sem_log_by_noise_model = {"per_task (b)": per_task_sem_log, "metr_global": metr_global_sem_log}
+sem_log_by_noise_model = {"per_task": per_task_sem_log, "metr_global": metr_global_sem_log}
 
 # %% [markdown]
 # ## Run SIMEX
@@ -129,7 +129,7 @@ def simex_horizons_at_lambda(noise_model: str, lam: float) -> dict:
     return {key: total / n_draws for key, total in log_horizon_sums.items()}
 
 
-simex_cache = DATA_OUT / f"d_simex_curves{SUFFIX}.csv"
+simex_cache = DATA_OUT / f"simex_curves{SUFFIX}.csv"
 if simex_cache.exists():
     simex_curve_rows = pd.read_csv(simex_cache)
     print(f"loaded cached SIMEX curves ({len(simex_curve_rows)} rows)")
@@ -194,7 +194,7 @@ for (noise_model, agent, quantile), curve in simex_curve_rows.groupby(
         "pct_change_exp": 100 * (2 ** (corrected_log2_exponential - naive_log2) - 1),
     })
 simex_correction_by_agent = pd.DataFrame(corrected_rows)
-simex_correction_by_agent.to_csv(DATA_OUT / f"d_simex_corrections{SUFFIX}.csv", index=False, float_format=metr.CSV_FLOAT_FORMAT)
+simex_correction_by_agent.to_csv(DATA_OUT / f"simex_corrections{SUFFIX}.csv", index=False, float_format=metr.CSV_FLOAT_FORMAT)
 
 # %% [markdown]
 # ## Frontier summary: per-task vs METR-global haircut
@@ -228,7 +228,7 @@ print(simex_correction_by_agent[
 # sits relative to the bulk of the task-length distribution. Plot it against the agent's
 # own uncorrected p50 as a single capability axis, so both quantiles of one agent share x.
 capability_by_agent = (
-    frontier_correction.query("quantile == 'p50' and noise_model == 'per_task (b)'")
+    frontier_correction.query("quantile == 'p50' and noise_model == 'per_task'")
     .set_index("agent")["naive_horizon_min"]
 )
 correction_plot_data = frontier_correction.assign(
@@ -249,7 +249,7 @@ fig = px.scatter(
 fig.update_traces(marker=dict(size=9))
 fig.update_layout(legend_title_text="")
 fig.add_hline(y=0, line_dash="dash", line_color="gray")
-fig.write_image(FIGURES / f"d_simex_correction{SUFFIX}.png", width=880, height=530, scale=2)
+fig.write_image(FIGURES / f"simex_correction{SUFFIX}.png", width=880, height=530, scale=2)
 show(fig)
 
 # %% [markdown]
@@ -284,7 +284,7 @@ for curve_name, curve in example_curves.groupby("curve"):
     )
 fig.add_vline(x=0, line_dash="dot", line_color="gray")
 fig.add_vline(x=-1, line_dash="dash", line_color="red")
-fig.write_image(FIGURES / f"d_simex_curves{SUFFIX}.png", width=850, height=500, scale=2)
+fig.write_image(FIGURES / f"simex_curves{SUFFIX}.png", width=850, height=500, scale=2)
 show(fig)
 
 # %% [markdown]
@@ -298,4 +298,4 @@ show(fig)
 # modelling lever — the quadratic roughly *doubles* the p80 rise relative to METR's
 # exponential (both printed above), while p50 is much less sensitive — and SIMEX
 # presumes the noise is *independent* across tasks; the *systematic* component is
-# bounded separately in [(c)](c_coherent_shift.py).
+# bounded separately in [the coherent shift](coherent_shift.py).

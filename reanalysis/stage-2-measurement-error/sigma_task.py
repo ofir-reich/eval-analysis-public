@@ -14,7 +14,7 @@
 # ---
 
 # %% [markdown]
-# # Stage 2(b) — Per-task σ via empirical-Bayes shrinkage
+# # Stage 2 — Per-task σ via empirical-Bayes shrinkage
 #
 # Goal: an estimate of **σ_task** — the spread (SD) of log completion time across human
 # baseliners — for *every* task, including the 21 tasks with a single successful baseline
@@ -133,7 +133,7 @@ fig = px.ecdf(
     labels={"log_time_std": "sample SD of ln(completion minutes)"},
 )
 fig.add_vline(x=METR_SIGMA_BASELINED, line_dash="dash", line_color="gray")
-fig.write_image(FIGURES / f"b_sigma_ecdf_by_source{SUFFIX}.png", width=900, height=500, scale=2)
+fig.write_image(FIGURES / f"sigma_ecdf_by_source{SUFFIX}.png", width=900, height=500, scale=2)
 show(fig)
 
 # %% [markdown]
@@ -151,7 +151,7 @@ fig = px.scatter(
             "log_time_std": "sample SD of ln(completion minutes)"},
 )
 fig.add_hline(y=METR_SIGMA_BASELINED, line_dash="dash", line_color="gray")
-fig.write_image(FIGURES / f"b_sigma_vs_length{SUFFIX}.png", width=900, height=500, scale=2)
+fig.write_image(FIGURES / f"sigma_vs_length{SUFFIX}.png", width=900, height=500, scale=2)
 show(fig)
 
 # %% [markdown]
@@ -277,7 +277,7 @@ fig.add_shape(type="line", x0=0, y0=0, x1=axis_max, y1=axis_max,
 for prior_sigma, sources_with_prior in prior_by_source.groupby("prior_sigma"):
     fig.add_hline(y=prior_sigma, line_dash="dash", opacity=0.4,
                   annotation_text="s₀ " + "/".join(sources_with_prior.index))
-fig.write_image(FIGURES / f"b_shrinkage{SUFFIX}.png", width=900, height=550, scale=2)
+fig.write_image(FIGURES / f"sigma_shrinkage{SUFFIX}.png", width=900, height=550, scale=2)
 show(fig)
 
 # %% [markdown]
@@ -326,7 +326,7 @@ fig = px.ecdf(
           "(baselined tasks)",
     labels={"sem": "SEM of ln(human_minutes)"},
 )
-fig.write_image(FIGURES / f"b_sem_vs_metr{SUFFIX}.png", width=900, height=500, scale=2)
+fig.write_image(FIGURES / f"sigma_sem_vs_metr{SUFFIX}.png", width=900, height=500, scale=2)
 show(fig)
 
 sem_ratio_to_metr = (
@@ -361,7 +361,7 @@ print(estimate_check.round(2))
 print(f"METR's assumed estimate σ: {METR_SIGMA_ESTIMATE}")
 
 # %% [markdown]
-# ## Robustness (a): does the $d_0 = \infty$ boundary matter downstream?
+# ## Robustness check 1: does the $d_0 = \infty$ boundary matter downstream?
 #
 # The HCAST $d_0 = \infty$ is a point estimate on the boundary of the parameter space.
 # How firmly does the data pin it there? Bootstrap the spread-observable HCAST tasks
@@ -390,7 +390,8 @@ print(f"bootstrap over the {len(hcast_fit_tasks)} HCAST tasks (2000 resamples): 
 # %% [markdown]
 # Finite heterogeneity appears in only a minority of resamples — so the data are also
 # compatible with moderate heterogeneity, and a full-Bayes posterior on $d_0$ would keep
-# mass on finite values. Does that ambiguity change what feeds (c)/(d)? Recompute the
+# mass on finite values. Does that ambiguity change what the downstream analyses
+# (x-bootstrap, coherent shift, SIMEX) consume? Recompute the
 # HCAST shrunken σ̃ (holding $s_0 = 0.89$) under $d_0 \in \{\infty, 20, 10\}$:
 
 # %%
@@ -423,16 +424,17 @@ print(sigma_by_alternative_d0.loc[most_affected_hcast_tasks].round(3))
 # The **median is fixed at $s_0$** and the mean moves ~1% (0.889 → 0.901) across
 # $d_0 \in \{\infty, 20, 10\}$. Only a handful of high-$s_j$ tasks move materially, and
 # only at $d_0 = 10$ (the low end of what the bootstrap supports): the single most
-# extreme task goes 0.89 → 1.30. So the *aggregate scale* that (c)/(d) consume is
-# insensitive to the boundary; individual tail tasks are not — but per-task independent
-# x-noise largely averages out across ~130 tasks in the horizon fit (this is exactly
-# what the nonparametric (a0) bootstrap already showed: ±2.4 days on doubling time).
+# extreme task goes 0.89 → 1.30. So the *aggregate scale* the downstream analyses
+# consume is insensitive to the boundary; individual tail tasks are not — but per-task
+# independent x-noise largely averages out across ~130 tasks in the horizon fit (this is
+# exactly what the nonparametric floor of [the x-bootstrap](xboot.py) already showed:
+# ±2.4 days on doubling time).
 # The $d_0 = \infty$ result is best read as a statement about the *story* — the data
 # cannot resolve task-to-task heterogeneity in σ from n=2–3 runs — rather than a claim
 # that every task's true σ is identical.
 
 # %% [markdown]
-# ## Robustness (b): is the χ² sampling model (within-task log-normality) violated?
+# ## Robustness check 2: is the χ² sampling model (within-task log-normality) violated?
 #
 # The moment fit attributes observed dispersion of $s_j^2$ to sampling noise via the
 # χ² model, which assumes within-task **log-times are normal**. If they are heavier-
@@ -475,7 +477,7 @@ fig = px.ecdf(
 normal_grid = np.linspace(-3, 3, 200)
 fig.add_scatter(x=normal_grid, y=stats.norm.cdf(normal_grid), mode="lines",
                 line=dict(color="black", dash="dash"), name="N(0,1)")
-fig.write_image(FIGURES / f"b_within_task_normality{SUFFIX}.png", width=900, height=500, scale=2)
+fig.write_image(FIGURES / f"sigma_within_task_normality{SUFFIX}.png", width=900, height=500, scale=2)
 show(fig)
 
 # %% [markdown]
@@ -487,13 +489,14 @@ show(fig)
 # reinforce it, not overturn it.** The caveat heavy tails *do* introduce is separate:
 # σ (a second moment) is an incomplete summary of these distributions, and the
 # CLT-based SEM = σ̃/√n understates gmean uncertainty at small n — a point in favour of
-# the nonparametric bootstrap in (a0) as the honest floor, and a reason to read the
-# parametric (c)/(d) as a smooth complement rather than a replacement.
+# the nonparametric floor of [the x-bootstrap](xboot.py) as the honest baseline, and a
+# reason to read the parametric analyses downstream as a smooth complement rather than
+# a replacement.
 
 # %% [markdown]
 # ## Output
 
 # %%
-sigma_by_task.to_csv(DATA_OUT / f"b_sigma_by_task{SUFFIX}.csv", float_format=metr.CSV_FLOAT_FORMAT)
-print(f"wrote {DATA_OUT / f'b_sigma_by_task{SUFFIX}.csv'} ({len(sigma_by_task)} tasks)")
+sigma_by_task.to_csv(DATA_OUT / f"sigma_by_task{SUFFIX}.csv", float_format=metr.CSV_FLOAT_FORMAT)
+print(f"wrote {DATA_OUT / f'sigma_by_task{SUFFIX}.csv'} ({len(sigma_by_task)} tasks)")
 sigma_by_task.head()

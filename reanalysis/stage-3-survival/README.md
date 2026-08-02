@@ -19,7 +19,7 @@ Three escalating tiers:
 |---|---|---|
 | 1 | **hard bounds** — the geometric mean of censoring times bounds the true one from below | none |
 | 2 | **Kaplan–Meier** — nonparametric survival of completion time | non-informative censoring |
-| 3 | **censored-lognormal MLE**, σ̃ from [Stage 2(b)](../stage-2-measurement-error/) | lognormal, σ known |
+| 3 | **censored-lognormal MLE**, σ̃ from [Stage 2's σ analysis](../stage-2-measurement-error/) | lognormal, σ known |
 
 ## Bottom line
 
@@ -90,8 +90,9 @@ per-task estimates.)
 
 ## Tier 3 — censored-lognormal MLE
 
-For a per-task point estimate, model completion time as lognormal and take **σ from Stage
-2(b)** — which is what makes this tractable: with σ known, μ is a one-parameter fit,
+For a per-task point estimate, model completion time as lognormal and take **σ from
+Stage 2's σ analysis** — which is what makes this tractable: with σ known, μ is a
+one-parameter fit,
 stable even on a task with one success and several censored runs. The censored terms can
 only push μ up, so the correction is one-directional by construction.
 
@@ -168,7 +169,7 @@ capable agent, with the censoring correction in both variants:
 
 | correction on most-capable-agent p50 | v1.0 (Claude Opus 4.5) | v1.1 (Claude Opus 4.6) |
 |---|---|---|
-| SIMEX errors-in-variables ([Stage 2d](../stage-2-measurement-error/), per-task σ) | ×0.812 (−18.8%) | ×0.641 (−35.9%) |
+| SIMEX errors-in-variables ([Stage 2](../stage-2-measurement-error/), per-task σ) | ×0.812 (−18.8%) | ×0.641 (−35.9%) |
 | censoring, pure (`censored_ratio + bounds`) | ×1.349 (+34.9%) | ×1.171 (+17.1%) |
 | **→ net** | **×1.096 (+9.6%)** | **×0.750 (−25.0%)** |
 | censoring, elapsed-time-consistent (`censored_mle + bounds`) | ×1.447 (+44.7%) | ×1.227 (+22.7%) |

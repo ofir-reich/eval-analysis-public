@@ -1,4 +1,5 @@
-"""Shared fit primitives for the Stage 2 measurement-error analyses (a)/(c)/(d).
+"""Shared fit primitives for the Stage 2 measurement-error analyses
+(x-bootstrap, coherent shift, SIMEX).
 
 Thin wrappers around METR's own logistic fit and frontier / doubling-time
 construction, so every sub-analysis perturbs the x-axis and then runs the

@@ -41,7 +41,7 @@
 # |---|---|---|
 # | 1 | **hard bounds** — gmean of censoring times is a lower bound on the true gmean | none |
 # | 2 | **Kaplan–Meier** — nonparametric survival of completion time | non-informative censoring |
-# | 3 | **censored-lognormal MLE** with σ̃ from [Stage 2(b)](../stage-2-measurement-error/) | lognormal, σ known |
+# | 3 | **censored-lognormal MLE** with σ̃ from [Stage 2's σ analysis](../stage-2-measurement-error/) | lognormal, σ known |
 #
 # then propagate the corrected `human_minutes` through METR's own fit.
 
@@ -370,7 +370,7 @@ show(fig)
 #
 # To get a *point estimate* per task we need one distributional assumption. Take
 # completion time on task $j$ to be lognormal with location $\mu_j$ and spread
-# $\sigma_j$ — and take $\sigma_j$ from **Stage 2(b)**, which estimated it by
+# $\sigma_j$ — and take $\sigma_j$ from **Stage 2's σ analysis**, which estimated it by
 # empirical-Bayes shrinkage (HCAST complete-pools to σ̃ ≈ 0.89). That is what makes this
 # tractable: with σ known, $\mu_j$ is a one-parameter fit, stable even on a task with a
 # single success and several censored runs.
@@ -385,7 +385,7 @@ show(fig)
 
 # %%
 sigma_by_task = pd.read_csv(
-    STAGE_2 / "data" / f"b_sigma_by_task{SUFFIX}.csv", index_col=0
+    STAGE_2 / "data" / f"sigma_by_task{SUFFIX}.csv", index_col=0
 )
 shrunken_sigma_by_task = sigma_by_task["log_time_std_shrunken"].fillna(
     sigma_by_task["sem_log"]
@@ -472,7 +472,7 @@ show(fig)
 # solving it. No model is needed to see that 12 minutes is the wrong number; the MLE's
 # 113 minutes is one defensible answer.
 #
-# It also exposes this tier's main risk: σ is *fixed* at Stage 2(b)'s pooled 0.89, but a
+# It also exposes this tier's main risk: σ is *fixed* at Stage 2's pooled 0.89, but a
 # task where one person finishes in 12 min and others exceed 139 min plainly has a larger
 # spread. With σ pinned too low, the fit can only reconcile the censored runs by pushing
 # μ up. So we check how much the headline depends on that borrowed σ.
@@ -643,7 +643,7 @@ show(fig)
 # true σ is *larger* than 0.89, and our central estimate is the **conservative** one.
 
 # %%
-# complete pooling in Stage 2(b) gives every HCAST task the same σ̃ (= the prior s0);
+# complete pooling in Stage 2's σ analysis gives every HCAST task the same σ̃ (= the prior s0);
 # the median just reads that common value off the table for display
 hcast_pooled_sigma = float(
     sigma_by_task.query("task_source == 'HCAST'")["log_time_std_shrunken"].median()
@@ -689,7 +689,7 @@ sigma_sensitivity.to_csv(DATA_OUT / f"sigma_sensitivity{SUFFIX}.csv", index=Fals
 # %% [markdown]
 # ## Net effect: censoring correction vs SIMEX
 #
-# [Stage 2(d)](../stage-2-measurement-error/) found SIMEX *lowers* the newest frontier
+# [Stage 2's SIMEX](../stage-2-measurement-error/) found SIMEX *lowers* the newest frontier
 # agent's p50 (−18.8% on v1.0 with per-task σ). Censoring correction pushes the other
 # way. Composing them multiplicatively in log space gives the net revision to the
 # headline horizon — the two largest known x-axis corrections, applied together for the
@@ -704,17 +704,17 @@ sigma_sensitivity.to_csv(DATA_OUT / f"sigma_sensitivity{SUFFIX}.csv", index=Fals
 
 # %%
 simex_corrections = pd.read_csv(
-    STAGE_2 / "data" / f"d_simex_corrections{SUFFIX}.csv"
+    STAGE_2 / "data" / f"simex_corrections{SUFFIX}.csv"
 )
 newest_frontier_agent = max(
     years_since_release_by_agent, key=years_since_release_by_agent.get
 )
 simex_per_task_p50 = simex_corrections.query(
-    "noise_model == 'per_task (b)' and quantile == 'p50' and agent == @newest_frontier_agent"
+    "noise_model == 'per_task' and quantile == 'p50' and agent == @newest_frontier_agent"
 )["pct_change"].iloc[0]
 
 print(f"newest frontier agent: {newest_frontier_agent}")
-print(f"  SIMEX (Stage 2d, per-task σ):              ×{1 + simex_per_task_p50 / 100:.3f} "
+print(f"  SIMEX (Stage 2, per-task σ):              ×{1 + simex_per_task_p50 / 100:.3f} "
       f"({simex_per_task_p50:+.1f}%)")
 for censoring_scenario in ["censored_ratio + bounds", "censored_mle + bounds"]:
     censoring_p50 = scenario_summary.query(
@@ -734,7 +734,7 @@ for censoring_scenario in ["censored_ratio + bounds", "censored_mle + bounds"]:
 #    earlier — which would make even these corrections **understate** the true times.
 #    The 8-hour administrative cap (25 runs at 479 min) is genuinely non-informative;
 #    voluntary give-ups are not.
-# 2. **σ borrowed from successes.** Stage 2(b)'s σ̃ is estimated from *successful* runs
+# 2. **σ borrowed from successes.** Stage 2's σ̃ is estimated from *successful* runs
 #    only. If failures come from a heavier-tailed part of the distribution, the true σ is
 #    larger and the correction bigger.
 # 3. **All-failure tasks are bounds, not estimates** — with no successes the location is

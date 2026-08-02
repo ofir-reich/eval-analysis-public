@@ -15,7 +15,7 @@ that uncertainty through to time horizons and doubling times.
 | Stage | Question | Status |
 |---|---|---|
 | [1 — Export archaeology](stage-1-export-archaeology/) | What exactly is in the public export, and can per-run human times be recovered? | ✅ done (v1.0 + v1.1) |
-| [2 — Measurement error](stage-2-measurement-error/) | How does per-task uncertainty in `human_minutes` propagate to horizons and doubling times? | ✅ (a0,b,a,c,d; v1.0 + v1.1) |
+| [2 — Measurement error](stage-2-measurement-error/) | How does per-task uncertainty in `human_minutes` propagate to horizons and doubling times? | ✅ done (v1.0 + v1.1) |
 | [3 — Survival analysis](stage-3-survival/) | What happens when failed human baselines are treated as censored observations instead of discarded? | ✅ done (v1.0 + v1.1) |
 | [4 — Cohort selection](stage-4-cohort-selection/) | Are long-task baseliners systematically faster, *tilting* the x-axis and hence the doubling time? | proposal — needs pseudonymous baseliner IDs |
 
@@ -64,26 +64,24 @@ confidently revised downward.
 ## Reproducing
 
 Everything is a plain Python script — no notebook interaction needed. The only ordering
-constraints: Stage 1 writes the per-run CSVs that Stage 2 consumes, and Stage 2(b)
-writes the per-task σ that (a), (c), (d), and Stage 3 consume.
+constraints: Stage 1 writes the per-run CSVs that Stage 2 consumes, and Stage 2's σ
+analysis writes the per-task σ that the rest of Stage 2 and Stage 3 consume.
 
 ```bash
 uv sync --all-extras                     # from repo root (Python ≥3.11)
 cd reanalysis/stage-1-export-archaeology && python analysis.py
 cd ../stage-2-measurement-error
-python b_sigma_task.py                   # per-task σ — must run before a/c/d
-python a0_nonparametric_xboot.py         # v1.0 only (the floor that (a) supersedes)
-python a_parametric_xboot.py
-python c_coherent_shift.py
-python d_simex.py
+python sigma_task.py                     # per-task σ — must run first
+python xboot.py                          # nonparametric floor + parametric bootstrap
+python coherent_shift.py
+python simex.py
 cd ../stage-3-survival && python analysis.py
 ```
 
 - **Extending to v1.1:** rerun any Stage-2/3 script with `DATASET_VERSION=1-1`
-  (outputs get a `_v1_1` suffix; Stage 1 handles both suites in one run; a0 is
-  v1.0-only).
+  (outputs get a `_v1_1` suffix; Stage 1 handles both suites in one run).
 - **Caches:** the committed `data/` CSVs double as caches for the expensive steps (the
-  bootstraps in a0/a, the SIMEX curves in d) — delete a cache file to force a
+  bootstrap replicates in `xboot`, the SIMEX curves) — delete a cache file to force a
   recompute; seeds are fixed, so a recompute reproduces it exactly. `N_BOOT` and
   `N_SIMEX` env vars trade runtime for precision.
 
