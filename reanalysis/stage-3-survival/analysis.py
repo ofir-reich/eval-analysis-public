@@ -5,6 +5,8 @@
 #     text_representation:
 #       extension: .py
 #       format_name: percent
+#       format_version: '1.3'
+#       jupytext_version: 1.19.4
 #   kernelspec:
 #     display_name: Python 3
 #     language: python
@@ -69,17 +71,9 @@ FIGURES.mkdir(exist_ok=True), DATA_OUT.mkdir(exist_ok=True)
 SUFFIX = metr.VERSION_SUFFIX
 print(f"dataset version: {metr.DATASET_VERSION}")
 
-try:
-    get_ipython()  # type: ignore[name-defined]
-    IS_INTERACTIVE = True
-except NameError:
-    IS_INTERACTIVE = False
+show = metr.show   # inline display in interactive sessions; no-op headless
 
-def show(fig):
-    if IS_INTERACTIVE:
-        fig.show()
-
-MIN_MINUTES = 10 / 60          # Stage-1 convention: clip zero-length runs to 10 seconds
+MIN_MINUTES = 10 / 60          # safety floor for log(time); see the clip note below
 LENGTH_BUCKET_EDGES = [0, 1, 4, 16, 64, 256, 960, np.inf]
 LENGTH_BUCKET_LABELS = ["<1m", "1-4m", "4-16m", "16-64m", "64-256m", "256-960m", ">960m"]
 
@@ -107,10 +101,11 @@ delta_by_task = (
 human_runs["minutes_derived"] = human_runs["minutes_floored"] + np.where(
     is_minute_floored, human_runs["task_id"].map(delta_by_task).fillna(0.0), 0.0
 )
-# A minute-floored run recorded as 0 means "under a minute"; adding δ>0 already makes it
-# positive, so this 10-second floor only ever binds on minute-floored sources with no δ
-# (uncorrected RE-Bench), where it just keeps log(time) finite. SWAA is exempt — its times
-# are genuinely sub-minute and clipping them would inflate the shortest tasks.
+# A minute-floored run recorded as 0 means "took under a minute". Where Stage 1 solved a
+# δ the correction already makes it positive; the 10-second floor is a safety mechanism
+# for the remaining runs (tasks with no solvable δ: all-failure HCAST tasks and
+# RE-Bench), needed only to keep log(time) finite in the fits below. SWAA is exempt —
+# its times are genuinely sub-minute and clipping them would inflate the shortest tasks.
 human_runs["minutes_derived"] = human_runs["minutes_derived"].where(
     ~is_minute_floored, human_runs["minutes_derived"].clip(lower=MIN_MINUTES)
 )
@@ -485,14 +480,25 @@ show(fig)
 # %% [markdown]
 # ## Propagating to horizons and the doubling time
 #
-# Four x-axis scenarios, each fed through METR's own weighted-logistic fit:
+# Six x-axis scenarios, each fed through METR's own weighted-logistic fit:
 #
 # | scenario | `human_minutes` used |
 # |---|---|
 # | `published` | METR's values (reproduces the headline exactly) |
 # | `max_impute` | crude: give every failed run its task's longest observed time, re-gmean |
-# | `censored_mle` | Tier 3 MLE where identified; published elsewhere |
+# | `censored_mle` | Tier 3 MLE **level** where identified; published elsewhere |
 # | `censored_mle + bounds` | as above, plus all-failure tasks raised to their Tier-1 bound |
+# | `censored_ratio` | published × (Tier-3 MLE ÷ naive gmean of successes) |
+# | `censored_ratio + bounds` | as above, plus the Tier-1 floors |
+#
+# The two families answer different questions. For HCAST and SWAA they coincide, because
+# the published value *is* the gmean of successful run times (Stage 1). For **RE-Bench**
+# they do not: its published `human_minutes` follows a different time convention
+# (§Stage 1 — not a gmean of elapsed times), so `censored_mle` substituting the
+# elapsed-time MLE level there bundles the censoring correction together with a
+# convention switch. `censored_ratio` keeps every task in its published convention and
+# applies only the *relative* censoring effect — the cleaner "pure censoring" scenario —
+# while `censored_mle` shows what a fully elapsed-time-consistent x-axis would look like.
 
 # %%
 published_human_minutes_by_task = metr.official_human_minutes_by_task(runs)
@@ -516,18 +522,32 @@ censored_mle_human_minutes_by_task = np.maximum(
     censored_mle_human_minutes_by_task, published_human_minutes_by_task
 )
 
-with_bounds_human_minutes_by_task = censored_mle_human_minutes_by_task.copy()
-for task_id, bound_row in bound_by_all_censored_task.iterrows():
-    with_bounds_human_minutes_by_task[task_id] = max(
-        with_bounds_human_minutes_by_task[task_id],
-        bound_row["gmean_censoring_lower_bound"],
-    )
+censoring_ratio_by_task = (
+    survival_by_task["mle_over_naive"].clip(lower=1)   # one-directional, like the MLE
+    .reindex(published_human_minutes_by_task.index).fillna(1)
+)
+censored_ratio_human_minutes_by_task = (
+    published_human_minutes_by_task * censoring_ratio_by_task
+)
+
+
+def raised_to_tier1_bounds(human_minutes_by_task: pd.Series) -> pd.Series:
+    """All-failure tasks raised to their Tier-1 arithmetic floor."""
+    with_bounds = human_minutes_by_task.copy()
+    for task_id, bound_row in bound_by_all_censored_task.iterrows():
+        with_bounds[task_id] = max(
+            with_bounds[task_id], bound_row["gmean_censoring_lower_bound"]
+        )
+    return with_bounds
+
 
 human_minutes_by_scenario = {
     "published": published_human_minutes_by_task,
     "max_impute": max_impute_human_minutes_by_task,
     "censored_mle": censored_mle_human_minutes_by_task,
-    "censored_mle + bounds": with_bounds_human_minutes_by_task,
+    "censored_mle + bounds": raised_to_tier1_bounds(censored_mle_human_minutes_by_task),
+    "censored_ratio": censored_ratio_human_minutes_by_task,
+    "censored_ratio + bounds": raised_to_tier1_bounds(censored_ratio_human_minutes_by_task),
 }
 print("median ×change in human_minutes vs published, and change on long tasks:")
 is_long_task = published_human_minutes_by_task > 60
@@ -573,7 +593,8 @@ survival_by_task.to_csv(DATA_OUT / f"survival_by_task{SUFFIX}.csv", float_format
 bound_by_all_censored_task.to_csv(DATA_OUT / f"lower_bounds_all_censored{SUFFIX}.csv", float_format=metr.CSV_FLOAT_FORMAT)
 
 # %%
-SCENARIO_ORDER = ["published", "censored_mle", "censored_mle + bounds", "max_impute"]
+SCENARIO_ORDER = ["published", "censored_ratio", "censored_ratio + bounds",
+                  "censored_mle", "censored_mle + bounds", "max_impute"]
 
 fig = px.scatter(
     scenario_summary, x="scenario", y="gmean_frontier_horizon_min_vs_published",
@@ -622,6 +643,11 @@ show(fig)
 # true σ is *larger* than 0.89, and our central estimate is the **conservative** one.
 
 # %%
+# complete pooling in Stage 2(b) gives every HCAST task the same σ̃ (= the prior s0);
+# the median just reads that common value off the table for display
+hcast_pooled_sigma = float(
+    sigma_by_task.query("task_source == 'HCAST'")["log_time_std_shrunken"].median()
+)
 sigma_sensitivity_rows = []
 for sigma_multiplier in [0.75, 1.0, 1.5]:
     corrected_by_task = {}
@@ -648,7 +674,7 @@ for sigma_multiplier in [0.75, 1.0, 1.5]:
     correction_ratio = corrected_human_minutes / published_human_minutes_by_task
     sigma_sensitivity_rows.append({
         "sigma_multiplier": sigma_multiplier,
-        "hcast_sigma": shrunken_sigma_by_task.get("blackbox/acorn", np.nan) * sigma_multiplier,
+        "hcast_sigma": hcast_pooled_sigma * sigma_multiplier,
         "median_correction_on_changed_tasks": float(
             correction_ratio[correction_ratio > 1.001].median()),
         "gmean_frontier_p50_min": float(np.exp(np.log(frontier_p50).mean())),
@@ -667,7 +693,14 @@ sigma_sensitivity.to_csv(DATA_OUT / f"sigma_sensitivity{SUFFIX}.csv", index=Fals
 # agent's p50 (−18.8% on v1.0 with per-task σ). Censoring correction pushes the other
 # way. Composing them multiplicatively in log space gives the net revision to the
 # headline horizon — the two largest known x-axis corrections, applied together for the
-# first time.
+# first time. Both censoring variants are shown: `censored_ratio + bounds` (pure
+# censoring, published conventions kept) and `censored_mle + bounds` (fully
+# elapsed-time-consistent, which for RE-Bench also switches the time convention).
+#
+# The multiplicative composition is itself an approximation: it assumes the two
+# corrections commute, whereas SIMEX rerun *on* a censoring-corrected x-axis (with σ
+# re-estimated from it) would come out somewhat different. Read the net as indicative,
+# not as a precise revised headline.
 
 # %%
 simex_corrections = pd.read_csv(
@@ -680,17 +713,17 @@ simex_per_task_p50 = simex_corrections.query(
     "noise_model == 'per_task (b)' and quantile == 'p50' and agent == @newest_frontier_agent"
 )["pct_change"].iloc[0]
 
-censoring_p50 = scenario_summary.query(
-    "scenario == 'censored_mle + bounds' and quantile == 'p50'"
-)["newest_agent_horizon_min_vs_published"].iloc[0]
-net_factor = (1 + simex_per_task_p50 / 100) * censoring_p50
 print(f"newest frontier agent: {newest_frontier_agent}")
-print(f"  SIMEX (Stage 2d, per-task σ):      ×{1 + simex_per_task_p50 / 100:.3f} "
+print(f"  SIMEX (Stage 2d, per-task σ):              ×{1 + simex_per_task_p50 / 100:.3f} "
       f"({simex_per_task_p50:+.1f}%)")
-print(f"  censoring correction (Stage 3):    ×{censoring_p50:.3f} "
-      f"({100 * (censoring_p50 - 1):+.1f}%)")
-print(f"  NET combined:                      ×{net_factor:.3f} "
-      f"({100 * (net_factor - 1):+.1f}%)")
+for censoring_scenario in ["censored_ratio + bounds", "censored_mle + bounds"]:
+    censoring_p50 = scenario_summary.query(
+        "scenario == @censoring_scenario and quantile == 'p50'"
+    )["newest_agent_horizon_min_vs_published"].iloc[0]
+    net_factor = (1 + simex_per_task_p50 / 100) * censoring_p50
+    print(f"  censoring, {censoring_scenario:24}: ×{censoring_p50:.3f} "
+          f"({100 * (censoring_p50 - 1):+.1f}%)  →  net ×{net_factor:.3f} "
+          f"({100 * (net_factor - 1):+.1f}%)")
 
 # %% [markdown]
 # ## Caveats
@@ -707,4 +740,8 @@ print(f"  NET combined:                      ×{net_factor:.3f} "
 # 3. **All-failure tasks are bounds, not estimates** — with no successes the location is
 #    not identified, so `censored_mle + bounds` uses the Tier-1 arithmetic floor. The true
 #    values are somewhere above it, by an unknown amount.
-# 4. The 7 zero-length censored runs carry essentially no information (clipped to 10 s).
+# 4. **The 10-second clip is inert.** A handful of runs are floored to 0 minutes
+#    (v1.0: 4, of which 1 censored); where no δ exists they are clipped to 10 s purely
+#    to keep log(time) finite. The one clipped *censored* run sits on an all-failure
+#    task whose Tier-1 bound is ~0.07× the published value under any treatment of that
+#    run — so no "provably understated" conclusion rests on a clipped value.

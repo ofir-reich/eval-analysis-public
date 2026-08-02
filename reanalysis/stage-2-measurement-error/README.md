@@ -23,12 +23,15 @@ set. We keep that definition but avoid the bare word "frontier", since these mod
 no longer frontier: v1.0's most capable member is **Claude Opus 4.5** and v1.1's is
 **Claude Opus 4.6**. Below they are the **SOTA-at-release agents** (17 of them on v1.0,
 14 on v1.1), and the newest one is named explicitly wherever it carries the headline.
+(Throughout, this set is held fixed at METR's published membership even under corrected
+x-axes — comparability is the point, though a large enough correction could in
+principle change who was SOTA at release.)
 
 **Bottom line for Stage 2.** The x-axis matters for the *absolute* horizon numbers but
 barely for the *trend*. The doubling time is remarkably robust: independent x-noise
 averages out (its 95% interval widens ~2 days even with every task perturbed, (a)), and a
-coherent systematic bias — even a full ±1σ — moves it under ±10% while swinging absolute
-horizons by ~×2.4 ((c)). The place where the x-axis changes a *published point estimate*
+coherent systematic bias — even a full ±1σ — moves it by at most ~10% while swinging
+absolute horizons by ~×2.3 ((c)). The place where the x-axis changes a *published point estimate*
 rather than just its error bar is the errors-in-variables attenuation corrected by SIMEX
 in (d) — and that effect is **strongly uneven across agents**, which the per-agent figure
 in (d) shows and a summary median hides: the 80%-horizon rises 25–40% for essentially
@@ -40,9 +43,10 @@ the long HCAST/RE-Bench tasks that drive the top end are a touch noisier than 0.
 [`metr_fit_helpers.py`](metr_fit_helpers.py), which reproduces METR's published p50/p80 exactly.
 
 Everything below is on **Time Horizon v1.0** (the paper's suite). The whole chain also
-runs on **v1.1** (228 tasks, GPT-4-era, Inspect harness) via `DATASET_VERSION=1-1` — see
-[the v1.1 replication](#v11-replication) at the end, which notably reproduces METR's own
-published Opus 4.6 SIMEX headline (−36%) almost exactly.
+runs on **v1.1** (228 tasks; agents from GPT-4 (Mar 2023) onward; Inspect harness) via
+`DATASET_VERSION=1-1` — see [the v1.1 replication](#v11-replication) at the end, which
+under METR's own extrapolant lands within ~2 points of their published Opus 4.6 SIMEX
+headline (−33.8% vs −36%).
 
 ## (a0) — Nonparametric x-bootstrap
 
@@ -107,8 +111,8 @@ noise plus true between-task spread, both expressible in trigamma functions. Bec
 between-baseliner spread differs systematically by source, the prior is fit **per task
 source** (RE-Bench, with only 7 spread-observable tasks, borrows the HCAST prior).
 
-**Results — the raw spreads were misleading; METR's global σ = 0.78 is vindicated for
-the tasks that matter:**
+**Results — the raw spreads were misleading; METR's global σ = 0.78 is roughly right
+for the tasks that matter, and if anything slightly low:**
 
 - **HCAST: $d_0 = \infty$ (complete pooling), common $\sigma \approx 0.89$.** The observed
   dispersion of $\log s_j^2$ (2.33) is *fully* explained by $\chi^2$ sampling noise around
@@ -199,20 +203,22 @@ Outputs: [`data/a_ci_by_agent.csv`](data/a_ci_by_agent.csv),
 The bootstraps ((a0)/(a)) treat x-noise as *independent* across tasks, so it averages
 out. A **systematic** error — every task biased the same direction (baseliner
 selection, a shared convention, the flooring scheme) — does not. We bound it by shifting
-*all* tasks' `human_minutes` coherently by $\pm 1\,\tilde\sigma_j$ in log space and refitting.
+*all* tasks' `human_minutes` coherently by $\pm 1\,\tilde\sigma_j$ in log space and
+refitting (researcher-estimate tasks, which have no baseliner spread, shift by METR's
+estimate-error σ = 1.05 — the same value (d) uses for them).
 
 **Result: absolute horizons swing hugely; the trend barely moves.**
 
 - A coherent ±1σ̃ bias multiplies the geometric-mean p50 horizon of the SOTA-at-release
-  agents by **×2.23 / ×0.45**
-  (16.4 min → 36.7 / 7.4 min): the *absolute* horizon is extremely sensitive to any
+  agents by **×2.29 / ×0.44**
+  (16.4 min → 37.6 / 7.2 min): the *absolute* horizon is extremely sensitive to any
   systematic error in the baseline times.
-- But the **doubling time** moves only **−6.5% / +7.4%** (201 → 188 / 216 days), because
+- But the **doubling time** moves only **−7.0% / +8.1%** (201 → 187 / 217 days), because
   a coherent shift is nearly a uniform rescale, which slides log-horizons vertically
   without changing the slope. The small residual asymmetry is real: the shift is larger
   for the long HCAST/RE-Bench tasks than for short SWAA, so pushing all tasks *up*
   steepens the recent trend slightly (faster doubling).
-- The **p80/p50 ratio is preserved** (0.235–0.255 across scenarios) — a pure shift moves
+- The **p80/p50 ratio is preserved** (0.233–0.256 across scenarios) — a pure shift moves
   both quantiles by the same factor. This is the systematic-error counterpart to the
   errors-in-variables *attenuation* in (d), which instead widens the p50/p80 gap.
 
@@ -232,8 +238,16 @@ Output: [`data/c_coherent_shift.csv`](data/c_coherent_shift.csv).
 Wider CIs aren't the whole story: x-noise *attenuates* the logistic slope, biasing the
 horizon **point estimates**. SIMEX corrects it — add known noise at λ = 0.5…2, watch the
 horizon drift, extrapolate to λ = −1 (zero noise). We run METR's own global-σ version and
-our per-task-σ version through the identical pipeline. (Validation: the λ=0 fits
+our per-task-σ version through the same pipeline. (Validation: the λ=0 fits
 reproduce METR's published p50/p80 exactly.)
+
+The extrapolation back to λ = −1 is a modelling choice, and it turns out to be the
+single largest lever in this analysis, so we compute two: a **quadratic** in λ (the
+textbook default; the headline numbers below) and METR's **exponential** — their note
+fits `horizon(λ)/horizon(0) = exp(β·λ)`, log-horizon linear in λ. The quadratic follows
+the curve's curvature and extrapolates more aggressively; the difference is small for
+p50 but roughly **halves the p80 rise** (both variants are in
+[`data/d_simex_corrections.csv`](data/d_simex_corrections.csv)).
 
 **Result 1: the correction is very uneven across agents — a median hides it.**
 
@@ -269,12 +283,16 @@ guess.**
   ($\tilde\sigma \approx 0.89$) exceeds METR's global 0.78, and those are the long tasks
   that drive the top end. **So METR's published SIMEX, if anything, slightly *understates*
   the errors-in-variables correction — not overstates it, as we had hypothesised.**
-- On **v1.1** the same pipeline reproduces METR's own published headline almost exactly:
-  Claude Opus 4.6 p50 **−34.3%** (global σ) against their reported **−36%**. See the
-  [v1.1 replication](#v11-replication).
+- On **v1.1** the same pipeline lands close to METR's own published headline: Claude
+  Opus 4.6 p50 **−33.8%** under their global σ *and* their exponential extrapolant,
+  against their reported **−36%**. See the [v1.1 replication](#v11-replication) for the
+  full comparison, including the p80 discrepancy.
 
-Caveats: the quadratic extrapolant to λ=−1 is itself uncertain (METR emphasised wide
-ranges), and SIMEX assumes *independent* noise — the systematic component is (c).
+Caveats: the extrapolant matters most for p80 — under METR's exponential, Opus 4.5's
+p80 correction is +18.8% instead of the quadratic's +26.3%, and the median p80 rise
+drops from +33.0% to +27.9% (per-task σ; the qualitative story — p80 up for every
+capable agent, p50 down only at the top — is extrapolant-invariant). And SIMEX assumes
+*independent* noise — the systematic component is (c).
 
 ![SIMEX correction across agents](figures/d_simex_correction.png)
 
@@ -286,8 +304,9 @@ Code: [`d_simex.py`](d_simex.py) / [notebook](d_simex.ipynb). Outputs:
 
 ## v1.1 replication
 
-Rerunning the whole chain on **Time Horizon v1.1** (228 tasks, GPT-4-era, Inspect harness;
-14 SOTA-at-release agents) — `DATASET_VERSION=1-1 python {b,a,c,d}_*.py`, outputs suffixed
+Rerunning the whole chain on **Time Horizon v1.1** (228 tasks; agents from GPT-4
+(Mar 2023) onward; Inspect harness; 14 SOTA-at-release agents) —
+`DATASET_VERSION=1-1 python {b,a,c,d}_*.py`, outputs suffixed
 `_v1_1`. All Stage-2 conclusions carry over, and one new thing appears because v1.1
 includes the agent METR itself reported on:
 
@@ -297,21 +316,29 @@ includes the agent METR itself reported on:
 | (b) SWAA prior | $d_0\approx2.5$, $s_0\approx0.30$ | $d_0\approx2.5$, $s_0\approx0.30$ — identical |
 | (a) median p50 interval widening | 13.6% | **12.4%** |
 | (a) doubling-time CI (metr → metr+x) | 52.7 → 54.7 d, median ~flat | 54.2 → 57.0 d, **median 129 → 117 d** |
-| (c) coherent ±1σ̃: horizon | ×2.23 / ×0.45 | ×2.39 / ×0.42 |
-| (c) coherent ±1σ̃: doubling | −6.5% / +7.4% | **−1.3% / +1.5%** |
-| (d) SIMEX newest agent p50 (global / per-task) | Opus 4.5: −16.6 / −18.8% | **Opus 4.6: −34.3 / −35.9%** |
-| (d) SIMEX median p80 across those agents (global / per-task) | +29.6 / +33.0% | +37.4 / +43.2% |
+| (c) coherent ±1σ̃: horizon | ×2.29 / ×0.44 | ×2.56 / ×0.39 |
+| (c) coherent ±1σ̃: doubling | −7.0% / +8.1% | **−2.5% / +2.8%** |
+| (d) SIMEX newest agent p50, quadratic extrapolant (global / per-task σ) | Opus 4.5: −16.6 / −18.8% | **Opus 4.6: −34.3 / −35.9%** |
+| (d) — same, METR's exponential extrapolant | −15.6 / −17.7% | −33.8 / −35.6% |
+| (d) SIMEX median p80 across those agents, quadratic (global / per-task σ) | +29.6 / +33.0% | +37.4 / +43.2% |
+| (d) — same, METR's exponential extrapolant | +24.5 / +27.9% | +32.9 / +37.4% |
 
 Three takeaways:
 
 1. **The (b) noise model is suite-invariant.** HCAST complete-pools to σ≈0.89 and SWAA to
    $s_0\approx0.30$ on *both* suites — the per-task σ estimates aren't an artifact of the paper's
    task selection.
-2. **SIMEX reproduces METR's own headline.** v1.1's most capable agent is
-   Claude Opus 4.6 — the very agent METR's note highlights. Our global-σ SIMEX gives
-   p50 **−34.3%** (11h59m → 7h53m); METR reported **−36%** (→ 7h38m). That near-exact
-   match validates the whole `metr_fit_helpers` pipeline against METR's published number,
-   and our per-task σ again lands slightly deeper (−35.9%).
+2. **SIMEX comes close to METR's own headline — with one disclosed discrepancy.**
+   v1.1's most capable agent is Claude Opus 4.6 — the very agent METR's note
+   highlights. Under METR's global σ and their exponential extrapolant, our p50
+   correction is **−33.8%** (11h59m → 7h43m); METR reported **−36%** (→ 7h38m). The
+   p80 does not match as well: we get **+12.5%** on the same like-for-like basis (and
+   +17.8% under our quadratic) against their published **+9%**. We could not close the
+   remaining ~2-point p50 / ~3-point p80 gap — METR's SIMEX code and exact λ grid are
+   unpublished, and their note's "regularization fix" fit may differ in detail from the
+   headline fit we replicate — so read our pipeline as closely parallel to METR's, not
+   as a re-execution of it. Our per-task σ again lands slightly deeper (p50 −35.6%
+   exponential / −35.9% quadratic).
 3. **The trend is *even more* robust on v1.1 under a coherent shift** (doubling moves
    only ±1.5% vs v1.0's ±7%), but the independent-noise bootstrap (a) pulls the
    doubling-time *median* down ~9% (129 → 117 d) — a larger central effect than v1.0's

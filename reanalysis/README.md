@@ -23,12 +23,12 @@ that uncertainty through to time horizons and doubling times.
 
 Short version: **the doubling time is robust, the absolute horizons are not.**
 
-- **The doubling time barely moves — under ~6% in every scenario we tried.** Random
+- **The doubling time barely moves — under ~10% in every scenario we tried.** Random
   per-task noise averages out over ~170 tasks, and even a coherent bias applied to all
   tasks at once mostly cancels, because rescaling every task slides the horizon-vs-date
   line without tilting it.
 - **Absolute horizons are a different story.** A coherent ±1σ error in the baseline times
-  multiplies them by **×2.4 or ×0.45**, so the headline "time horizon" numbers are far
+  multiplies them by **×2.3 or ×0.44**, so the headline "time horizon" numbers are far
   more fragile than the doubling time.
 - **Two real corrections pull in opposite directions.** METR's own errors-in-variables
   (SIMEX) correction *lowers* the most capable agent's 50%-horizon and raises everyone's
@@ -63,11 +63,29 @@ confidently revised downward.
 
 ## Reproducing
 
+Everything is a plain Python script — no notebook interaction needed. The only ordering
+constraints: Stage 1 writes the per-run CSVs that Stage 2 consumes, and Stage 2(b)
+writes the per-task σ that (a), (c), (d), and Stage 3 consume.
+
 ```bash
-uv sync --all-extras            # from repo root (Python ≥3.11)
-cd reanalysis/stage-1-export-archaeology
-python analysis.py              # or open analysis.ipynb
+uv sync --all-extras                     # from repo root (Python ≥3.11)
+cd reanalysis/stage-1-export-archaeology && python analysis.py
+cd ../stage-2-measurement-error
+python b_sigma_task.py                   # per-task σ — must run before a/c/d
+python a0_nonparametric_xboot.py         # v1.0 only (the floor that (a) supersedes)
+python a_parametric_xboot.py
+python c_coherent_shift.py
+python d_simex.py
+cd ../stage-3-survival && python analysis.py
 ```
+
+- **v1.1 replication:** rerun any Stage-2/3 script with `DATASET_VERSION=1-1`
+  (outputs get a `_v1_1` suffix; Stage 1 handles both suites in one run; a0 is
+  v1.0-only).
+- **Caches:** the committed `data/` CSVs double as caches for the expensive steps (the
+  bootstraps in a0/a, the SIMEX curves in d) — delete a cache file to force a
+  recompute; seeds are fixed, so a recompute reproduces it exactly. `N_BOOT` and
+  `N_SIMEX` env vars trade runtime for precision.
 
 Each stage directory contains: `README.md` (summary + key figures), `analysis.py`
 (jupytext py:percent source of truth), `analysis.ipynb` (paired, executed), `figures/`,

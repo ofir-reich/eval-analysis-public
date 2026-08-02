@@ -99,21 +99,37 @@ the data supports.
 
 ## Propagating to horizons and the doubling time
 
-Four x-axis scenarios through METR's own weighted-logistic fit (the `published` scenario
-reproduces their headline p50/p80 exactly):
+Six x-axis scenarios through METR's own weighted-logistic fit (the `published` scenario
+reproduces their headline p50/p80 exactly; the SOTA-at-release agent set is held fixed
+at METR's published membership throughout):
 
 | scenario | p50, geo-mean over SOTA-at-release agents | p80, same | Claude Opus 4.5 p50 | doubling time |
 |---|---|---|---|---|
 | `published` | 16.4 min | 4.0 min | 246.8 min | 201.1 d |
-| `max_impute` (crude) | ×1.39 | ×1.43 | ×1.59 | 189.3 d (−5.9%) |
+| `censored_ratio` | ×1.28 | ×1.32 | ×1.36 | 193.1 d (−4.0%) |
+| `censored_ratio + bounds` | ×1.35 | ×1.47 | ×1.35 | 191.4 d (−4.8%) |
 | `censored_mle` | ×1.30 | ×1.31 | ×1.47 | 192.2 d (−4.5%) |
 | `censored_mle + bounds` | ×1.37 | ×1.46 | ×1.45 | 190.6 d (−5.2%) |
+| `max_impute` (crude) | ×1.39 | ×1.43 | ×1.59 | 189.3 d (−5.9%) |
 
-**Horizons rise 30–46%; the most capable agent's p50 rises ~45%** (Claude Opus 4.5:
-247 → 357 min). The doubling time *shortens* by about 5% (201 → 191 days) — long
-tasks stretch more than short ones, so recent agents gain more than old ones and the
-trend slope steepens slightly. Consistent with Stage 2: the x-axis moves levels far
-more than it moves the trend.
+The two `censored_*` families differ in how the Tier-3 fit is applied, and the
+difference only matters for RE-Bench. `censored_mle` substitutes the MLE **level** —
+the corrected gmean of elapsed completion times. For HCAST and SWAA that is exactly the
+published convention (Stage 1), but RE-Bench's published `human_minutes` is *not* a
+gmean of elapsed times (8h-capped sessions, Stage 1 §1), so substituting the elapsed-time
+MLE there bundles the censoring correction with a **convention switch** — its ×1.47 on
+Opus 4.5 is not purely a censoring effect. `censored_ratio` instead multiplies each
+published value by the task's censoring **factor** (MLE ÷ naive gmean of successes),
+keeping every task in its published convention: the pure-censoring number is **×1.36**.
+Both are shown because both questions are legitimate — "what does censoring alone do?"
+(ratio) and "what would a fully elapsed-time-consistent x-axis look like?" (level).
+
+**Horizons rise ~28–47% across scenarios; the most capable agent's p50 rises ~35%
+(pure censoring) to ~45% (elapsed-time-consistent)** — Claude Opus 4.5: 247 → 333–357
+min. The doubling time *shortens* by 4–5% (201 → 191–193 days) — long tasks stretch
+more than short ones, so recent agents gain more than old ones and the trend slope
+steepens slightly. Consistent with Stage 2: the x-axis moves levels far more than it
+moves the trend.
 
 ![horizon by scenario](figures/horizon_by_scenario.png)
 
@@ -135,18 +151,24 @@ is *larger* than 0.89 — making our central estimate the **conservative** one.
 
 These are the two largest known x-axis corrections and they point in **opposite
 directions**. Applying both — the first time that has been done — to each suite's most
-capable agent:
+capable agent, with the censoring correction in both variants:
 
 | correction on most-capable-agent p50 | v1.0 (Claude Opus 4.5) | v1.1 (Claude Opus 4.6) |
 |---|---|---|
 | SIMEX errors-in-variables ([Stage 2d](../stage-2-measurement-error/), per-task σ) | ×0.812 (−18.8%) | ×0.641 (−35.9%) |
-| censoring correction (this stage) | ×1.447 (+44.7%) | ×1.227 (+22.7%) |
-| **net combined** | **×1.175 (+17.5%)** | **×0.786 (−21.4%)** |
+| censoring, pure (`censored_ratio + bounds`) | ×1.349 (+34.9%) | ×1.171 (+17.1%) |
+| **→ net** | **×1.096 (+9.6%)** | **×0.750 (−25.0%)** |
+| censoring, elapsed-time-consistent (`censored_mle + bounds`) | ×1.447 (+44.7%) | ×1.227 (+22.7%) |
+| **→ net** | **×1.175 (+17.5%)** | **×0.786 (−21.4%)** |
+
+(The multiplicative composition assumes the two corrections commute; SIMEX rerun on a
+censoring-corrected x-axis, with σ re-estimated from it, would come out somewhat
+different. Read the net as indicative, not as a precise revised headline.)
 
 **The two corrections are of comparable size and substantially cancel — but the sign of
 what is left over is not robust.** On v1.0 the censoring correction wins and the headline
-p50 should be revised *up* ~18%; on v1.1, where SIMEX bites much harder (−36%, matching
-METR's own published figure), SIMEX wins and the net is *down* ~21%.
+p50 should be revised *up* 10–18%; on v1.1, where SIMEX bites much harder (−36%, close to
+METR's own published figure), SIMEX wins and the net is *down* 21–25%.
 
 The defensible claim is therefore not a specific net number but this: **METR's published
 SIMEX haircut is not the end of the story.** It is opposed by a correction of similar
@@ -166,9 +188,9 @@ finding replicates, including the structural one:
 | …identical to the HCAST `estimate` set? | **yes** | **yes** |
 | provably understated (Tier 1) | 7/16, median 2.9× | 10/23, median 2.44× |
 | Tier-3 correction factor (median) | 1.47× | 1.54× |
-| p50, geo-mean over SOTA-at-release agents | ×1.37 | ×1.27 |
-| most-capable-agent p50 | ×1.45 | ×1.23 |
-| doubling time | −5.2% | −1.8% |
+| p50, geo-mean over SOTA-at-release agents (mle+bounds / ratio+bounds) | ×1.37 / ×1.35 | ×1.27 / ×1.26 |
+| most-capable-agent p50 (mle+bounds / ratio+bounds) | ×1.45 / ×1.35 | ×1.23 / ×1.17 |
+| doubling time (mle+bounds / ratio+bounds) | −5.2% / −4.8% | −1.8% / −1.4% |
 | σ sensitivity (0.75/1/1.5×) | ×1.25 / ×1.30 / ×1.41 | ×1.18 / ×1.21 / ×1.30 |
 
 The one-to-one correspondence between "all baseliners failed" and
@@ -190,6 +212,11 @@ rule, not a coincidence of task selection.
    time — i.e. that the person would have succeeded eventually. For a task a given person
    would *never* complete, the true value is unbounded, which again makes the bound
    conservative.
+5. **The 10-second safety clip is inert.** A few runs are floored to 0 minutes (v1.0:
+   4, of which 1 censored); where Stage 1 has no δ they are clipped to 10 s purely to
+   keep log(time) finite. The one clipped *censored* run sits on an all-failure task
+   whose Tier-1 bound is ~0.07× the published value under any treatment of that run, so
+   the "provably understated" set does not depend on a clipped value.
 
 Code: [`analysis.py`](analysis.py) (jupytext; paired executed notebook
 [`analysis.ipynb`](analysis.ipynb)) — runs on v1.1 too via `DATASET_VERSION=1-1`. Outputs:

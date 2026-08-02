@@ -5,6 +5,8 @@
 #     text_representation:
 #       extension: .py
 #       format_name: percent
+#       format_version: '1.3'
+#       jupytext_version: 1.19.4
 #   kernelspec:
 #     display_name: Python 3
 #     language: python
@@ -24,13 +26,18 @@
 # METR's [modelling-assumptions note
 # (2026-03-20)](https://metr.org/notes/2026-03-20-impact-of-modelling-assumptions-on-time-horizon-results/)
 # ran SIMEX with a **global** noise scale — SEM² = 0.78²/n (baselined), σ² = 1.05²
-# (estimates) — and reported Opus 4.6 p50 falling **−36%** (7h38m) and p80 **+9%**.
-# Here we rerun the identical procedure but with the **per-task** SEM from
+# (estimates), zero noise for SWAA — and reported Opus 4.6 p50 falling **−36%** (7h38m)
+# and p80 **+9%**. Here we rerun the procedure with the **per-task** SEM from
 # [(b)](b_sigma_task.py) — where the noise scale differs by source (HCAST/RE-Bench a
 # touch *above* 0.78, SWAA well below) — to see whether the haircut grows or shrinks.
 #
 # **Reproduction target check:** we also run METR's own global-σ version here, so any
 # difference is attributable to per-task vs global σ, not to pipeline differences.
+# Two known procedural differences from METR's run remain: (1) they assumed zero noise
+# for SWAA where our global model uses 0.78/√n — we checked this and it moves Opus 4.6's
+# corrections by ≤0.1 point, immaterial; (2) their extrapolant is exponential where our
+# default is quadratic — this one matters, especially for p80, so both extrapolants are
+# computed below.
 
 # %%
 import os
@@ -54,15 +61,7 @@ FIGURES.mkdir(exist_ok=True), DATA_OUT.mkdir(exist_ok=True)
 SUFFIX = metr.VERSION_SUFFIX   # "" for v1.0, "_v1_1" for v1.1
 print(f"dataset version: {metr.DATASET_VERSION}")
 
-try:
-    get_ipython()  # type: ignore[name-defined]
-    IS_INTERACTIVE = True
-except NameError:
-    IS_INTERACTIVE = False
-
-def show(fig):
-    if IS_INTERACTIVE:
-        fig.show()
+show = metr.show   # inline display in interactive sessions; no-op headless
 
 N_SIMEX = int(os.environ.get("N_SIMEX", 200))   # noised datasets per λ (METR used 200)
 LAMBDA_GRID = [0.0, 0.5, 1.0, 1.5, 2.0]
@@ -103,15 +102,16 @@ sem_log_by_noise_model = {"per_task (b)": per_task_sem_log, "metr_global": metr_
 #
 # At each λ we draw `N_SIMEX` datasets with extra multiplicative noise of variance
 # λ·SEM²_task, refit every agent's p50/p80, and average log-horizon over the draws
-# (λ = 0 is the unperturbed fit). Then per agent we fit a quadratic in λ over the grid
-# and evaluate it at λ = −1 — METR's extrapolant.
+# (λ = 0 is the unperturbed fit). The extrapolation back to λ = −1 happens in the next
+# section, under both extrapolants.
 
 # %%
 def simex_horizons_at_lambda(noise_model: str, lam: float) -> dict:
     """Mean over N_SIMEX draws of each agent's log2-horizon at added-noise level λ."""
     sem_log = sem_log_by_noise_model[noise_model]
+    n_draws = 1 if lam == 0.0 else N_SIMEX   # λ=0 is the deterministic unperturbed fit
     log_horizon_sums = {}
-    for draw_index in range(N_SIMEX):
+    for draw_index in range(n_draws):
         rng = np.random.default_rng(10_000 * int(lam * 10) + draw_index)
         if lam == 0.0:
             human_minutes_by_task = official_human_minutes_by_task
@@ -126,7 +126,7 @@ def simex_horizons_at_lambda(noise_model: str, lam: float) -> dict:
             for agent, horizon in horizon_by_agent.items():
                 key = (agent, f"p{int(quantile * 100)}")
                 log_horizon_sums[key] = log_horizon_sums.get(key, 0.0) + np.log2(horizon)
-    return {key: total / N_SIMEX for key, total in log_horizon_sums.items()}
+    return {key: total / n_draws for key, total in log_horizon_sums.items()}
 
 
 simex_cache = DATA_OUT / f"d_simex_curves{SUFFIX}.csv"
@@ -149,25 +149,49 @@ else:
     print(f"computed SIMEX curves ({len(simex_curve_rows)} rows)")
 
 # %% [markdown]
-# ## Extrapolate to λ = −1
+# ## Extrapolate to λ = −1 — two extrapolants
+#
+# The extrapolation function is a modelling choice, and it matters. We compute both:
+#
+# - **quadratic** (the common textbook default): fit mean log2-horizon as a quadratic in
+#   λ, evaluate at λ = −1;
+# - **exponential — METR's choice**: their note fits
+#   `horizon(λ)/horizon(0) = exp(β·λ)` and takes `horizon(0)·exp(−β)`, i.e.
+#   log-horizon **linear** in λ through the λ = 0 point.
+#
+# The quadratic bends with the curve's curvature and extrapolates more aggressively;
+# the exponential is the conservative straight line in log space. Comparing our
+# exponential-extrapolant numbers to METR's published ones is the like-for-like check;
+# the quadratic is our headline elsewhere, so both are carried through the outputs.
 
 # %%
-def extrapolate_to_minus_one(curve: pd.DataFrame) -> float:
+def extrapolate_quadratic_to_minus_one(curve: pd.DataFrame) -> float:
     """Quadratic fit of mean_log2_horizon on λ over the grid, evaluated at λ=−1."""
     coefficients = np.polyfit(curve["lambda"], curve["mean_log2_horizon"], 2)
     return float(np.polyval(coefficients, -1.0))
+
+def extrapolate_exponential_to_minus_one(curve: pd.DataFrame, naive_log2: float) -> float:
+    """METR's extrapolant: horizon ratio = exp(β·λ), i.e. log2-horizon linear in λ
+    through the λ=0 point (β by least squares); evaluated at λ=−1."""
+    lambdas = curve["lambda"].to_numpy()
+    log2_ratio = curve["mean_log2_horizon"].to_numpy() - naive_log2
+    beta = (lambdas @ log2_ratio) / (lambdas @ lambdas)
+    return float(naive_log2 - beta)
 
 corrected_rows = []
 for (noise_model, agent, quantile), curve in simex_curve_rows.groupby(
     ["noise_model", "agent", "quantile"]
 ):
     naive_log2 = curve.loc[curve["lambda"] == 0.0, "mean_log2_horizon"].iloc[0]
-    corrected_log2 = extrapolate_to_minus_one(curve)
+    corrected_log2 = extrapolate_quadratic_to_minus_one(curve)
+    corrected_log2_exponential = extrapolate_exponential_to_minus_one(curve, naive_log2)
     corrected_rows.append({
         "noise_model": noise_model, "agent": agent, "quantile": quantile,
         "naive_horizon_min": 2 ** naive_log2,
         "simex_horizon_min": 2 ** corrected_log2,
         "pct_change": 100 * (2 ** (corrected_log2 - naive_log2) - 1),
+        "simex_horizon_min_exp": 2 ** corrected_log2_exponential,
+        "pct_change_exp": 100 * (2 ** (corrected_log2_exponential - naive_log2) - 1),
     })
 simex_correction_by_agent = pd.DataFrame(corrected_rows)
 simex_correction_by_agent.to_csv(DATA_OUT / f"d_simex_corrections{SUFFIX}.csv", index=False, float_format=metr.CSV_FLOAT_FORMAT)
@@ -179,12 +203,16 @@ simex_correction_by_agent.to_csv(DATA_OUT / f"d_simex_corrections{SUFFIX}.csv", 
 frontier_correction = simex_correction_by_agent[
     simex_correction_by_agent["agent"].isin(frontier_agents)
 ]
-median_pct_change = (
-    frontier_correction.groupby(["noise_model", "quantile"])["pct_change"]
-    .median().unstack()
-)
-print("Median SIMEX correction across frontier agents (%):")
-print(median_pct_change.round(1).to_string())
+for extrapolant_column, extrapolant_name in [
+    ("pct_change", "quadratic extrapolant"),
+    ("pct_change_exp", "exponential extrapolant (METR's)"),
+]:
+    median_pct_change = (
+        frontier_correction.groupby(["noise_model", "quantile"])[extrapolant_column]
+        .median().unstack()
+    )
+    print(f"Median SIMEX correction across frontier agents (%), {extrapolant_name}:")
+    print(median_pct_change.round(1).to_string(), "\n")
 
 # the newest frontier agent (analogue of METR's Opus 4.6 headline)
 newest_frontier_agent = max(
@@ -212,7 +240,7 @@ fig = px.scatter(
     color="quantile", symbol="noise_model", hover_name="agent", log_x=True,
     title="SIMEX correction depends on the agent, not just on σ<br>"
           "<sub>p80 rises for every capable agent; p50 flips sign and only bites at the "
-          "top end</sub>",
+          "top end (quadratic extrapolant)</sub>",
     labels={"agent_capability_min":
             "agent's uncorrected 50%-horizon (minutes, log axis)",
             "pct_change": "horizon change at λ=−1 (%)",
@@ -266,7 +294,8 @@ show(fig)
 # −26…−36% p50 haircut, and whether the p80 sign (METR: +9%) holds. Because SIMEX
 # corrects the *slope attenuation*, p50 (a location) and p80 (which also depends on the
 # slope) move differently — the errors-in-variables mechanism behind the p50/p80 gap
-# flagged in the Stage 2 intro. Caveats: the quadratic extrapolant to λ=−1 is itself
-# uncertain (METR emphasised wide ranges), and SIMEX presumes the noise is *independent*
-# across tasks — the *systematic* component is bounded separately in
-# [(c)](c_coherent_shift.py).
+# flagged in the Stage 2 intro. Caveats: the extrapolation to λ=−1 is the largest
+# modelling lever — the quadratic roughly *doubles* the p80 rise relative to METR's
+# exponential (both printed above), while p50 is much less sensitive — and SIMEX
+# presumes the noise is *independent* across tasks; the *systematic* component is
+# bounded separately in [(c)](c_coherent_shift.py).

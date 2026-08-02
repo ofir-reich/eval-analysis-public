@@ -5,6 +5,8 @@
 #     text_representation:
 #       extension: .py
 #       format_name: percent
+#       format_version: '1.3'
+#       jupytext_version: 1.19.4
 #   kernelspec:
 #     display_name: Python 3
 #     language: python
@@ -55,15 +57,7 @@ FIGURES.mkdir(exist_ok=True), DATA_OUT.mkdir(exist_ok=True)
 SUFFIX = metr.VERSION_SUFFIX   # "" for v1.0, "_v1_1" for v1.1
 print(f"dataset version: {metr.DATASET_VERSION}")
 
-try:
-    get_ipython()  # type: ignore[name-defined]
-    IS_INTERACTIVE = True
-except NameError:
-    IS_INTERACTIVE = False
-
-def show(fig):
-    if IS_INTERACTIVE:
-        fig.show()
+show = metr.show   # inline display in interactive sessions; no-op headless
 
 N_BOOT = int(os.environ.get("N_BOOT", 500))
 CATEGORIES = ["task_family", "task_id", "run_id"]   # METR's "ftr"
@@ -147,7 +141,7 @@ for condition, horizons_by_replicate in horizons_by_replicate_by_condition.items
             continue
         p50_draws = horizons_by_replicate[column].dropna()
         p50_draws = p50_draws[np.isfinite(p50_draws)]
-        if len(p50_draws) < N_BOOT * 0.9:
+        if len(p50_draws) < len(horizons_by_replicate) * 0.9:
             continue
         ci_lower, ci_upper = p50_draws.quantile([0.025, 0.975])
         ci_rows.append({

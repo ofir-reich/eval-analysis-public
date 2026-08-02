@@ -32,6 +32,20 @@ REPORT = REPO / "reports" / f"time-horizon-{DATASET_VERSION}"
 REGULARIZATION = 1e-5          # headline value from reports/time-horizon-*/fig_params
 WEIGHT_COLUMN = "invsqrt_task_weight"
 DEFAULT_QUANTILES = (0.5, 0.8)
+
+try:  # running under a Jupyter/VS Code kernel?
+    get_ipython()  # type: ignore[name-defined]
+    IS_INTERACTIVE = True
+except NameError:
+    IS_INTERACTIVE = False
+
+
+def show(fig) -> None:
+    """Display inline in interactive sessions; no-op in headless script runs
+    (plotly's fallback there opens browser windows — figures are on disk anyway)."""
+    if IS_INTERACTIVE:
+        fig.show()
+
 # Round floats on CSV write so re-running a script is byte-stable: BLAS summation order
 # varies run to run and perturbs the last couple of digits, which otherwise shows up as
 # spurious diffs in every committed data file.

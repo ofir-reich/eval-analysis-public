@@ -5,6 +5,8 @@
 #     text_representation:
 #       extension: .py
 #       format_name: percent
+#       format_version: '1.3'
+#       jupytext_version: 1.19.4
 #   kernelspec:
 #     display_name: Python 3
 #     language: python
@@ -32,9 +34,10 @@
 #
 # **What to expect:** a coherent shift that were *perfectly uniform* across all tasks
 # would move every horizon by the same factor and leave the doubling time **unchanged**
-# (it only shifts the intercept). Our shift is uniform only *within* a task source
-# (σ̃ ≈ 0.89 for HCAST/RE-Bench, ≈ 0.30 for SWAA after complete-pooling), so any
-# doubling-time movement comes from the source mix differing across agents.
+# (it only shifts the intercept). Our shift is uniform only *within* a task class
+# (σ̃ ≈ 0.89 for baselined HCAST/RE-Bench, ≈ 0.30 for SWAA after complete-pooling;
+# METR's estimate-error σ = 1.05 for researcher-estimate tasks), so any doubling-time
+# movement comes from the class mix differing across agents.
 
 # %%
 from pathlib import Path
@@ -56,15 +59,7 @@ FIGURES.mkdir(exist_ok=True), DATA_OUT.mkdir(exist_ok=True)
 SUFFIX = metr.VERSION_SUFFIX   # "" for v1.0, "_v1_1" for v1.1
 print(f"dataset version: {metr.DATASET_VERSION}")
 
-try:
-    get_ipython()  # type: ignore[name-defined]
-    IS_INTERACTIVE = True
-except NameError:
-    IS_INTERACTIVE = False
-
-def show(fig):
-    if IS_INTERACTIVE:
-        fig.show()
+show = metr.show   # inline display in interactive sessions; no-op headless
 
 # %% [markdown]
 # ## Build the shifted x-axes
@@ -82,13 +77,21 @@ years_since_release_by_agent = metr.years_since_first_release_by_agent(
 )
 print(f"frontier agents ({len(frontier_agents)})")
 
-# per-task log-space shift magnitudes, aligned to the runs' task order
-sigma_shift_by_task = sigma_by_task["log_time_std_shrunken"].reindex(
-    official_human_minutes_by_task.index
+# per-task log-space shift magnitudes, aligned to the runs' task order.
+# Baselined tasks (incl. n=1, which complete-pool to the prior s0): the shrunken
+# between-baseliner σ̃. Researcher-estimate tasks have no baseliners — their systematic
+# error is estimate error, not person-to-person spread, so they carry METR's σ = 1.05
+# (the same value (d)'s SIMEX uses for them; Stage 3's Tier-1 bounds suggest real
+# estimate errors are of at least this order).
+is_estimate_task = (
+    sigma_by_task["human_source"].reindex(official_human_minutes_by_task.index)
+    == "estimate"
 )
-# n=1 / estimate tasks have no observed σ̃ — carry the SEM the (b) output assigned them
-# (prior s0 for n=1 baselined; METR's 1.05 for estimates)
-sigma_shift_by_task = sigma_shift_by_task.fillna(sigma_by_task["sem_log"])
+sigma_shift_by_task = (
+    sigma_by_task["log_time_std_shrunken"]
+    .reindex(official_human_minutes_by_task.index)
+    .mask(is_estimate_task, sigma_by_task["sem_log"])
+)
 sem_shift_by_task = sigma_by_task["sem_log"].reindex(official_human_minutes_by_task.index)
 
 shifted_human_minutes_by_scenario = {

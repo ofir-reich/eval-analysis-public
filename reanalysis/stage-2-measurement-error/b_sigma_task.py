@@ -5,6 +5,8 @@
 #     text_representation:
 #       extension: .py
 #       format_name: percent
+#       format_version: '1.3'
+#       jupytext_version: 1.19.4
 #   kernelspec:
 #     display_name: Python 3
 #     language: python
@@ -68,17 +70,7 @@ FIGURES.mkdir(exist_ok=True), DATA_OUT.mkdir(exist_ok=True)
 SUFFIX = metr.VERSION_SUFFIX   # "" for v1.0, "_v1_1" for v1.1
 print(f"dataset version: {metr.DATASET_VERSION}")
 
-try:  # running under a Jupyter/VS Code kernel?
-    get_ipython()  # type: ignore[name-defined]
-    IS_INTERACTIVE = True
-except NameError:
-    IS_INTERACTIVE = False
-
-def show(fig):
-    """Display inline in interactive sessions; no-op in headless script runs
-    (plotly's fallback there opens browser windows — figures are on disk anyway)."""
-    if IS_INTERACTIVE:
-        fig.show()
+show = metr.show   # inline display in interactive sessions; no-op headless
 
 METR_SIGMA_BASELINED = 0.78   # METR's global natural-log σ: SEM² = 0.78²/n
 METR_SIGMA_ESTIMATE = 1.05    # METR's σ for researcher-estimate tasks
@@ -104,6 +96,9 @@ successful_runs_with_derived_times = human_runs_derived.query("score_binarized =
 assert set(successful_runs_with_derived_times["derivation"]) == {
     "delta_corrected", "swaa_exact", "uncorrected_rebench"
 }
+# log() below requires strictly positive times; the zero-floored HCAST successes are
+# all δ-corrected positive, so this only fires if the Stage-1 input changes shape
+assert (successful_runs_with_derived_times["minutes_derived"] > 0).all()
 
 log_time_spread_by_task = successful_runs_with_derived_times.groupby("task_id").agg(
     n_successful_runs=("minutes_derived", "size"),
@@ -369,8 +364,31 @@ print(f"METR's assumed estimate σ: {METR_SIGMA_ESTIMATE}")
 # ## Robustness (a): does the $d_0 = \infty$ boundary matter downstream?
 #
 # The HCAST $d_0 = \infty$ is a point estimate on the boundary of the parameter space.
-# A bootstrap over the 60 spread-observable HCAST tasks refits finite heterogeneity in
-# only ~⅓ of resamples (median $d_0 \approx 11$ among those) — so the data are also
+# How firmly does the data pin it there? Bootstrap the spread-observable HCAST tasks
+# and refit the prior in each resample:
+
+# %%
+bootstrap_rng = np.random.default_rng(0)
+hcast_fit_tasks = tasks_with_observed_spread.query(
+    "task_source == 'HCAST' and log_time_std > 0"
+)
+hcast_sample_variances = hcast_fit_tasks["log_time_std"].to_numpy() ** 2
+hcast_degrees_of_freedom = hcast_fit_tasks["degrees_of_freedom"].to_numpy().astype(float)
+bootstrap_prior_degrees_of_freedom = np.array([
+    fit_log_variance_prior(
+        hcast_sample_variances[resample_indices], hcast_degrees_of_freedom[resample_indices]
+    )["prior_degrees_of_freedom"]
+    for resample_indices in bootstrap_rng.integers(
+        0, len(hcast_fit_tasks), size=(2000, len(hcast_fit_tasks))
+    )
+])
+is_finite_d0 = np.isfinite(bootstrap_prior_degrees_of_freedom)
+print(f"bootstrap over the {len(hcast_fit_tasks)} HCAST tasks (2000 resamples): "
+      f"finite d0 in {is_finite_d0.mean():.0%} of resamples; "
+      f"median finite d0 = {np.median(bootstrap_prior_degrees_of_freedom[is_finite_d0]):.1f}")
+
+# %% [markdown]
+# Finite heterogeneity appears in only a minority of resamples — so the data are also
 # compatible with moderate heterogeneity, and a full-Bayes posterior on $d_0$ would keep
 # mass on finite values. Does that ambiguity change what feeds (c)/(d)? Recompute the
 # HCAST shrunken σ̃ (holding $s_0 = 0.89$) under $d_0 \in \{\infty, 20, 10\}$:

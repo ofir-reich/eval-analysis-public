@@ -5,6 +5,8 @@
 #     text_representation:
 #       extension: .py
 #       format_name: percent
+#       format_version: '1.3'
+#       jupytext_version: 1.19.4
 #   kernelspec:
 #     display_name: Python 3
 #     language: python
@@ -52,7 +54,6 @@ import plotly.express as px
 from joblib import Parallel, delayed
 from scipy import stats
 
-from horizon.utils.logistic import get_x_for_quantile, logistic_regression
 from horizon.wrangle.bootstrap import bootstrap_sample
 
 import metr_fit_helpers as metr   # shared figure/fit helpers (see (a)/(c)/(d))
@@ -61,34 +62,21 @@ plotly.io.templates.default = "plotly_white"
 pd.set_option("display.max_columns", None, "display.width", 200)
 
 HERE = Path(__file__).parent if "__file__" in dir() else Path.cwd()
-REPO = HERE / ".." / ".."
-REPORT = REPO / "reports" / "time-horizon-1-0"
 FIGURES = HERE / "figures"
 DATA_OUT = HERE / "data"
 FIGURES.mkdir(exist_ok=True), DATA_OUT.mkdir(exist_ok=True)
 
-try:  # running under a Jupyter/VS Code kernel?
-    get_ipython()  # type: ignore[name-defined]
-    IS_INTERACTIVE = True
-except NameError:
-    IS_INTERACTIVE = False
+show = metr.show   # inline display in interactive sessions; no-op headless
 
-def show(fig):
-    """Display inline in interactive sessions; no-op in headless script runs
-    (plotly's fallback there opens browser windows — figures are on disk anyway)."""
-    if IS_INTERACTIVE:
-        fig.show()
+# a0 is v1.0-only by design: it is the assumption-free floor whose bound the
+# parametric (a) lifts, and (a) is what the v1.1 replication reruns.
+assert metr.DATASET_VERSION == "1-0", "a0 runs on v1.0 only — use (a) for v1.1"
 
 N_BOOT = int(os.environ.get("N_BOOT", 500))
-REGULARIZATION = 1e-5          # headline value from reports/time-horizon-1-0/fig_params
-WEIGHT_COLUMN = "invsqrt_task_weight"
 CATEGORIES = ["task_family", "task_id", "run_id"]   # METR's "ftr"
 
-runs = pd.read_json(REPORT / "data" / "raw" / "runs.jsonl", lines=True)
-runs = runs.rename(columns={"alias": "agent"})
-human_runs_derived = pd.read_csv(
-    HERE / ".." / "stage-1-export-archaeology" / "data" / "human_runs_derived.csv"
-)
+runs = metr.load_runs()
+human_runs_derived = pd.read_csv(metr.derived_human_runs_csv())
 print(f"{len(runs):,} runs | {runs['agent'].nunique()} agents")
 
 # %% [markdown]
@@ -107,7 +95,7 @@ successful_times_by_task = {
     for task, grp in resampleable_successful_runs.groupby("task_id")
     if len(grp) >= 2
 }
-official_human_minutes_by_task = runs.groupby("task_id")["human_minutes"].first()
+official_human_minutes_by_task = metr.official_human_minutes_by_task(runs)
 n_tasks = runs["task_id"].nunique()
 print(f"x-resampled tasks: {len(successful_times_by_task)} / {n_tasks} "
       f"(rest fixed: n=1, estimates, RE-Bench)")
@@ -135,26 +123,6 @@ def draw_human_minutes(rng: np.random.Generator) -> pd.Series:
 # ## Bootstrap machinery — METR's fit, three conditions
 
 # %%
-def fit_horizons(runs_sample: pd.DataFrame, human_minutes_by_task: pd.Series) -> dict:
-    """Fit METR's weighted logistic per agent on log2(human_minutes); return p50s."""
-    log2_minutes = np.log2(
-        runs_sample["task_id"].map(human_minutes_by_task).to_numpy()
-    )
-    p50_by_agent = {}
-    for agent, indices in runs_sample.groupby("agent").indices.items():
-        y = runs_sample["score_binarized"].to_numpy()[indices]
-        if len(np.unique(y)) < 2:
-            continue
-        model = logistic_regression(
-            log2_minutes[indices].reshape(-1, 1), y,
-            sample_weight=runs_sample[WEIGHT_COLUMN].to_numpy()[indices],
-            regularization=REGULARIZATION,
-            ensure_weights_sum_to_1=False,
-        )
-        p50_by_agent[agent] = float(np.exp2(get_x_for_quantile(model, 0.5)))
-    return p50_by_agent
-
-
 def one_replicate(replicate_index: int, condition: str) -> dict:
     rng = np.random.default_rng(42 + replicate_index)
     runs_sample = (
@@ -165,7 +133,9 @@ def one_replicate(replicate_index: int, condition: str) -> dict:
         draw_human_minutes(rng) if condition in ("metr+x", "x_only")
         else official_human_minutes_by_task
     )
-    return fit_horizons(runs_sample, human_minutes_by_task)
+    return metr.fit_horizons_per_quantile_by_agent(
+        runs_sample, human_minutes_by_task, quantiles=(0.5,)
+    )[0.5]
 
 
 # Raw per-replicate horizons are cached to data/ — delete those files to force a
@@ -199,7 +169,7 @@ for condition, p50_per_agent_by_replicate in p50_per_agent_by_replicate_by_condi
     for agent in p50_per_agent_by_replicate.columns:
         p50_draws = p50_per_agent_by_replicate[agent].dropna()
         p50_draws = p50_draws[np.isfinite(p50_draws)]
-        if len(p50_draws) < N_BOOT * 0.9:
+        if len(p50_draws) < len(p50_per_agent_by_replicate) * 0.9:
             continue
         ci_lower, ci_upper = p50_draws.quantile([0.025, 0.975])
         ci_rows.append({
@@ -246,30 +216,15 @@ show(fig)
 # headline construction); doubling time = 1/slope.
 
 # %%
-release_date_by_agent = {
-    agent: pd.Timestamp(date) for agent, date in release_dates["date"].items()
-    if agent in frontier_agents and date is not None
-}
-first_release_date = min(release_date_by_agent.values())
-years_since_first_release_by_agent = {
-    agent: (date - first_release_date).days / 365.25
-    for agent, date in release_date_by_agent.items()
-}
-
-def fit_doubling_days(p50_by_agent: pd.Series) -> float:
-    points = [
-        (years_since_first_release_by_agent[agent], np.log2(p50_by_agent[agent]))
-        for agent in years_since_first_release_by_agent
-        if agent in p50_by_agent and np.isfinite(p50_by_agent.get(agent, np.nan))
-    ]
-    if len(points) < 5:
-        return np.nan
-    x, y = map(np.array, zip(*points))
-    slope = np.polyfit(x, y, 1)[0]
-    return 365.25 / slope
+years_since_first_release_by_agent = metr.years_since_first_release_by_agent(
+    frontier_agents, release_dates
+)
 
 doubling_days_per_condition_by_replicate = pd.DataFrame({
-    condition: p50_per_agent_by_replicate.apply(fit_doubling_days, axis=1)
+    condition: p50_per_agent_by_replicate.apply(
+        metr.fit_doubling_days, axis=1,
+        years_since_release_by_agent=years_since_first_release_by_agent,
+    )
     for condition, p50_per_agent_by_replicate
     in p50_per_agent_by_replicate_by_condition.items()
 })
