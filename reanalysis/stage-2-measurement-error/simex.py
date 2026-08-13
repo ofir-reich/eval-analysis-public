@@ -262,8 +262,9 @@ example_curves["curve"] = example_curves["noise_model"] + " · " + example_curve
 fig = px.line(
     example_curves, x="lambda", y="horizon_min", color="curve", markers=True,
     log_y=True,
-    title=f"SIMEX extrapolation curves — {newest_frontier_agent} "
-          "(dashed = quadratic extrapolated back to λ=−1, the zero-noise fit)",
+    title=f"SIMEX extrapolation curves — {newest_frontier_agent}<br>"
+          "<sub>dashed: quadratic extrapolation back to λ = −1, the zero-noise fit "
+          "(stars)</sub>",
     labels={"lambda": "added-noise level λ", "horizon_min": "mean horizon (min, log)"},
 )
 # draw each curve's quadratic extrapolation from λ=0 back to λ=−1, ending on the marker
