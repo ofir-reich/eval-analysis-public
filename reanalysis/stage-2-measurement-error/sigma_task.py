@@ -160,10 +160,10 @@ show(fig)
 # With $e_j = \log s_j^2$ and $z_j = e_j - \psi(d_j/2) + \log(d_j/2)$ (removing the
 # known mean of $\log\chi^2$ sampling noise):
 #
-# - $\operatorname{Var}[z_j] = \overline{\psi'(d_j/2)} + \psi'(d_0/2)$ → solve for
+# - $\mathrm{Var}[z_j] = \overline{\psi'(d_j/2)} + \psi'(d_0/2)$ → solve for
 #   $d_0$ by inverting the trigamma function (if the left side is not larger, the data
 #   are consistent with a single common σ: $d_0 = \infty$, complete pooling);
-# - $\operatorname{E}[z_j] = \log s_0^2 - \psi(d_0/2) + \log(d_0/2)$ → gives $s_0^2$.
+# - $\mathrm{E}[z_j] = \log s_0^2 - \psi(d_0/2) + \log(d_0/2)$ → gives $s_0^2$.
 #
 # One task (`ai_rd_triton_cumsum`, 4 tied RE-Bench times) has $s_j = 0$ exactly —
 # excluded from the moment fit (it would send $\log s_j^2 \to -\infty$) but still

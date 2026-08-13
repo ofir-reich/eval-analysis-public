@@ -228,7 +228,7 @@ print("\n(the 3 RE-Bench estimate tasks DO have successful runs — "
 # If every baseliner on a task failed, with censoring times $c_1 \dots c_n$, then each
 # true completion time satisfies $T_i > c_i$, so **any** summary that is monotone in the
 # $T_i$ is bounded below by the same summary of the $c_i$. In particular
-# $\operatorname{gmean}(T) > \operatorname{gmean}(c)$. This needs no distributional
+# $\mathrm{gmean}(T) > \mathrm{gmean}(c)$. This needs no distributional
 # model, and it can be checked directly against the published number.
 
 # %%

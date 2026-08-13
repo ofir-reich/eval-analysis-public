@@ -35,7 +35,7 @@ Two things follow. First, the estimates are not exogenous guesses — baselining
 
 ## Tier 1 — hard lower bounds from the failed attempts
 
-If every baseliner failed at times $c_1 \dots c_n$, then each true completion time satisfies $T_i > c_i$, so $\operatorname{gmean}(T) > \operatorname{gmean}(c)$. This needs no distributional model, and it can be checked against the published value:
+If every baseliner failed at times $c_1 \dots c_n$, then each true completion time satisfies $T_i > c_i$, so $\mathrm{gmean}(T) > \mathrm{gmean}(c)$. This needs no distributional model, and it can be checked against the published value:
 
 - **7 of the 16 all-failure tasks publish a `human_minutes` below this hard lower bound.** For those tasks the published value is understated by a median factor of 2.9.
 - **13 of the 16** had at least one baseliner who worked longer than the published estimate without solving the task.
