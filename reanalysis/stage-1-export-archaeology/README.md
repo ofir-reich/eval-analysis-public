@@ -1,6 +1,10 @@
 # Stage 1 — Export archaeology: recovering per-run human baseline times
 
-**TL;DR:** In the public export, the durations of human baseline runs were floored to the whole minute before release, while the official per-task `human_minutes` (computed upstream from the unfloored times) kept full precision. We show this, and then repair it *at the task level*: for each task we solve for a single sub-minute offset δ_task that makes the task's geometric mean reproduce the official `human_minutes` exactly. That is an **imputation, not a recovery** — the true per-run fractional minutes are gone for good, and every run on a task gets the same δ — but it removes the systematic downward bias the flooring introduced (up to ~20% on short tasks), and we publish the resulting per-run dataset for downstream use.
+## Bottom line
+
+- **The public export floored every HCAST and RE-Bench run duration down to a whole minute**, while the official per-task `human_minutes` — computed upstream from the unfloored times — kept full precision. On short tasks the flooring biases the recorded times down by up to about 20%.
+- **We repair it at the task level.** For each task we solve for a single sub-minute offset δ that makes the task's geometric mean reproduce the official `human_minutes` exactly. This is an **imputation, not a recovery** — the true per-run fractions of a minute are gone for good, and every run on a task gets the same δ — but it removes the systematic downward bias.
+- **The resulting per-run dataset is published** for downstream use; the later stages consume it.
 
 ## The symptom
 
@@ -8,9 +12,9 @@
 
 ![gmean vs official by source](figures/gmean_vs_official_by_source.png)
 
-* **SWAA** (66 tasks) lands on y=x to within 4×10⁻⁴ — stored to the millisecond, nothing to fix.
-* **HCAST** (81 tasks) falls *below* the line, never above, by up to ~20%, worst on short tasks — the signature of a downward truncation.
-* **RE-Bench** (4 tasks) sits *above* the line by up to 76% — its `human_minutes` isn't a gmean of elapsed times at all (8h-capped sessions), so it's a different problem entirely.
+* **SWAA** (66 tasks) lands on the y=x line to within 4×10⁻⁴. Its times are stored to the millisecond; there is nothing to fix.
+* **HCAST** (81 tasks) falls *below* the line, never above, by up to about 20%, worst on short tasks — the signature of a downward truncation.
+* **RE-Bench** (4 tasks) sits *above* the line by up to 76%. Its `human_minutes` is not a geometric mean of elapsed times at all (its sessions were capped at 8 hours), so it is a different problem entirely.
 
 **Everything below is HCAST-only.** It is the only source that needs the correction, and the only one that admits it.
 

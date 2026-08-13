@@ -4,7 +4,7 @@
 
 Discarding them is complete-case analysis of censored data, which biases the estimate *downwards*, because the discarded attempts are precisely the slow ones. This correction has not been done before: METR's [limitations note](https://metr.org/notes/2026-01-22-time-horizon-limitations/) lists it as open, and the existing Weibull survival work in this space models *agent* runs, not human baselines.
 
-Three escalating tiers:
+The correction comes in three tiers of escalating assumptions:
 
 | tier | method | assumption |
 |---|---|---|
@@ -21,9 +21,9 @@ Three escalating tiers:
 
 ## How much censoring is there?
 
-**226 of 793 baseline runs (28.5%) ended in failure** — 38% of HCAST and 48% of RE-Bench runs, versus 2.6% of SWAA. The censoring times are long, not quick give-ups: median 145 min, 95th percentile 690 min, max 7,597 min (5.3 days). **1,277 hours of recorded human effort** is discarded — 388 of those hours on the 16 tasks discussed below, where *every* baseliner failed. 25 runs sit at exactly 479 minutes: a visible **8-hour administrative cap**.
+**226 of 793 baseline runs — 28.5% — ended in failure.** Failure is common on HCAST (38% of runs) and RE-Bench (48%) and rare on SWAA (under 3%). These were not quick give-ups: the median failed attempt lasted almost two and a half hours, and the longest ran for days. In all, the export records about **1,277 hours of discarded human effort**, 388 of them on the 16 tasks discussed below, where *every* baseliner failed. Twenty-five runs stopped at exactly 479 minutes — the visible signature of an **8-hour administrative cap**.
 
-And the censoring is concentrated exactly where it does the most damage: human success rate falls from 97.5% on sub-minute tasks to **39.9%** at 256–960 min and **20%** beyond 960 min. The long tasks that determine the top-end horizons are the ones whose `human_minutes` rests on the most heavily filtered data.
+The censoring is also concentrated exactly where it does the most damage. The human success rate falls from near-certain on sub-minute tasks to about 40% on tasks of 4 to 16 hours, and to 20% beyond that. The long tasks that determine the top-end horizons are the ones whose `human_minutes` rests on the most heavily filtered data.
 
 ![success rate by length](figures/success_rate_by_length.png)
 
@@ -37,27 +37,29 @@ Two things follow. First, the estimates are not exogenous guesses — baselining
 
 If every baseliner failed at times $c_1 \dots c_n$, then each true completion time satisfies $T_i > c_i$, so $\operatorname{gmean}(T) > \operatorname{gmean}(c)$. This needs no distributional model, and it can be checked against the published value:
 
-- **7 of the 16** all-failure tasks have a published `human_minutes` **below** this hard lower bound — for those tasks the published value is understated by a median factor of **2.9×**.
-- **13 of 16** have at least one single baseliner who worked longer than the published estimate without solving the task.
-- Worst case `blackbox/apron`: published estimate **10 minutes**, while 8 baseliners failed, one after **368 minutes**. The bound alone puts it at ≥30 min (3.0× the estimate).
+- **7 of the 16 all-failure tasks publish a `human_minutes` below this hard lower bound.** For those tasks the published value is understated by a median factor of 2.9.
+- **13 of the 16** had at least one baseliner who worked longer than the published estimate without solving the task.
+- The worst case is `blackbox/apron`, published at **10 minutes**: eight baseliners failed it, one of them only giving up after **368 minutes**, and the bound alone puts the true value at 30 minutes or more.
 
 ![lower bounds](figures/lower_bounds_all_censored.png)
 
 ## Tier 2 — Kaplan–Meier
 
-Treating failures as right-censored and pooling within task-length buckets, the KM median runs **~1.5× the naive geometric mean of successes** in the well-populated middle buckets (4–16 m: 1.35×, 16–64 m: 1.54×, 64–256 m: 1.49×). This is a distribution-free corroboration of the parametric correction below. (The 256–960 m bucket dips below 1.0 because pooling spans a 4× range of true task lengths — read these as coarse checks, not per-task estimates.)
+Treating failures as right-censored and pooling tasks within length buckets, the [Kaplan–Meier median](figures/kaplan_meier_by_length.png) runs about **1.5× the naive geometric mean of the successes** in each of the well-populated middle buckets (4 minutes to about 4 hours).[^kmbuckets] This is a distribution-free corroboration of the parametric correction below.
 
-![kaplan-meier](figures/kaplan_meier_by_length.png)
+[^kmbuckets]: The bucket ratios are 1.35×, 1.54×, and 1.49× for the 4–16, 16–64, and 64–256 minute buckets. The 256–960 minute bucket dips below 1.0 because pooling there spans a 4× range of true task lengths — read the buckets as coarse checks, not per-task estimates.
 
 ## Tier 3 — censored-lognormal MLE
 
 For a per-task point estimate, model completion time as lognormal and take **σ from Stage 2's σ analysis** — which is what makes this tractable: with σ known, μ is a one-parameter fit, stable even on a task with one success and several censored runs. The censored terms can only push μ up, so the correction is one-directional by construction.
 
-**Correction factor (MLE ÷ naive geometric mean) across the 59 correctable tasks: median 1.47×, 75th pct 2.04×, max 9.4×.** On tasks longer than 60 minutes the corrected `human_minutes` is **1.41–1.50×** the published value.
+**The correction factor — the MLE over the naive geometric mean — has a median of 1.47× across the 59 correctable tasks**, a 75th percentile of about 2×, and a long tail reaching 9.4×. On tasks longer than an hour the corrected `human_minutes` comes out at roughly 1.4 to 1.5 times the published value.
 
 The extreme case is instructive. `blackbox/acorn` publishes **12.0 minutes** — the time of its *single* successful baseliner — while **six of its nine failed baseliners worked longer than 12 minutes** without solving it. The recorded attempts alone show that 12 minutes understates the typical completion time; the MLE's 113 minutes is one defensible answer.
 
 Note the identifiability limit: with **no** successes the likelihood rises without bound in μ, so the 16 all-failure tasks have no MLE. For them Tier 1's arithmetic floor is all the data supports.
+
+The per-task view — each bubble is one task, sized by how many of its runs were failures:
 
 ![correction factors](figures/correction_factor_by_task.png)
 
@@ -74,17 +76,15 @@ Six x-axis scenarios through METR's own weighted-logistic fit (the `published` s
 | `censored_mle + bounds` | ×1.37 | ×1.46 | ×1.45 | 190.6 d (−5.2%) |
 | `max_impute` (crude) | ×1.39 | ×1.43 | ×1.59 | 189.3 d (−5.9%) |
 
+Two scenario ingredients need defining. `+ bounds` additionally raises the 16 all-failure tasks — which have no MLE — to their Tier-1 hard lower bound; `max_impute` is a deliberately crude upper reference that gives every failed run its task's longest observed time and recomputes the geometric mean.
+
 The two `censored_*` families differ in how the Tier-3 fit is applied, and the difference only matters for RE-Bench. `censored_mle` substitutes the MLE **level** — the corrected gmean of elapsed completion times. For HCAST and SWAA that is exactly the published convention (Stage 1), but RE-Bench's published `human_minutes` is *not* a gmean of elapsed times (8h-capped sessions, Stage 1 §1), so substituting the elapsed-time MLE there bundles the censoring correction with a **convention switch** — its ×1.47 on Opus 4.5 is not purely a censoring effect. `censored_ratio` instead multiplies each published value by the task's censoring **factor** (MLE ÷ naive gmean of successes), keeping every task in its published convention: the pure-censoring number is **×1.36**. Both are shown because both questions are legitimate — "what does censoring alone do?" (ratio) and "what would a fully elapsed-time-consistent x-axis look like?" (level).
 
-**Horizons rise ~28–47% across scenarios; the most capable agent's p50 rises ~35% (pure censoring) to ~45% (elapsed-time-consistent)** — Claude Opus 4.5: 247 → 333–357 min. The doubling time *shortens* by 4–5% (201 → 191–193 days) — long tasks stretch more than short ones, so recent agents gain more than old ones and the fitted slope steepens slightly. Consistent with Stage 2: the x-axis moves levels far more than it moves the doubling time.
-
-![horizon by scenario](figures/horizon_by_scenario.png)
-
-![doubling by scenario](figures/doubling_by_scenario.png)
+**Across scenarios the horizons rise by roughly 28 to 47%, while the doubling time shortens by only 4 to 5%.** Claude Opus 4.5's 50%-horizon goes from the published 247 minutes to between 333 minutes (pure censoring) and 357 minutes (elapsed-time-consistent). The doubling time shortens slightly because long tasks stretch more than short ones, so recent agents gain more than old ones and the fitted slope steepens. This is consistent with Stage 2: the x-axis moves levels far more than it moves the doubling time. The same numbers as bar charts: [horizons by scenario](figures/horizon_by_scenario.png) · [doubling time by scenario](figures/doubling_by_scenario.png).
 
 ## How much rides on the borrowed σ?
 
-σ is the one parameter Tier 3 imports rather than estimates. Rescaling it 0.75× / 1× / 1.5× (HCAST $\tilde\sigma$ = 0.67 / 0.89 / 1.33) moves the p50 correction to **×1.25 / ×1.30 / ×1.41**. The correction *grows* with σ: a wider distribution makes each exact success weaker evidence about the location, so the censored observations dominate more.
+σ is the one parameter Tier 3 imports rather than estimates. Rescaling the Stage-2 value by 0.75× and 1.5× moves the aggregate p50 correction from its central ×1.30 down to ×1.25 and up to ×1.41 ([full table](data/sigma_sensitivity.csv)). The correction *grows* with σ: a wider distribution makes each exact success weaker evidence about the location, so the censored observations dominate more.
 
 That direction matters for reading the headline. σ̃ is estimated from **successful** runs only, so if failures are drawn from a heavier-tailed part of the distribution the true σ is *larger* than 0.89 — making our central estimate the **conservative** one.
 
