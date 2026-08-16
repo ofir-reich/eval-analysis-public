@@ -365,8 +365,9 @@ show(fig)
 # a sub-minute offset is immaterial — but the flag makes the epistemic status explicit.
 
 # %%
-DERIVED_OUTPUT_COLUMNS = ["task_id", "task_family", "task_source", "human_source",
-                          "score_binarized", "score_cont", "human_minutes",
+DERIVED_OUTPUT_COLUMNS = ["run_id", "task_id", "task_family", "task_source",
+                          "human_source", "score_binarized", "score_cont", "human_minutes",
+                          "started_at", "completed_at",
                           "minutes_floored", "delta_task", "minutes_derived", "derivation"]
 
 def build_derived_runs(human_runs: pd.DataFrame, delta_by_task: pd.DataFrame) -> pd.DataFrame:
@@ -391,6 +392,8 @@ def build_derived_runs(human_runs: pd.DataFrame, delta_by_task: pd.DataFrame) ->
         ["swaa_exact", "delta_corrected", "delta_imputed_failure", "uncorrected_rebench"],
         default="uncorrected_no_delta",   # HCAST runs on tasks with no successful baseline
     )
+    assert human_runs_derived["run_id"].notna().all()
+    assert human_runs_derived["run_id"].is_unique
     return human_runs_derived[DERIVED_OUTPUT_COLUMNS]
 
 human_runs_derived = build_derived_runs(human_runs, delta_by_task)

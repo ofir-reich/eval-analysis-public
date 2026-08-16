@@ -8,7 +8,7 @@ The correction comes in three tiers of escalating assumptions:
 
 | tier | method | assumption |
 |---|---|---|
-| 1 | **hard bounds** — the geometric mean of censoring times bounds the true one from below | none |
+| 1 | **hard bounds** — the geometric mean of censoring times bounds the true one from below | failed attempts would eventually have succeeded (caveat 4) |
 | 2 | **Kaplan–Meier** — nonparametric survival of completion time | non-informative censoring |
 | 3 | **censored-lognormal MLE**, σ̃ from [Stage 2's σ analysis](../stage-2-measurement-error/) | lognormal, σ known |
 
@@ -17,7 +17,7 @@ The correction comes in three tiers of escalating assumptions:
 - **Over a quarter of all human baseline attempts ended in failure, and the published numbers ignore them.** A failure is information — the person needed *more* time than they spent — so dropping failures biases the published task times low. The failures concentrate on exactly the long tasks that set the top-end horizons.
 - **Correcting for them raises the absolute time horizons substantially.** Across correction methods, horizons rise by 28% to 47%; the most capable agent's 50%-horizon rises ~35% under the cleanest ("pure censoring") variant. The doubling time barely moves — it shortens by 4% to 5%.
 - **This correction and METR's own SIMEX correction pull in opposite directions and largely cancel.** The net change to the newest agent's 50%-horizon is **+10% to +18% on v1.0, and −21% to −25% on v1.1** — which way the balance tips depends on the task suite. Reporting the SIMEX correction alone would therefore overstate how confidently the horizon should be revised downward.
-- **The researcher-estimated tasks are exactly the tasks where every baseliner failed.** The estimates are fallbacks after attempted baselining, not guesses about tasks nobody tried — but that also means they stand in for tasks humans could not finish, and for 7 of the 16 the durations of the recorded failed attempts already exceed the published value, implying it is too low.
+- **The researcher-estimated tasks are exactly the tasks where every baseliner failed.** The estimates are fallbacks after attempted baselining, not guesses about tasks nobody tried — but that also means they stand in for tasks humans could not finish, and for 7 of the 16 the durations of the recorded failed attempts already exceed the published value, implying it is too low. This is exactly true on v1.0; on v1.1 it holds for the estimate tasks whose baseline records are public (23 of 63), while the other 40 have no human-run rows in the export to check against.
 
 ## How much censoring is there?
 
@@ -29,9 +29,11 @@ The censoring is also concentrated exactly where it does the most damage. The hu
 
 ## The "estimate" tasks are the all-failure tasks
 
-16 tasks have **zero** successful baseline runs. That set is **exactly** the set of HCAST tasks whose `human_minutes` carries `human_source == "estimate"` — the correspondence is one-to-one in both directions. METR fell back to a researcher's estimate precisely when *every* baseliner failed.
+On v1.0, 16 tasks have **zero** successful baseline runs. That set is **exactly** the set of HCAST tasks whose `human_minutes` carries `human_source == "estimate"` — the correspondence is one-to-one in both directions, over the full suite. METR fell back to a researcher's estimate precisely when *every* baseliner failed.
 
-Two things follow. First, the estimates are not exogenous guesses — baselining was attempted on every one of these tasks, and the estimate is the fallback. Second, they stand in for tasks humans **could not finish**, and the export contains the record of how long people tried before giving up. 8.5% of all agent runs are scored against these 16 estimates.
+One coverage caveat, which bites on v1.1: the estimate-task universe has to be built from **all** runs, not from the human runs, because an estimate task with no public human rows never shows up in the human-run table at all. On v1.1, 40 of the 63 HCAST estimate tasks have no public human-run rows, so their baselining history cannot be determined from the export. Among the 23 that do have rows the correspondence is again exact. On v1.0 the question does not arise: all 16 estimate tasks have public rows.
+
+Two things follow, for the tasks whose baseline records are public. First, the estimates are not exogenous guesses — baselining was attempted on every one of these tasks, and the estimate is the fallback. Second, they stand in for tasks humans **could not finish**, and the export contains the record of how long people tried before giving up. 8.5% of all v1.0 agent runs are scored against these 16 estimates.
 
 ## Tier 1 — hard lower bounds from the failed attempts
 
@@ -39,15 +41,15 @@ If every baseliner failed at times $c_1 \dots c_n$, then each true completion ti
 
 - **7 of the 16 all-failure tasks publish a `human_minutes` below this hard lower bound.** For those tasks the published value is understated by a median factor of 2.9.
 - **13 of the 16** had at least one baseliner who worked longer than the published estimate without solving the task.
-- The worst case is `blackbox/apron`, published at **10 minutes**: eight baseliners failed it, one of them only giving up after **368 minutes**, and the bound alone puts the true value at 30 minutes or more.
+- The most extreme case is `blackbox/apron`, published at **10 minutes**: eight baseliners failed it, one of them only giving up after **368 minutes**, and the bound alone puts the true value at 30 minutes or more.
 
 ![lower bounds](figures/lower_bounds_all_censored.png)
 
 ## Tier 2 — Kaplan–Meier
 
-Treating failures as right-censored and pooling tasks within length buckets, the [Kaplan–Meier median](figures/kaplan_meier_by_length.png) runs about **1.5× the naive geometric mean of the successes** in each of the well-populated middle buckets (4 minutes to about 4 hours).[^kmbuckets] This is a distribution-free corroboration of the parametric correction below.
+Treating failures as right-censored and pooling tasks within length buckets, the [Kaplan–Meier median](figures/kaplan_meier_by_length.png) runs about **1.5× the naive geometric mean of the successes** in each of the well-populated middle buckets (4 minutes to about 4 hours).[^kmbuckets] That is a coarse nonparametric check on the parametric correction below, and it lands in the same place.
 
-[^kmbuckets]: The bucket ratios are 1.35×, 1.54×, and 1.49× for the 4–16, 16–64, and 64–256 minute buckets. The 256–960 minute bucket dips below 1.0 because pooling there spans a 4× range of true task lengths — read the buckets as coarse checks, not per-task estimates.
+[^kmbuckets]: The bucket ratios are 1.35×, 1.54×, and 1.49× for the 4–16, 16–64, and 64–256 minute buckets. The 256–960 minute bucket dips below 1.0 because pooling there spans a 4× range of true task lengths — read the buckets as coarse checks, not per-task estimates. The comparison also mixes estimands: the published `human_minutes` is a geometric mean, while Kaplan–Meier returns a median. The two coincide under the lognormal model Tier 3 uses, so the check is not fully distribution-free — the Kaplan–Meier estimator is, but reading its median against a geometric mean is not.
 
 ## Tier 3 — censored-lognormal MLE
 
@@ -104,7 +106,7 @@ These are the two largest known x-axis corrections and they point in **opposite 
 
 **The two corrections are of comparable size and substantially cancel — but the sign of what is left over is not robust.** On v1.0 the censoring correction wins and the headline p50 should be revised *up* 10–18%; on v1.1, where SIMEX bites much harder (−36%, close to METR's own published figure), SIMEX wins and the net is *down* 21–25%.
 
-The defensible claim is therefore not a specific net number: **the SIMEX correction is opposed by a censoring correction of similar magnitude** that had not previously been applied, and once both are in play the residual uncertainty in the headline horizon is roughly ±20% with a suite-dependent sign. Reporting the SIMEX correction alone would overstate how confidently the horizon should be revised downward.
+The defensible claim is therefore not a specific net number: **the SIMEX correction is opposed by a censoring correction of similar magnitude** that had not previously been applied, and once both are in play the combined point corrections span roughly −25% to +18% depending on suite and censoring convention. That is a range of scenario results, not a fitted uncertainty interval — the two corrections were applied multiplicatively, not jointly re-estimated. Reporting the SIMEX correction alone would overstate how confidently the horizon should be revised downward.
 
 ## Extending to v1.1
 
@@ -114,7 +116,8 @@ The defensible claim is therefore not a specific net number: **the SIMEX correct
 |---|---|---|
 | censoring rate | 226/793 (28.5%) | 216/773 (27.9%) |
 | all-failure tasks | 16 | 23 |
-| …identical to the HCAST `estimate` set? | **yes** | **yes** |
+| HCAST estimate tasks: with public human runs / total | 16 / 16 | 23 / 63 |
+| observed all-failure set = estimate tasks with public runs? | **yes** | **yes** |
 | understated per the Tier-1 bound | 7/16, median 2.9× | 10/23, median 2.44× |
 | Tier-3 correction factor (median) | 1.47× | 1.54× |
 | p50, geo-mean over SOTA-at-release agents (mle+bounds / ratio+bounds) | ×1.37 / ×1.35 | ×1.27 / ×1.26 |
@@ -122,7 +125,7 @@ The defensible claim is therefore not a specific net number: **the SIMEX correct
 | doubling time (mle+bounds / ratio+bounds) | −5.2% / −4.8% | −1.8% / −1.4% |
 | σ sensitivity (0.75/1/1.5×) | ×1.25 / ×1.30 / ×1.41 | ×1.18 / ×1.21 / ×1.30 |
 
-The one-to-one correspondence between "all baseliners failed" and `human_source == "estimate"` holding on both suites confirms it is a deliberate pipeline rule, not a coincidence of task selection.
+The one-to-one correspondence between "all baseliners failed" and `human_source == "estimate"` holds on both suites among the tasks whose baseline records are public, which is what one would expect from a deliberate pipeline rule rather than a coincidence of task selection. It stops short of confirming that rule for the whole suite: v1.1's 40 estimate tasks with no human-run rows at all cannot be checked against the export.
 
 ## Caveats
 

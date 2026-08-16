@@ -1,7 +1,0 @@
-# Extra dependencies for reanalysis/, on top of the upstream package (`uv sync --all-extras`).
-plotly>=6
-kaleido>=1      # PNG export for plotly figures
-joblib>=1.3
-# Only needed to re-execute the paired notebooks, not to run the scripts:
-jupytext>=1.16
-nbconvert>=7

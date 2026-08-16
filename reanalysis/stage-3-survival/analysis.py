@@ -39,7 +39,7 @@
 #
 # | tier | method | assumption |
 # |---|---|---|
-# | 1 | **hard bounds** — gmean of censoring times is a lower bound on the true gmean | none |
+# | 1 | **hard bounds** — gmean of censoring times is a lower bound on the true gmean | failed attempts would eventually have succeeded (caveat 4) |
 # | 2 | **Kaplan–Meier** — nonparametric survival of completion time | non-informative censoring |
 # | 3 | **censored-lognormal MLE** with σ̃ from [Stage 2's σ analysis](../stage-2-measurement-error/) | lognormal, σ known |
 #
@@ -200,25 +200,42 @@ show(fig)
 # %% [markdown]
 # ## The structural finding: "estimate" tasks *are* the all-failure tasks
 #
-# 16 tasks have **zero** successful baseline runs. Every one of them is exactly a task
-# whose `human_minutes` carries `human_source == "estimate"` — and conversely, every
-# HCAST estimate task is one of these 16. METR fell back to a researcher's estimate
+# On v1.0, 16 tasks have **zero** successful baseline runs, and that set is exactly the
+# set of HCAST tasks whose `human_minutes` carries `human_source == "estimate"` — in
+# both directions, over the full suite. METR fell back to a researcher's estimate
 # precisely when **all** baseliners failed.
 #
-# Two things follow. First, the estimates are not exogenous guesses — baselining was
-# attempted on every one of these tasks, and the estimate is the fallback. Second, they
-# stand in for tasks humans **could not finish**, and the export contains the record of
-# how long people tried.
+# One coverage caveat, which bites on v1.1: the estimate-task universe must be built
+# from **all** runs, not from the human runs — an estimate task with no public human
+# rows never appears in `task_level`. On v1.1, 40 of the 63 HCAST estimate tasks have
+# no public human-run rows at all, so their baselining history cannot be checked from
+# the export; among the 23 that do have rows, the correspondence is again exact.
+#
+# Two things follow for the tasks whose records are public. First, the estimates are
+# not exogenous guesses — baselining was attempted and the estimate is the fallback.
+# Second, they stand in for tasks humans **could not finish**, and the export contains
+# the record of how long people tried.
 
 # %%
 all_censored_tasks = task_level.query("n_successes == 0")
-print(f"tasks with zero successful baselines: {len(all_censored_tasks)}")
+print(f"tasks with zero successful baselines (among tasks with public human runs): "
+      f"{len(all_censored_tasks)}")
 print("their human_source:", all_censored_tasks["human_source"].value_counts().to_dict())
-hcast_estimate_tasks = task_level.query(
+
+suite_task_universe = runs.groupby("task_id").agg(
+    task_source=("task_source", "first"), human_source=("human_source", "first")
+)
+hcast_estimate_tasks = suite_task_universe.query(
     "human_source == 'estimate' and task_source == 'HCAST'"
 )
-print(f"HCAST estimate tasks: {len(hcast_estimate_tasks)} — "
-      f"identical set: {set(all_censored_tasks.index) == set(hcast_estimate_tasks.index)}")
+hcast_estimates_with_public_runs = hcast_estimate_tasks.index.intersection(
+    task_level.index
+)
+print(f"HCAST estimate tasks in the full suite: {len(hcast_estimate_tasks)} — "
+      f"{len(hcast_estimates_with_public_runs)} with public human runs, "
+      f"{len(hcast_estimate_tasks) - len(hcast_estimates_with_public_runs)} without any")
+assert set(all_censored_tasks.index) == set(hcast_estimates_with_public_runs)
+print("all-failure set == estimate-tasks-with-public-runs set (asserted)")
 print("\n(the 3 RE-Bench estimate tasks DO have successful runs — "
       "their `human_minutes` is the 480-min budget, treated separately)")
 
@@ -288,14 +305,16 @@ show(fig)
 # ## Tier 2 — Kaplan–Meier
 #
 # Pool the baseline runs within a task-length bucket and estimate the survival function
-# of completion time treating failures as right-censored (Kaplan–Meier). This needs no
-# distributional assumption, only that censoring is non-informative. Comparing the KM
-# median against the naive geometric mean of successes gives a **model-free** measure of
-# how much discarding failures understates the time — which we can then check against the
-# parametric Tier-3 correction.
+# of completion time treating failures as right-censored (Kaplan–Meier). The estimator
+# itself needs no distributional assumption, only that censoring is non-informative.
+# Comparing the KM median against the naive geometric mean of successes gives a coarse
+# nonparametric check on the parametric Tier-3 correction.
 #
-# (Caveat: a bucket pools tasks of differing true length, so these are coarse
-# bucket-level statistics, not per-task estimates.)
+# (Two caveats. A bucket pools tasks of differing true length, so these are coarse
+# bucket-level statistics, not per-task estimates. And the two sides are different
+# estimands — KM gives a median, the published convention is a geometric mean — which
+# coincide only under the lognormal model Tier 3 assumes, so the check is not fully
+# distribution-free.)
 
 # %%
 def kaplan_meier(durations: np.ndarray, is_event: np.ndarray) -> pd.DataFrame:
@@ -348,8 +367,8 @@ kaplan_meier_summary["km_median_over_naive_gmean"] = (
 print("KM median vs the naive gmean of successes (model-free view of the bias):")
 print(kaplan_meier_summary.round(3).to_string())
 print("\nIn the well-populated middle buckets (4-16m through 64-256m) the KM median runs "
-      "\n~1.5× the naive gmean — independent, distribution-free corroboration of the "
-      "\nparametric correction below. The 256-960m bucket dips under 1.0 because pooling "
+      "\n~1.5× the naive gmean — a coarse nonparametric check on the parametric "
+      "\ncorrection below. The 256-960m bucket dips under 1.0 because pooling "
       "\nspans a 4× range of true task lengths there, so read these as coarse checks.")
 
 fig = px.line(

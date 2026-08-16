@@ -40,6 +40,7 @@
 # computed below.
 
 # %%
+import json
 import os
 from pathlib import Path
 
@@ -63,7 +64,8 @@ print(f"dataset version: {metr.DATASET_VERSION}")
 
 show = metr.show   # inline display in interactive sessions; no-op headless
 
-N_SIMEX = int(os.environ.get("N_SIMEX", 200))   # noised datasets per λ (METR used 200)
+N_SIMEX_DEFAULT = 200                           # what the committed caches were computed at
+N_SIMEX = int(os.environ.get("N_SIMEX", N_SIMEX_DEFAULT))  # noised datasets per λ (METR used 200)
 LAMBDA_GRID = [0.0, 0.5, 1.0, 1.5, 2.0]
 METR_SIGMA_BASELINED = 0.78
 METR_SIGMA_ESTIMATE = 1.05
@@ -130,9 +132,24 @@ def simex_horizons_at_lambda(noise_model: str, lam: float) -> dict:
 
 
 simex_cache = DATA_OUT / f"simex_curves{SUFFIX}.csv"
+# the cache holds curves already averaged over the draws, so the draw count cannot be
+# read back off the CSV — a sidecar records it, and a mismatch is an error rather than a
+# silent reuse of curves computed at a different N_SIMEX.
+simex_cache_meta = simex_cache.with_name(f"{simex_cache.stem}_meta.json")
 if simex_cache.exists():
+    if not simex_cache_meta.exists():   # legacy cache: assume the default draw count
+        simex_cache_meta.write_text(json.dumps({"n_simex": N_SIMEX_DEFAULT}) + "\n")
+        print(f"no sidecar for {simex_cache.name} — recorded n_simex={N_SIMEX_DEFAULT}")
+    cached_n_simex = json.loads(simex_cache_meta.read_text())["n_simex"]
+    if cached_n_simex != N_SIMEX:
+        raise RuntimeError(
+            f"{simex_cache.name} holds curves computed with n_simex={cached_n_simex}, "
+            f"but N_SIMEX={N_SIMEX}. Delete {simex_cache.name} and "
+            f"{simex_cache_meta.name} to recompute."
+        )
     simex_curve_rows = pd.read_csv(simex_cache)
-    print(f"loaded cached SIMEX curves ({len(simex_curve_rows)} rows)")
+    print(f"loaded cached SIMEX curves ({len(simex_curve_rows)} rows, "
+          f"n_simex={cached_n_simex})")
 else:
     jobs = [(noise_model, lam) for noise_model in sem_log_by_noise_model
             for lam in LAMBDA_GRID]
@@ -146,7 +163,8 @@ else:
         for (agent, quantile), mean_log2_horizon in horizons.items()
     ])
     simex_curve_rows.to_csv(simex_cache, index=False, float_format=metr.CSV_FLOAT_FORMAT)
-    print(f"computed SIMEX curves ({len(simex_curve_rows)} rows)")
+    simex_cache_meta.write_text(json.dumps({"n_simex": N_SIMEX}) + "\n")
+    print(f"computed SIMEX curves ({len(simex_curve_rows)} rows, n_simex={N_SIMEX})")
 
 # %% [markdown]
 # ## Extrapolate to λ = −1 — two extrapolants
@@ -299,4 +317,4 @@ show(fig)
 # modelling lever — the quadratic roughly *doubles* the p80 rise relative to METR's
 # exponential (both printed above), while p50 is much less sensitive — and SIMEX
 # presumes the noise is *independent* across tasks; the *systematic* component is
-# bounded separately in [the coherent shift](coherent_shift.py).
+# explored separately, as a scenario, in [the coherent shift](coherent_shift.py).

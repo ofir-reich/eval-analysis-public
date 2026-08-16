@@ -216,10 +216,14 @@ for condition in ["metr", "metr+x", "x_only"]:
         DATA_OUT / f"xboot_nonparam_horizons_{condition.replace('+', '_')}{SUFFIX}.csv"
     )
     if cache_path.exists():
-        nonparam_p50_by_replicate_by_condition[condition] = pd.read_csv(cache_path)
-        print(f"{condition}: loaded "
-              f"{len(nonparam_p50_by_replicate_by_condition[condition])} cached replicates")
-        continue
+        # one row = one replicate, so the cache is only usable at the current N_BOOT
+        cached_replicates = pd.read_csv(cache_path)
+        if len(cached_replicates) == N_BOOT:
+            nonparam_p50_by_replicate_by_condition[condition] = cached_replicates
+            print(f"{condition}: loaded {len(cached_replicates)} cached replicates")
+            continue
+        print(f"{condition}: cache has {len(cached_replicates)} replicates but "
+              f"N_BOOT={N_BOOT} — recomputing and overwriting it")
     replicate_results = Parallel(n_jobs=-1, verbose=0)(
         delayed(one_replicate_nonparam)(i, condition) for i in range(N_BOOT)
     )
@@ -343,10 +347,14 @@ for condition in ["metr", "metr+x_param", "x_param_only"]:
         DATA_OUT / f"xboot_param_horizons_{condition.replace('+', '_')}{SUFFIX}.csv"
     )
     if cache_path.exists():
-        param_horizons_by_replicate_by_condition[condition] = pd.read_csv(cache_path)
-        print(f"{condition}: loaded "
-              f"{len(param_horizons_by_replicate_by_condition[condition])} cached")
-        continue
+        # one row = one replicate, so the cache is only usable at the current N_BOOT
+        cached_replicates = pd.read_csv(cache_path)
+        if len(cached_replicates) == N_BOOT:
+            param_horizons_by_replicate_by_condition[condition] = cached_replicates
+            print(f"{condition}: loaded {len(cached_replicates)} cached")
+            continue
+        print(f"{condition}: cache has {len(cached_replicates)} replicates but "
+              f"N_BOOT={N_BOOT} — recomputing and overwriting it")
     replicate_results = Parallel(n_jobs=-1, verbose=0)(
         delayed(one_replicate_param)(i, condition) for i in range(N_BOOT)
     )
@@ -434,4 +442,4 @@ show(fig)
 #    windowed variants; the *comparison across conditions* is the point, not the
 #    absolute number.
 # 3. The parametric draw treats x-noise as independent across tasks — correlated error
-#    is bounded separately in [the coherent shift](coherent_shift.py).
+#    is explored separately, as a scenario, in [the coherent shift](coherent_shift.py).

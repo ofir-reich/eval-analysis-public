@@ -14,7 +14,7 @@
 # ---
 
 # %% [markdown]
-# # Stage 2 — Coherent ±1σ shift (systematic-error worst case)
+# # Stage 2 — Coherent ±1σ shift (a systematic-error scenario)
 #
 # [The x-bootstrap](xboot.py) treats x-axis noise as
 # **independent** across tasks — so it averages out (its floor's pure-x doubling-time
@@ -27,10 +27,13 @@
 # - a shared baselining convention (instructions, environment, "give up" policy);
 # - the flooring/δ conventions from [Stage 1](../stage-1-export-archaeology/).
 #
-# Here we bound it: shift **every** task's `human_minutes` coherently by ±1 σ̃_task (the
-# shrunken per-task spread from [the σ analysis](sigma_task.py)) in log space, refit METR's
-# horizons, and read off the effect on p50, p80, and the doubling time. We also show the
-# gentler ±1 SEM version (σ̃/√n — the correlated *sampling* error, smaller by √n).
+# Here we run it as a scenario: shift **every** task's `human_minutes` coherently by
+# ±1 σ̃_task (the shrunken per-task spread from [the σ analysis](sigma_task.py)) in log
+# space, refit METR's horizons, and read off the effect on p50, p80, and the doubling
+# time. We also show the gentler ±1 SEM version (σ̃/√n — the correlated *sampling* error,
+# smaller by √n). The ±1σ̃ magnitude is illustrative: between-person spread is a natural
+# yardstick for how large a coherent bias might be, but it does not estimate or bound
+# one — a shared bias could be smaller or larger.
 #
 # **What to expect:** a coherent shift that were *perfectly uniform* across all tasks
 # would move every horizon by the same factor and leave the doubling time **unchanged**

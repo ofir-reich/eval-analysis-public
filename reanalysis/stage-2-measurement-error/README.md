@@ -6,15 +6,15 @@ METR's methodology treats each task's `human_minutes` — how long the task take
 | -------------------------------------------------------------------- | -------------------------------------------------------------------------------- |
 | [Per-task σ](#per-task-σ-via-empirical-bayes-shrinkage)              | How noisy is each task's measured human time?                                    |
 | [Parametric x-bootstrap](#parametric-x-bootstrap)                    | How much wider do the confidence intervals get once the x-axis is uncertain too? |
-| [Coherent ±1σ shift](#coherent-1σ-shift-systematic-error-worst-case) | What if all baseline times share one systematic bias?                            |
+| [Coherent ±1σ shift](#coherent-1σ-shift-a-systematic-error-scenario) | What if all baseline times share one systematic bias?                            |
 | [SIMEX](#simex-with-per-task-σ)                                      | How much does x-noise bias the fitted horizons themselves?                       |
 
 ## Bottom line
 
 Uncertainty in the human baseline times matters a lot for the *absolute* time horizons and very little for the *doubling time*:
 
-- **The absolute horizons are fragile.** If the baseline times share a systematic bias — every task measured against humans who were uniformly faster or slower than the reference population — the headline horizon moves by up to a factor of 2.3 in either direction. The published horizon numbers depend on there being no such shared bias.
-- **The doubling time is robust.** Independent per-task noise averages out across the 170 tasks (it widens the doubling-time confidence interval by only about 2 days), and even a fully systematic bias moves the doubling time by at most about 10%, because rescaling every task's time shifts the fitted line up or down without changing its slope.
+- **The absolute horizons are fragile.** If the baseline times share a systematic bias — every task measured against humans who were uniformly faster or slower than the reference population — the headline horizon moves by a factor of about 2.3 in either direction under a bias the size of one per-task σ̃. The published horizon numbers depend on there being no such shared bias.
+- **The doubling time is robust.** Independent per-task noise averages out across the 170 tasks (it widens the doubling-time confidence interval by only about 2 days), and a systematic bias of that same size moves the doubling time by about 10% at most, because rescaling every task's time shifts the fitted line up or down without changing its slope.
 - **Even zero-mean noise in the baseline times biases the fitted curves; SIMEX estimates the size of that bias.** Noise in a regression's x-values flattens the fitted success curves (errors-in-variables attenuation), which distorts the horizons estimated from them even when the noise has no systematic direction. The SIMEX correction differs sharply by agent: the 80%-horizon rises 25–40% for essentially every capable agent, while the 50%-horizon barely moves for mid-pack agents and drops for the most capable one (−19% for Claude Opus 4.5).
 - **METR assumed slightly too little noise, not too much.** Our per-task noise estimates come out a bit above METR's global assumption on the long tasks that drive the top-end horizons — so METR's published SIMEX correction slightly understates the effect.
 
@@ -77,11 +77,11 @@ The doubling time, however, still barely notices: its 95% interval grows by only
 
 Code: [`xboot.py`](xboot.py) / [notebook](xboot.ipynb). Outputs: per-agent intervals and doubling-time draws for both passes in [`data/`](data/) (`xboot_nonparam_*`, `xboot_param_*`).
 
-## Coherent ±1σ shift (systematic-error worst case)
+## Coherent ±1σ shift (a systematic-error scenario)
 
-If every task's human time is biased in the same direction — because the baseliners METR could recruit were uniformly faster or slower than the intended reference population, or because of a shared convention in how attempts were timed — then no amount of averaging helps. To bound how much this could matter, we shift *every* task's `human_minutes` up (or down) by one full per-task σ̃ and refit everything.
+If every task's human time is biased in the same direction — because the baseliners METR could recruit were uniformly faster or slower than the intended reference population, or because of a shared convention in how attempts were timed — then no amount of averaging helps. To see how much this could matter, we shift *every* task's `human_minutes` up (or down) by one full per-task σ̃ and refit everything.
 
-This is a worst case: it asks what happens if the baseline times are systematically wrong by their entire typical person-to-person spread. The answer splits sharply:
+This is a scenario, not a bound: it asks what happens if the baseline times are systematically wrong by their entire typical person-to-person spread. The ±1σ̃ magnitude is illustrative — between-person spread is a natural yardstick for the size of a coherent bias, not an estimate or bound of it, and a shared bias could be smaller or larger. The answer splits sharply:
 
 | scenario                   | 50%-horizon (geo-mean over SOTA-at-release agents) | doubling time |
 | -------------------------- | -------------------------------------------------- | ------------- |
@@ -89,7 +89,7 @@ This is a worst case: it asks what happens if the baseline times are systematica
 | published                  | 16.4 min                                           | 201 days      |
 | all tasks shifted up 1σ̃   | 37.6 min                                           | 187 days      |
 
-The absolute horizon swings by a factor of about 2.3 in each direction — it is fully exposed to any systematic error in the baselines. The doubling time moves by well under a tenth in the worst case, because shifting every task by a similar factor slides the horizon-versus-date line up or down without much changing its slope. The small movement that does occur comes from the shift not being perfectly uniform: long HCAST and RE-Bench tasks shift more than short SWAA tasks.
+The absolute horizon swings by a factor of about 2.3 in each direction — it is fully exposed to any systematic error in the baselines. The doubling time moves by well under a tenth even under the full ±1σ̃ shift, because shifting every task by a similar factor slides the horizon-versus-date line up or down without much changing its slope. The small movement that does occur comes from the shift not being perfectly uniform: long HCAST and RE-Bench tasks shift more than short SWAA tasks.
 
 ![coherent-shift horizon levels](figures/coherent_shift_horizon_levels.png)
 
@@ -120,7 +120,7 @@ The extrapolation is a modelling choice, and it turns out to be the largest sing
 | median 50%-horizon, SOTA-at-release agents | +4.1%           | +3.4%          |
 | median 80%-horizon, same                   | +29.6%          | +33.0%         |
 
-One caveat carries real weight: SIMEX assumes the noise is *independent* across tasks. The systematic component is exactly what the coherent-shift analysis above bounds.
+One caveat carries real weight: SIMEX assumes the noise is *independent* across tasks. The systematic component is what the coherent-shift scenario above explores instead.
 
 Code: [`simex.py`](simex.py) / [notebook](simex.ipynb). Outputs: [`data/simex_curves.csv`](data/simex_curves.csv), [`data/simex_corrections.csv`](data/simex_corrections.csv).
 
